@@ -1,24 +1,40 @@
-'use client'; // This must be a client component because it checks the active URL path dynamically
+'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation'; // 1. Import the hook to track the active route
+import { usePathname } from 'next/navigation';
 
 export default function Header() {
-  const pathname = usePathname(); // 2. Get the current active URL path (e.g., "/" or "/contact")
+  const pathname = usePathname();
+  
+  // State to handle selected language and toggle dropdown menu visibility
+  const [currentLang, setCurrentLang] = useState({ code: 'EN', name: 'English' });
+  const [isOpen, setIsOpen] = useState(false);
 
-  // 3. Helper function to apply the red color only if the path matches exactly
+  const languages = [
+    { code: 'EN', name: 'English' },
+    { code: 'OR', name: 'Afaan Oromoo' },
+    { code: 'AM', name: 'አማርኛ (Amharic)' }
+  ];
+
   const linkStyle = (path: string) => {
     const isActive = pathname === path;
     return `transition font-medium text-sm ${
       isActive 
-        ? 'text-red-600 font-bold border-b-2 border-red-600 pb-1' // Active look: Red text with a clean underline
-        : 'text-gray-600 hover:text-red-600'                     // Inactive look: Gray text turning red on hover
+        ? 'text-red-600 font-bold border-b-2 border-red-600 pb-1' 
+        : 'text-gray-600 hover:text-red-600'                     
     }`;
   };
 
+  const handleLanguageChange = (lang: { code: string; name: string }) => {
+    setCurrentLang(lang);
+    setIsOpen(false);
+    // Future integration point: code to switch your language context dictionaries goes here!
+    alert(`Language switched placeholder style to: ${lang.name}`);
+  };
+
   return (
-    <header className="bg-white text-gray-800 shadow-sm border-b border-gray-100 relative z-20 sticky top-0">
+    <header className="bg-white text-gray-800 shadow-sm border-b border-gray-100 relative z-50 sticky top-0">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         
         {/* Brand Identity */}
@@ -31,14 +47,49 @@ export default function Header() {
           <h1 className="text-2xl font-black tracking-wide text-red-600">Gore Woreda</h1>
         </Link>
         
-        {/* Navigation Links with Dynamic Active Coloring */}
-        <nav className="space-x-6 flex items-center">
-          <Link href="/" className={linkStyle('/')}>Home</Link>
-          <Link href="/news" className={linkStyle('/news')}>About</Link>
-          <Link href="/#services" className={linkStyle('/services')}>Services</Link>
-          <Link href="/news" className={linkStyle('/news')}>News</Link>
-          <Link href="/contact" className={linkStyle('/contact')}>Contact</Link>
-        </nav>
+        {/* Right Nav-Links & Language Dropdown Stack */}
+        <div className="flex items-center space-x-8">
+          <nav className="space-x-6 flex items-center">
+            <Link href="/" className={linkStyle('/')}>Home</Link>
+            <Link href="/news" className={linkStyle('/news')}>About</Link>
+            <Link href="/#services" className={linkStyle('/services')}>Services</Link>
+            <Link href="/news" className={linkStyle('/news')}>News</Link>
+            <Link href="/contact" className={linkStyle('/contact')}>Contact</Link>
+          </nav>
+
+          <span className="w-px h-5 bg-gray-200" /> {/* Vertical divider line */}
+
+          {/* Interactive Language Selector Menu */}
+          <div className="relative">
+            <button 
+              onClick={() => setIsOpen(!isOpen)}
+              className="flex items-center space-x-2 text-sm font-semibold text-gray-700 hover:text-red-600 border border-gray-200 rounded-md px-3 py-1.5 transition bg-gray-50"
+            >
+              <span>🌐</span>
+              <span>{currentLang.code}</span>
+              <span className={`text-xs transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>▼</span>
+            </button>
+
+            {/* Dropdown Menu Overlay List */}
+            {isOpen && (
+              <div className="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-xl border border-gray-100 py-1 overflow-hidden animate-fade-in">
+                {languages.map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => handleLanguageChange(lang)}
+                    className={`w-full text-left px-4 py-2.5 text-sm transition text-gray-700 hover:bg-red-50 hover:text-red-600 flex justify-between items-center ${
+                      currentLang.code === lang.code ? 'font-bold text-red-600 bg-red-50/30' : ''
+                    }`}
+                  >
+                    <span>{lang.name}</span>
+                    {currentLang.code === lang.code && <span className="text-xs">✓</span>}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
       </div>
     </header>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '@/component/Header';
 import Hero from '@/component/Hero';
+import StatsGrid from '@/component/StatsGrid'; 
 import Services from '@/component/Services';
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
       <Header />
       <Hero />
+      <StatsGrid />
       <Services />
       
       {/* Footer */}
