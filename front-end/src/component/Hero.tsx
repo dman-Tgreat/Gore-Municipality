@@ -45,21 +45,23 @@ export default function Hero() {
             <p className="text-xl max-w-2xl mx-auto drop-shadow-sm font-light h-16">
               {slide.text}
             </p>
-            <button className="mt-4 bg-yellow-500 text-gray-900 px-6 py-3 rounded-md font-semibold hover:bg-yellow-400 transition shadow-lg">
-              Explore Services
+            <button className="mt-4 bg-red-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-red-700 transition shadow-lg">
+                Explore Services
             </button>
           </div>
         </div>
       ))}
-      <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2 z-20">
-        {slides.map((_, index) => (
-          <button
+        <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2 z-20">
+            {slides.map((_, index) => (
+            <button
             key={index}
             onClick={() => setCurrentIndex(index)}
-            className={`w-3 h-3 rounded-full transition-all ${index === currentIndex ? 'bg-yellow-500 w-6' : 'bg-white/50'}`}
-          />
-        ))}
-      </div>
+            className={`w-3 h-3 rounded-full transition-all ${
+                index === currentIndex ? 'bg-red-600 w-6' : 'bg-white/50'
+            }`}
+            />
+            ))}
+        </div>
     </section>
   );
 }
