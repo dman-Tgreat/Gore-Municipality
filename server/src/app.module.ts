@@ -3,6 +3,11 @@ import { ConfigModule } from '@nestjs/config';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
+import { NewsModule } from './news/news.module';
+import { AnnouncementsModule } from './announcements/announcements.module';
+import { DepartmentsModule } from './departments/departments.module';
+import { ProjectsModule } from './projects/projects.module';
+import { DocumentsModule } from './documents/documents.module';
 
 @Module({
   imports: [
@@ -10,6 +15,7 @@ import { AuthModule } from './auth/auth.module';
     ConfigModule.forRoot({
       isGlobal:true,
     }),
+    
 
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -25,6 +31,16 @@ import { AuthModule } from './auth/auth.module';
     AdminModule,
 
     AuthModule,
+
+    NewsModule,
+
+    AnnouncementsModule,
+
+    DepartmentsModule,
+
+    ProjectsModule,
+
+    DocumentsModule,
   ],
 })
 export class AppModule {}
