@@ -13,7 +13,7 @@ export class Admin {
   id!: number;
 
   @Column({
-    100,
+    length:100,
   })
   fullName!: string;
 

@@ -1,44 +1,55 @@
 import {
   BadRequestException,
   Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 
 import * as bcrypt from 'bcrypt';
-
-import { UsersService } from '../users/users.service';
-import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
+import { AdminService } from '../admin/admin.service';
 
 @Injectable()
 export class AuthService {
-
   constructor(
-    private readonly usersService: UsersService,
+    private readonly adminsService: AdminService,
+    private readonly jwtService: JwtService,
   ) {}
-
-  async register(registerDto: RegisterDto) {
-
-    const existingUser =
-      await this.usersService.findByEmail(
-        registerDto.email,
+  async login(loginDto: LoginDto) {
+    const admin = await this.adminsService.findByEmail(
+      loginDto.email,
+    );
+    if(!admin) {
+      throw new UnauthorizedException(
+        'Invalid email or password,'
       );
+    }
+    if(!admin.isActive) {
+      throw new UnauthorizedException(
+        'Account is disabled',
+      );
+    }
+    const passwordMatches = await bcrypt.compare(
+      loginDto.password,admin.password,
+    );
 
-    if (existingUser) {
-      throw new BadRequestException(
-        'Email already exists',
+    if (!passwordMatches) {
+      throw new UnauthorizedException(
+        'Invalid email or password',
       );
     }
 
-    const hashedPassword =
-      await bcrypt.hash(
-        registerDto.password,
-        10,
-      );
+    const payload = {
+      sub: admin.id,
+      email: admin.email,
+    };
 
-    return this.usersService.create({
-      fullName: registerDto.fullName,
-      email: registerDto.email,
-      password: hashedPassword,
-      role: 'EDITOR',
-    });
+    const accessToken = await this.jwtService.signAsync(payload);
+    
+    return {
+    success: true,
+    message: 'Login successful',
+    accessToken,
+    };
   }
 }
