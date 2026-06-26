@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { User } from './entities/user.entity';
+import { Admin } from './entities/admin.entity';
 
 @Injectable()
-export class UsersService {
+export class AdminService {
 
   constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
+    @InjectRepository(Admin)
+    private userRepository: Repository<Admin>,
   ) {}
 
   async findByEmail(email: string) {
@@ -18,7 +18,7 @@ export class UsersService {
     });
   }
 
-  async create(userData: Partial<User>) {
+  async create(userData: Partial<Admin>) {
     const user = this.userRepository.create(userData);
 
     return this.userRepository.save(user);

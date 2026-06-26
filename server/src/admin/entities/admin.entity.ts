@@ -2,19 +2,24 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
-export class User {
+@Entity("admins")
+export class Admin {
 
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
+  @Column({
+    100,
+  })
   fullName!: string;
 
   @Column({
     unique: true,
+    length:150,
   })
   email!: string;
 
@@ -22,8 +27,13 @@ export class User {
   password!: string;
 
   @Column({
-    default: 'EDITOR',
+    default:true,
   })
-  role!
-  : string;
+  isActive!:boolean;
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }
