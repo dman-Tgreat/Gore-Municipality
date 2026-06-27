@@ -30,9 +30,9 @@ export class Department {
     head!: string;
 
     @Column({
-    length: 255,
+    length: 50,
     })
-    phone!: number;
+    phone!: string;
 
     @Column({
     type: 'text',
