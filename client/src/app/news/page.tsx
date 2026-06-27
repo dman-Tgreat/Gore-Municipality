@@ -5,17 +5,25 @@ import Header from '@/component/Header';
 import { useLocale } from '@/context/LocaleContext';
 import { newsApi, type NewsArticle } from '@/lib/api';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+
 export default function NewsPage() {
   const { t } = useLocale();
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    newsApi.getAll()
-      .then(setArticles)
+    newsApi.getAll().then((all) => setArticles(all.filter((a) => a.published)))
       .catch(() => setArticles([]))
       .finally(() => setLoading(false));
+
   }, []);
+
+  const imgSrc = (url: string | undefined) => {
+    if (!url) return undefined;
+    if (url.startsWith('/uploads/')) return `${API_BASE}${url}`;
+    return url;
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans flex flex-col justify-between">
@@ -62,7 +70,7 @@ export default function NewsPage() {
                   <h3 className="text-lg font-bold text-green-800 hover:underline cursor-pointer">{article.title}</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">{article.summary}</p>
                   {article.coverImage && (
-                    <img src={article.coverImage} alt={article.title} className="w-full h-48 object-cover rounded-lg" />
+                    <img src={imgSrc(article.coverImage)} alt={article.title} className="w-full h-48 object-cover rounded-lg" />
                   )}
                 </article>
               ))

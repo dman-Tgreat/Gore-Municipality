@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation';
 import { useLocale } from '@/context/LocaleContext';
 import FileUpload from '@/component/FileUpload';
 import {
-  contactAdminApi, adminApi, newsApi, announcementsApi, projectsApi, departmentsApi,
-  type ContactMessage, type AdminUser, type NewsArticle, type Announcement, type Project, type Department,
+  contactAdminApi, adminApi, newsApi, announcementsApi, projectsApi, departmentsApi, documentsApi,
+  type ContactMessage, type AdminUser, type NewsArticle, type Announcement, type Project, type Department, type Document,
 } from '@/lib/api';
 
-type Tab = 'messages' | 'news' | 'announcements' | 'projects' | 'departments' | 'admins';
+type Tab = 'messages' | 'news' | 'announcements' | 'projects' | 'departments' | 'documents' | 'admins';
 
 interface CmsFormState<T> {
   editing: boolean;
@@ -21,6 +21,7 @@ const emptyNewsForm = { title: '', slug: '', summary: '', content: '', coverImag
 const emptyAnnouncementForm = { title: '', description: '', content: '', published: true };
 const emptyProjectForm = { name: '', description: '', budget: 0, status: 'planned', startDate: '', endDate: '', location: '', coverImage: '', fundingSource: '', contractor: '', category: '' };
 const emptyDeptForm = { name: '', description: '', head: '', phone: '', email: '', office: '', image: '' };
+const emptyDocForm = { title: '', description: '', fileUrl: '', category: '' };
 
 export default function AdminDashboardPage() {
   const { t } = useLocale();
@@ -35,6 +36,7 @@ export default function AdminDashboardPage() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
+  const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<Tab>('messages');
 
@@ -58,6 +60,10 @@ export default function AdminDashboardPage() {
   const [deptForm, setDeptForm] = useState<CmsFormState<typeof emptyDeptForm>>({ editing: false, editingId: null, data: { ...emptyDeptForm } });
   const [deptSubmitting, setDeptSubmitting] = useState(false);
 
+  // Documents CMS
+  const [docForm, setDocForm] = useState<CmsFormState<typeof emptyDocForm>>({ editing: false, editingId: null, data: { ...emptyDocForm } });
+  const [docSubmitting, setDocSubmitting] = useState(false);
+
   // Admin states
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [adminForm, setAdminForm] = useState({ fullName: '', email: '', password: '' });
@@ -75,9 +81,10 @@ export default function AdminDashboardPage() {
       announcementsApi.getAll(),
       projectsApi.getAll(),
       departmentsApi.getAll(),
+      documentsApi.getAll(),
     ])
-      .then(([msgs, adms, n, a, p, d]) => {
-        setMessages(msgs); setAdmins(adms); setNews(n); setAnnouncements(a); setProjects(p); setDepartments(d);
+      .then(([msgs, adms, n, a, p, d, docs]) => {
+        setMessages(msgs); setAdmins(adms); setNews(n); setAnnouncements(a); setProjects(p); setDepartments(d); setDocuments(docs);
       })
       .catch(() => { localStorage.removeItem('admin_token'); router.push('/admin/login'); })
       .finally(() => setLoading(false));
@@ -192,6 +199,26 @@ export default function AdminDashboardPage() {
     try { await departmentsApi.remove(token, id); setDepartments((p) => p.filter((d) => d.id !== id)); } catch {}
   };
 
+  // Documents CRUD
+  const handleSaveDoc = async (e: React.FormEvent) => {
+    e.preventDefault(); if (!token) return;
+    setDocSubmitting(true);
+    try {
+      if (docForm.editingId) {
+        const updated = await documentsApi.update(token, docForm.editingId, docForm.data);
+        setDocuments((p) => p.map((d) => (d.id === docForm.editingId ? updated : d)));
+      } else {
+        const created = await documentsApi.create(token, docForm.data as any);
+        setDocuments((p) => [created, ...p]);
+      }
+      setDocForm({ editing: false, editingId: null, data: { ...emptyDocForm } });
+    } catch {} finally { setDocSubmitting(false); }
+  };
+  const handleDeleteDoc = async (id: number) => {
+    if (!token) return;
+    try { await documentsApi.remove(token, id); setDocuments((p) => p.filter((d) => d.id !== id)); } catch {}
+  };
+
   // Admin CRUD
   const handleCreateAdmin = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
@@ -251,6 +278,7 @@ export default function AdminDashboardPage() {
           <button onClick={() => setTab('announcements')} className={tabClasses('announcements')}>{t.admin.cmsAnnouncements} ({announcements.length})</button>
           <button onClick={() => setTab('projects')} className={tabClasses('projects')}>{t.admin.cmsProjects} ({projects.length})</button>
           <button onClick={() => setTab('departments')} className={tabClasses('departments')}>{t.admin.cmsDepartments} ({departments.length})</button>
+          <button onClick={() => setTab('documents')} className={tabClasses('documents')}>{t.admin.cmsDocuments} ({documents.length})</button>
           <button onClick={() => setTab('admins')} className={tabClasses('admins')}>{t.admin.admins} ({admins.length})</button>
         </div>
 
@@ -267,6 +295,7 @@ export default function AdminDashboardPage() {
           tab === 'announcements' ? <AnnouncementsTab /> :
           tab === 'projects' ? <ProjectsTab /> :
           tab === 'departments' ? <DepartmentsTab /> :
+          tab === 'documents' ? <DocumentsTab /> :
           <AdminsTab />}
       </div>
 
@@ -780,6 +809,101 @@ export default function AdminDashboardPage() {
           <button type="submit" disabled={deptSubmitting}
             className="bg-green-700 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50">
             {deptSubmitting ? t.admin.saving : t.admin.saveItem}
+          </button>
+        </div>
+      </form>
+    );
+  }
+
+  // ====== Documents Tab ======
+  function DocumentsTab() {
+    if (docForm.editing) return <DocumentsForm />;
+    return (
+      <>
+        <div className="flex justify-between items-center mb-4">
+          <p className="text-sm text-gray-500">{documents.length} document{documents.length !== 1 ? 's' : ''}</p>
+          <button onClick={() => setDocForm({ editing: true, editingId: null, data: { ...emptyDocForm } })}
+            className="bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-green-600 transition">{t.admin.createItem}</button>
+        </div>
+        {documents.length === 0 ? <p className="text-center text-gray-500 py-12">{t.admin.noItems}</p> : (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead><tr className="bg-gray-50 border-b border-gray-100">
+                <th className="text-left p-4 font-semibold text-gray-600">{t.admin.titleField}</th>
+                <th className="text-left p-4 font-semibold text-gray-600 hidden md:table-cell">{t.admin.documentCategoryField}</th>
+                <th className="text-left p-4 font-semibold text-gray-600 hidden md:table-cell">{t.admin.descriptionField}</th>
+                <th className="text-left p-4 font-semibold text-gray-600 hidden md:table-cell">{t.admin.dateField}</th>
+                <th className="text-right p-4 font-semibold text-gray-600">{t.admin.editItem}</th>
+              </tr></thead>
+              <tbody>
+                {documents.map((item) => (
+                  <tr key={item.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition">
+                    <td className="p-4 font-medium text-gray-900 max-w-xs truncate">{item.title}</td>
+                    <td className="p-4 text-gray-500 text-xs hidden md:table-cell">
+                      <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-xs font-medium">{item.category}</span>
+                    </td>
+                    <td className="p-4 text-gray-400 text-xs truncate max-w-[200px] hidden md:table-cell">{item.description}</td>
+                    <td className="p-4 text-gray-400 text-xs hidden md:table-cell">{new Date(item.createdAt).toLocaleDateString()}</td>
+                    <td className="p-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        {item.fileUrl && (
+                          <a href={item.fileUrl} target="_blank" rel="noopener noreferrer"
+                            className="text-xs text-green-600 hover:text-green-800 transition font-medium">View</a>
+                        )}
+                        <button onClick={() => setDocForm({ editing: true, editingId: item.id, data: { title: item.title, description: item.description, fileUrl: item.fileUrl, category: item.category } })}
+                          className="text-xs text-blue-600 hover:text-blue-800 transition font-medium">{t.admin.editItem}</button>
+                        <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteDoc(item.id); }}
+                          className="text-xs text-red-500 hover:text-red-700 transition font-medium">{t.admin.deleteItem}</button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </>
+    );
+  }
+  function DocumentsForm() {
+    const d = docForm.data;
+    return (
+      <form onSubmit={handleSaveDoc} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4 max-w-2xl">
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-lg font-bold text-gray-900">{docForm.editingId ? t.admin.editItem : t.admin.createItem} {t.admin.cmsDocuments}</h2>
+          <button type="button" onClick={() => setDocForm({ editing: false, editingId: null, data: { ...emptyDocForm } })}
+            className="text-sm text-gray-500 hover:text-gray-700 transition">{t.admin.cancelEdit}</button>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.titleField} *</label>
+            <input type="text" required value={d.title} onChange={(e) => setDocForm((p) => ({ ...p, data: { ...p.data, title: e.target.value } }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+          </div>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.documentCategoryField} *</label>
+            <input type="text" required value={d.category} onChange={(e) => setDocForm((p) => ({ ...p, data: { ...p.data, category: e.target.value } }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" placeholder="e.g. Policy, Report, Form" />
+          </div>
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.descriptionField} *</label>
+            <textarea required value={d.description} onChange={(e) => setDocForm((p) => ({ ...p, data: { ...p.data, description: e.target.value } }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" rows={3} />
+          </div>
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.documentFileUrlField} *</label>
+            <FileUpload
+              existingUrl={d.fileUrl}
+              onUpload={(url) => setDocForm((p) => ({ ...p, data: { ...p.data, fileUrl: url } }))}
+              label="Upload Document"
+              accept=".pdf,.doc,.docx,.xls,.xlsx"
+            />
+          </div>
+        </div>
+        <div className="flex gap-3 pt-2">
+          <button type="submit" disabled={docSubmitting}
+            className="bg-green-700 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50">
+            {docSubmitting ? t.admin.saving : t.admin.saveItem}
           </button>
         </div>
       </form>
