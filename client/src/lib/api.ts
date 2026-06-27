@@ -39,6 +39,12 @@ export interface NewsArticle {
 export const newsApi = {
   getAll: () => request<NewsArticle[]>('/news'),
   getOne: (id: number) => request<NewsArticle>(`/news/${id}`),
+  create: (token: string, data: { title: string; slug: string; summary: string; content: string; coverImage?: string; published?: boolean }) =>
+    request<NewsArticle>('/news', { method: 'POST', headers: authHeaders(token), body: JSON.stringify(data) }),
+  update: (token: string, id: number, data: { title?: string; slug?: string; summary?: string; content?: string; coverImage?: string; published?: boolean }) =>
+    request<NewsArticle>(`/news/${id}`, { method: 'PATCH', headers: authHeaders(token), body: JSON.stringify(data) }),
+  remove: (token: string, id: number) =>
+    request<{ message: string }>(`/news/${id}`, { method: 'DELETE', headers: authHeaders(token) }),
 };
 
 export interface Announcement {
@@ -55,6 +61,12 @@ export interface Announcement {
 export const announcementsApi = {
   getAll: () => request<Announcement[]>('/announcements'),
   getOne: (id: number) => request<Announcement>(`/announcements/${id}`),
+  create: (token: string, data: { title: string; description: string; content: string; published?: boolean }) =>
+    request<Announcement>('/announcements', { method: 'POST', headers: authHeaders(token), body: JSON.stringify(data) }),
+  update: (token: string, id: number, data: { title?: string; description?: string; content?: string; published?: boolean }) =>
+    request<Announcement>(`/announcements/${id}`, { method: 'PATCH', headers: authHeaders(token), body: JSON.stringify(data) }),
+  remove: (token: string, id: number) =>
+    request<{ message: string }>(`/announcements/${id}`, { method: 'DELETE', headers: authHeaders(token) }),
 };
 
 export interface Department {
@@ -73,6 +85,12 @@ export interface Department {
 export const departmentsApi = {
   getAll: () => request<Department[]>('/departments'),
   getOne: (id: number) => request<Department>(`/departments/${id}`),
+  create: (token: string, data: { name: string; description: string; head: string; phone: string; email: string; office: string; image?: string }) =>
+    request<Department>('/departments', { method: 'POST', headers: authHeaders(token), body: JSON.stringify(data) }),
+  update: (token: string, id: number, data: { name?: string; description?: string; head?: string; phone?: string; email?: string; office?: string; image?: string }) =>
+    request<Department>(`/departments/${id}`, { method: 'PATCH', headers: authHeaders(token), body: JSON.stringify(data) }),
+  remove: (token: string, id: number) =>
+    request<{ message: string }>(`/departments/${id}`, { method: 'DELETE', headers: authHeaders(token) }),
 };
 
 export interface Project {
@@ -96,6 +114,12 @@ export interface Project {
 export const projectsApi = {
   getAll: () => request<Project[]>('/projects'),
   getOne: (id: number) => request<Project>(`/projects/${id}`),
+  create: (token: string, data: { name: string; description: string; budget?: number; status?: string; startDate?: string; endDate?: string; location?: string; coverImage?: string; fundingSource?: string; contractor?: string; category?: string }) =>
+    request<Project>('/projects', { method: 'POST', headers: authHeaders(token), body: JSON.stringify(data) }),
+  update: (token: string, id: number, data: { name?: string; description?: string; budget?: number; status?: string; startDate?: string; endDate?: string; location?: string; coverImage?: string; fundingSource?: string; contractor?: string; category?: string }) =>
+    request<Project>(`/projects/${id}`, { method: 'PATCH', headers: authHeaders(token), body: JSON.stringify(data) }),
+  remove: (token: string, id: number) =>
+    request<{ message: string }>(`/projects/${id}`, { method: 'DELETE', headers: authHeaders(token) }),
 };
 
 // --- Contact (public POST) ---
@@ -151,6 +175,23 @@ export const adminApi = {
     request<AdminUser[]>('/admin', { headers: authHeaders(token) }),
   getOne: (token: string, id: number) =>
     request<AdminUser>(`/admin/${id}`, { headers: authHeaders(token) }),
+  create: (token: string, data: { fullName: string; email: string; password: string }) =>
+    request<AdminUser>('/admin', {
+      method: 'POST',
+      headers: authHeaders(token),
+      body: JSON.stringify(data),
+    }),
+  update: (token: string, id: number, data: { fullName?: string; email?: string; password?: string; isActive?: boolean }) =>
+    request<AdminUser>(`/admin/${id}`, {
+      method: 'PATCH',
+      headers: authHeaders(token),
+      body: JSON.stringify(data),
+    }),
+  remove: (token: string, id: number) =>
+    request<{ message: string }>(`/admin/${id}`, {
+      method: 'DELETE',
+      headers: authHeaders(token),
+    }),
 };
 
 export const contactAdminApi = {

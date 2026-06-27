@@ -21,6 +21,14 @@ export default function Home() {
       <footer className="bg-gray-900 text-gray-400 py-6 border-t border-gray-800 mt-12">
         <div className="container mx-auto px-6 text-center text-sm">
           <p>&copy; {new Date().getFullYear()} {t.footer.copyright}</p>
+          <div className="mt-3 pt-3 border-t border-gray-800">
+            <a
+              href="/admin/login"
+              className="text-gray-600 hover:text-gray-400 transition text-xs"
+            >
+              {t.admin.login}
+            </a>
+          </div>
         </div>
       </footer>
     </div>
