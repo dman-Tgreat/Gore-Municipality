@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Header from '@/component/Header';
 import { useLocale } from '@/context/LocaleContext';
+import { contactApi } from '@/lib/api';
 
 export default function ContactPage() {
   const { t } = useLocale();
@@ -18,19 +19,11 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:3000/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      if (res.ok) {
-        setSubmitted(true);
-        setFormData({ name: '', email: '', subject: '', message: '' });
-      } else {
-        alert('Failed to submit. Please try again.');
-      }
+      await contactApi.submit(formData);
+      setSubmitted(true);
+      setFormData({ name: '', email: '', subject: '', message: '' });
     } catch {
-      alert('Could not connect to server. Please try again later.');
+      alert('Failed to submit. Please try again later.');
     }
   };
 
