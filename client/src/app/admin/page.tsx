@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from '@/context/LocaleContext';
+import FileUpload from '@/component/FileUpload';
 import {
   contactAdminApi, adminApi, newsApi, announcementsApi, projectsApi, departmentsApi,
   type ContactMessage, type AdminUser, type NewsArticle, type Announcement, type Project, type Department,
@@ -435,8 +436,11 @@ export default function AdminDashboardPage() {
           </div>
           <div className="col-span-2 sm:col-span-1">
             <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.coverImageField}</label>
-            <input type="url" value={d.coverImage} onChange={(e) => setNewsForm((p) => ({ ...p, data: { ...p.data, coverImage: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" placeholder="https://..." />
+            <FileUpload
+              existingUrl={d.coverImage}
+              onUpload={(url) => setNewsForm((p) => ({ ...p, data: { ...p.data, coverImage: url } }))}
+              label="Upload Cover Image"
+            />
           </div>
           <div className="col-span-2 sm:col-span-1">
             <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.statusField}</label>
@@ -662,8 +666,11 @@ export default function AdminDashboardPage() {
           </div>
           <div className="col-span-2">
             <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.coverImageField}</label>
-            <input type="url" value={d.coverImage} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, coverImage: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" placeholder="https://..." />
+            <FileUpload
+              existingUrl={d.coverImage}
+              onUpload={(url) => setProjForm((p) => ({ ...p, data: { ...p.data, coverImage: url } }))}
+              label="Upload Project Image"
+            />
           </div>
         </div>
         <div className="flex gap-3 pt-2">
@@ -762,8 +769,11 @@ export default function AdminDashboardPage() {
           </div>
           <div className="col-span-2">
             <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.imageField}</label>
-            <input type="url" value={d.image} onChange={(e) => setDeptForm((p) => ({ ...p, data: { ...p.data, image: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" placeholder="https://..." />
+            <FileUpload
+              existingUrl={d.image}
+              onUpload={(url) => setDeptForm((p) => ({ ...p, data: { ...p.data, image: url } }))}
+              label="Upload Department Image"
+            />
           </div>
         </div>
         <div className="flex gap-3 pt-2">
