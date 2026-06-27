@@ -1,20 +1,23 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useLocale } from '@/context/LocaleContext';
 
 export default function Hero() {
+  const { t } = useLocale();
+
   const slides = [
     {
       image: 'https://www.connect4climate.org/sites/default/files/2024-11/EthiopiaBanner3.png',
-      text: 'Empowering the Gore Woreda community through modern digital administration.',
+      text: t.hero.slides[0],
     },
     {
       image: 'https://figures.academia-assets.com/65833206/figure_020.jpg',
-      text: 'Promoting local agricultural development and sustainable resources.',
+      text: t.hero.slides[1],
     },
     {
-      image: '	https://i0.wp.com/qbo-abo-wbo.org/wp-content/uploa…MG-20240714-WA0001.jpg?fit=1080%2C621&ssl=1&w=640',
-      text: 'Efficient and transparent civil registry and licensing services for everyone.',
+      image: 'https://i0.wp.com/qbo-abo-wbo.org/wp-content/uploads/2024/07/IMG-20240714-WA0001.jpg?fit=1080%2C621&ssl=1&w=640',
+      text: t.hero.slides[2],
     },
   ];
 
@@ -40,28 +43,28 @@ export default function Hero() {
           <div className="absolute inset-0 bg-black/50" />
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-6">
             <h2 className="text-4xl font-extrabold mb-4 drop-shadow-md tracking-tight max-w-4xl">
-              Welcome to the Official Portal of Gore Woreda
+              {t.hero.welcome}
             </h2>
             <p className="text-xl max-w-2xl mx-auto drop-shadow-sm font-light h-16">
               {slide.text}
             </p>
             <button className="mt-4 bg-red-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-red-700 transition shadow-lg">
-                Explore Services
+              {t.hero.exploreServices}
             </button>
           </div>
         </div>
       ))}
-        <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2 z-20">
-            {slides.map((_, index) => (
-            <button
+      <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2 z-20">
+        {slides.map((_, index) => (
+          <button
             key={index}
             onClick={() => setCurrentIndex(index)}
             className={`w-3 h-3 rounded-full transition-all ${
-                index === currentIndex ? 'bg-red-600 w-6' : 'bg-white/50'
+              index === currentIndex ? 'bg-red-600 w-6' : 'bg-white/50'
             }`}
-            />
-            ))}
-        </div>
+          />
+        ))}
+      </div>
     </section>
   );
 }
