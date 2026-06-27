@@ -8,37 +8,42 @@ import {
   JoinColumn,
 } from 'typeorm';
 
+import { Admin } from '../../admin/entities/admin.entity';
 
-@Entity('news')
-
+@Entity('document')
 export class Document {
-    @PrimaryGeneratedColumn()
-    id!: number;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-    @Column({
+  @Column({
     length: 255,
-    })
-    title!: string;
+  })
+  title!: string;
 
-    @Column({
+  @Column({
     length: 255,
-    })
-    description!: string;
+  })
+  description!: string;
 
-    @Column({
+  @Column({
     type: 'text',
-    })
-    fileUrl!: string;
+  })
+  fileUrl!: string;
 
-    @Column({
+  @Column({
     type: 'text',
-    })
-    category!: string;
+  })
+  category!: string;
 
-    @CreateDateColumn()
-    createdAt!: Date;
+  @ManyToOne(() => Admin)
+  @JoinColumn({
+    name: 'createdBy',
+  })
+  createdBy!: Admin;
 
-    @UpdateDateColumn()
-    updatedAt!: Date;
+  @CreateDateColumn()
+  createdAt!: Date;
 
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }
