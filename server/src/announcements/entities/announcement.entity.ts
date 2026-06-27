@@ -22,7 +22,6 @@ export class Announcement {
       title!: string;
     
       @Column({
-        unique: true,
         length: 255,
       })
       description!: string;

@@ -12,6 +12,7 @@ import { Admin } from '../../admin/entities/admin.entity';
 
 @Entity('news')
 export class News {
+  
   @PrimaryGeneratedColumn()
   id!: number;
 
