@@ -37,11 +37,13 @@ export class DocumentsController {
     return this.documentsService.findOne(+id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateDocumentDto: UpdateDocumentDto) {
     return this.documentsService.update(+id, updateDocumentDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.documentsService.remove(+id);

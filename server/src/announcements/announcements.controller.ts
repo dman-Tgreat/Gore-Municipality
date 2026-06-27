@@ -37,11 +37,13 @@ export class AnnouncementsController {
     return this.announcementsService.findOne(+id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAnnouncementDto: UpdateAnnouncementDto) {
     return this.announcementsService.update(+id, updateAnnouncementDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.announcementsService.remove(+id);
