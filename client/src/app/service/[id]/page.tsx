@@ -10,11 +10,6 @@ import { departmentsApi, type Department } from '@/lib/api';
 
 const iconList = ['📋', '🌱', '🏢', '⚕️', '🔧', '📚', '🏛️', '⚖️'];
 
-const serviceCategories = [
-  'Document Processing', 'Field Services', 'Consultation & Advisory', 'Permits & Licensing',
-  'Inspections', 'Community Outreach', 'Records Management', 'Emergency Response',
-];
-
 export default function ServiceDetailPage() {
   const { t } = useLocale();
   const params = useParams();
@@ -55,13 +50,13 @@ export default function ServiceDetailPage() {
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <p className="text-5xl mb-4">🔍</p>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">Department Not Found</h2>
-            <p className="text-gray-500 mb-6">The department you are looking for does not exist.</p>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">{t.servicesPage.notFound}</h2>
+            <p className="text-gray-500 mb-6">{t.servicesPage.notFoundDesc}</p>
             <Link href="/service" className="text-red-600 hover:text-red-700 font-semibold inline-flex items-center gap-1">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
               </svg>
-              Back to Services
+              {t.servicesPage.backToServices}
             </Link>
           </div>
         </div>
@@ -110,64 +105,26 @@ export default function ServiceDetailPage() {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
               <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <span className="w-1.5 h-6 bg-green-600 rounded-full" />
-                About This Department
+                {t.servicesPage.aboutDept}
               </h2>
               <p className="text-gray-600 leading-relaxed">{dept.description}</p>
-
-              {/* Services Provided */}
-              <div className="mt-8">
-                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">Services Provided</h3>
-                <div className="grid sm:grid-cols-2 gap-3">
-                  {serviceCategories.map((service, i) => (
-                    <div key={i} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
-                      <div className="w-8 h-8 rounded-lg bg-green-100 text-green-600 flex items-center justify-center text-sm shrink-0">
-                        ✓
-                      </div>
-                      <span className="text-sm text-gray-700">{service}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
 
-            {/* Stats Cards */}
+            {/* Department Stats — derived from API data */}
             <div className="grid sm:grid-cols-3 gap-4">
               {[
-                { label: 'Active Staff', value: '24', icon: '👥', gradient: 'from-blue-500 to-blue-400' },
-                { label: 'Avg Response', value: '2 Days', icon: '⚡', gradient: 'from-amber-500 to-amber-400' },
-                { label: 'Service Years', value: '15+', icon: '📅', gradient: 'from-purple-500 to-purple-400' },
+                { label: t.servicesPage.deptHead, value: dept.head || '—', icon: '👤', gradient: 'from-blue-500 to-blue-400' },
+                { label: t.servicesPage.contact, value: dept.phone || dept.email || '—', icon: '📞', gradient: 'from-amber-500 to-amber-400' },
+                { label: t.servicesPage.office, value: dept.office || '—', icon: '📍', gradient: 'from-purple-500 to-purple-400' },
               ].map((stat, i) => (
                 <div key={i} className="bg-white rounded-xl border border-gray-100 p-5 text-center hover:shadow-md transition">
                   <div className={`inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br ${stat.gradient} text-white text-lg mb-3`}>
                     {stat.icon}
                   </div>
-                  <p className="text-2xl font-black text-gray-900">{stat.value}</p>
+                  <p className="text-2xl font-black text-gray-900 truncate" title={stat.value}>{stat.value}</p>
                   <p className="text-xs text-gray-500 mt-1">{stat.label}</p>
                 </div>
               ))}
-            </div>
-
-            {/* Organizational Chart Placeholder */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <span className="w-1.5 h-6 bg-green-600 rounded-full" />
-                Organizational Structure
-              </h2>
-              <div className="flex items-center justify-center p-8 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                <div className="text-center">
-                  <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
-                    <span className="text-2xl">🏛️</span>
-                  </div>
-                  <p className="text-sm font-semibold text-gray-700">{dept.head}</p>
-                  <p className="text-xs text-gray-400">Department Head</p>
-                  <div className="w-px h-6 bg-gray-300 mx-auto my-2" />
-                  <div className="flex items-center gap-4 justify-center">
-                    <div className="px-4 py-2 bg-white rounded-lg border border-gray-200 text-xs text-gray-600">Division A</div>
-                    <div className="px-4 py-2 bg-white rounded-lg border border-gray-200 text-xs text-gray-600">Division B</div>
-                    <div className="px-4 py-2 bg-white rounded-lg border border-gray-200 text-xs text-gray-600">Division C</div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -177,14 +134,14 @@ export default function ServiceDetailPage() {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
               <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <span className="w-1 h-5 bg-green-600 rounded-full" />
-                Contact Information
+                {t.servicesPage.contactInfo}
               </h3>
               <div className="space-y-4">
                 {dept.head && (
                   <div className="flex items-start gap-3">
                     <span className="text-lg shrink-0">👤</span>
                     <div>
-                      <p className="text-xs text-gray-400">Department Head</p>
+                      <p className="text-xs text-gray-400">{t.admin.headField}</p>
                       <p className="text-sm font-medium text-gray-800">{dept.head}</p>
                     </div>
                   </div>
@@ -193,7 +150,7 @@ export default function ServiceDetailPage() {
                   <div className="flex items-start gap-3">
                     <span className="text-lg shrink-0">📞</span>
                     <div>
-                      <p className="text-xs text-gray-400">Phone</p>
+                      <p className="text-xs text-gray-400">{t.admin.phoneField}</p>
                       <p className="text-sm font-medium text-gray-800">{dept.phone}</p>
                     </div>
                   </div>
@@ -202,7 +159,7 @@ export default function ServiceDetailPage() {
                   <div className="flex items-start gap-3">
                     <span className="text-lg shrink-0">✉️</span>
                     <div>
-                      <p className="text-xs text-gray-400">Email</p>
+                      <p className="text-xs text-gray-400">{t.contact.email}</p>
                       <p className="text-sm font-medium text-gray-800">{dept.email}</p>
                     </div>
                   </div>
@@ -211,7 +168,7 @@ export default function ServiceDetailPage() {
                   <div className="flex items-start gap-3">
                     <span className="text-lg shrink-0">📍</span>
                     <div>
-                      <p className="text-xs text-gray-400">Office</p>
+                      <p className="text-xs text-gray-400">{t.admin.officeField}</p>
                       <p className="text-sm font-medium text-gray-800">{dept.office}</p>
                     </div>
                   </div>
@@ -227,28 +184,28 @@ export default function ServiceDetailPage() {
               </div>
             </div>
 
-            {/* Quick Stats */}
+            {/* Quick Stats — data-driven from API */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
               <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <span className="w-1 h-5 bg-green-600 rounded-full" />
-                Department Info
+                {t.servicesPage.deptInfo}
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                  <span className="text-xs text-gray-500">Established</span>
-                  <span className="text-xs font-semibold text-gray-800">2005 E.C</span>
+                  <span className="text-xs text-gray-500">{t.servicesPage.registered}</span>
+                  <span className="text-xs font-semibold text-gray-800">{new Date(dept.createdAt).toLocaleDateString()}</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                  <span className="text-xs text-gray-500">Staff Count</span>
-                  <span className="text-xs font-semibold text-gray-800">24</span>
+                  <span className="text-xs text-gray-500">{t.admin.headField}</span>
+                  <span className="text-xs font-semibold text-gray-800">{dept.head}</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                  <span className="text-xs text-gray-500">Branches</span>
-                  <span className="text-xs font-semibold text-gray-800">3</span>
+                  <span className="text-xs text-gray-500">{t.contact.email}</span>
+                  <span className="text-xs font-semibold text-gray-800 truncate max-w-[140px]" title={dept.email}>{dept.email}</span>
                 </div>
                 <div className="flex justify-between items-center py-2">
-                  <span className="text-xs text-gray-500">Status</span>
-                  <span className="text-[10px] font-semibold bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Active</span>
+                  <span className="text-xs text-gray-500">{t.admin.phoneField}</span>
+                  <span className="text-xs font-semibold text-gray-800">{dept.phone}</span>
                 </div>
               </div>
             </div>

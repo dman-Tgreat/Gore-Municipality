@@ -482,9 +482,9 @@ export default function AdminDashboardPage() {
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
           </div>
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.slugField} *</label>
-            <input type="text" required value={d.slug} onChange={(e) => setNewsForm((p) => ({ ...p, data: { ...p.data, slug: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.slugField}</label>
+            <input type="text" value={d.slug} onChange={(e) => setNewsForm((p) => ({ ...p, data: { ...p.data, slug: e.target.value } }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" placeholder="Auto-generated from title if empty" />
           </div>
           <div className="col-span-2">
             <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.summaryField} *</label>

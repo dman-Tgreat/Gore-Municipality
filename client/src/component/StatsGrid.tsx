@@ -2,38 +2,15 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocale } from '@/context/LocaleContext';
-import type { Messages } from '@/i18n/messages';
+import { newsApi, departmentsApi, projectsApi } from '@/lib/api';
 
-interface StatsData {
+interface StatsItem {
   label: string;
   value: string;
-  detail: string;
   icon: string;
   gradient: string;
+  detail: string;
 }
-
-const defaultStats = (t: Messages): StatsData[] => [
-  {
-    ...t.stats.stats[0],
-    icon: '👥',
-    gradient: 'from-blue-600 to-blue-400',
-  },
-  {
-    ...t.stats.stats[1],
-    icon: '🌍',
-    gradient: 'from-emerald-600 to-emerald-400',
-  },
-  {
-    ...t.stats.stats[2],
-    icon: '🏛️',
-    gradient: 'from-amber-600 to-amber-400',
-  },
-  {
-    ...t.stats.stats[3],
-    icon: '🌱',
-    gradient: 'from-green-600 to-green-400',
-  },
-];
 
 function AnimatedCounter({ value, duration = 1500 }: { value: string; duration?: number }) {
   const [displayed, setDisplayed] = useState(value);
@@ -83,7 +60,55 @@ function AnimatedCounter({ value, duration = 1500 }: { value: string; duration?:
 
 export default function StatsGrid() {
   const { t } = useLocale();
-  const stats = defaultStats(t);
+  const [newsCount, setNewsCount] = useState(0);
+  const [deptCount, setDeptCount] = useState(0);
+  const [projectCount, setProjectCount] = useState(0);
+  const [ongoingCount, setOngoingCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      newsApi.getAll().catch(() => []),
+      departmentsApi.getAll().catch(() => []),
+      projectsApi.getAll().catch(() => []),
+    ]).then(([news, depts, projects]) => {
+      setNewsCount(news.filter((n: any) => n.published).length);
+      setDeptCount(depts.length);
+      setProjectCount(projects.length);
+      setOngoingCount(projects.filter((p: any) => p.status === 'ongoing').length);
+    }).finally(() => setLoading(false));
+  }, []);
+
+  const stats: StatsItem[] = [
+    {
+      label: t.stats.stats[0].label,
+      value: loading ? '—' : `${newsCount}`,
+      icon: '📰',
+      gradient: 'from-blue-600 to-blue-400',
+      detail: 'Published news articles & announcements',
+    },
+    {
+      label: t.stats.stats[1].label,
+      value: loading ? '—' : `${deptCount}`,
+      icon: '🏛️',
+      gradient: 'from-emerald-600 to-emerald-400',
+      detail: 'Municipal departments & offices',
+    },
+    {
+      label: 'Active Projects',
+      value: loading ? '—' : `${ongoingCount}`,
+      icon: '🚧',
+      gradient: 'from-amber-600 to-amber-400',
+      detail: 'Ongoing development initiatives',
+    },
+    {
+      label: t.stats.stats[3].label,
+      value: loading ? '—' : `${projectCount}`,
+      icon: '📊',
+      gradient: 'from-green-600 to-green-400',
+      detail: 'Total projects completed & planned',
+    },
+  ];
 
   return (
     <section className="relative py-20 overflow-hidden">
@@ -150,12 +175,6 @@ export default function StatsGrid() {
               <div className={`mt-4 w-12 h-0.5 bg-gradient-to-r ${stat.gradient} rounded-full mx-auto opacity-50 group-hover:opacity-100 transition-opacity duration-300`} />
             </div>
           ))}
-        </div>
-
-        {/* Live indicator */}
-        <div className="flex items-center justify-center gap-2 mt-10 text-white/30 text-xs">
-          <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-          Live statistics · Updated in real-time
         </div>
       </div>
     </section>

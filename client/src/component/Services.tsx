@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useLocale } from '@/context/LocaleContext';
+import { newsApi, departmentsApi, projectsApi, type NewsArticle, type Department, type Project } from '@/lib/api';
 
 const serviceIcons = {
   news: (
@@ -22,40 +23,30 @@ const serviceIcons = {
   ),
 };
 
-const serviceGradients = [
-  { from: 'from-red-600', to: 'to-red-400', bg: 'bg-red-50', text: 'text-red-600', border: 'border-red-100', hover: 'hover:border-red-200' },
-  { from: 'from-emerald-600', to: 'to-emerald-400', bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-100', hover: 'hover:border-emerald-200' },
-  { from: 'from-amber-600', to: 'to-amber-400', bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-100', hover: 'hover:border-amber-200' },
-];
-
-const serviceLinks = ['/news', '/service', '/news'];
-
 export default function Services() {
   const { t } = useLocale();
+  const [news, setNews] = useState<NewsArticle[]>([]);
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const services = [
-    {
-      title: t.services.latestNews,
-      desc: t.services.latestNewsDesc,
-      icon: serviceIcons.news,
-      link: serviceLinks[0],
-      cta: t.services.viewAll,
-    },
-    {
-      title: t.services.municipalServices,
-      desc: t.services.municipalServicesDesc,
-      icon: serviceIcons.services,
-      link: serviceLinks[1],
-      cta: t.services.viewAll,
-    },
-    {
-      title: t.services.aboutGore,
-      desc: t.services.aboutGoreDesc,
-      icon: serviceIcons.about,
-      link: serviceLinks[2],
-      cta: t.services.readHistory,
-    },
-  ];
+  useEffect(() => {
+    Promise.all([
+      newsApi.getAll().catch(() => [] as NewsArticle[]),
+      departmentsApi.getAll().catch(() => [] as Department[]),
+      projectsApi.getAll().catch(() => [] as Project[]),
+    ])
+      .then(([allNews, allDepts, allProjects]) => {
+        setNews(allNews.filter((a) => a.published).slice(0, 4));
+        setDepartments(allDepts);
+        setProjects(allProjects);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const publishedNewsCount = news.length;
+  const deptCount = departments.length;
+  const projectCount = projects.filter((p) => p.status === 'ongoing').length;
 
   return (
     <section id="services" className="py-20 bg-gradient-to-b from-gray-50 to-white">
@@ -76,42 +67,162 @@ export default function Services() {
 
         {/* Service Cards */}
         <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
-          {services.map((service, idx) => {
-            const grad = serviceGradients[idx];
-            return (
-              <div
-                key={idx}
-                className={`group relative bg-white rounded-2xl border ${grad.border} ${grad.hover} p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg`}
-              >
-                {/* Top accent bar */}
-                <div className={`absolute top-0 left-6 right-6 h-1 bg-gradient-to-r ${grad.from} ${grad.to} rounded-full opacity-60 group-hover:opacity-100 transition-opacity`} />
+          {/* ── Card 1: Latest News ── */}
+          <div className="group relative bg-white rounded-2xl border border-red-100 hover:border-red-200 p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <div className="absolute top-0 left-6 right-6 h-1 bg-gradient-to-r from-red-600 to-red-400 rounded-full opacity-60 group-hover:opacity-100 transition-opacity" />
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-red-50 text-red-600 mb-6 group-hover:scale-110 transition-transform duration-300">
+              {serviceIcons.news}
+            </div>
+            <h3 className="text-lg font-bold text-red-600 mb-4">{t.services.latestNews}</h3>
 
-                {/* Icon */}
-                <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl ${grad.bg} ${grad.text} mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                  {service.icon}
-                </div>
-
-                {/* Content */}
-                <h3 className={`text-lg font-bold ${grad.text} mb-3`}>
-                  {service.title}
-                </h3>
-                <p className="text-gray-500 text-sm leading-relaxed mb-6">
-                  {service.desc}
-                </p>
-
-                {/* CTA Link */}
-                <Link
-                  href={service.link}
-                  className={`inline-flex items-center gap-2 text-sm font-semibold ${grad.text} hover:gap-3 transition-all`}
-                >
-                  {service.cta}
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                  </svg>
-                </Link>
+            {loading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-4 bg-gray-100 rounded animate-pulse" />
+                ))}
               </div>
-            );
-          })}
+            ) : news.length > 0 ? (
+              <ul className="space-y-3 mb-6">
+                {news.map((article) => (
+                  <li key={article.id}>
+                    <Link
+                      href={`/news`}
+                      className="group/item flex items-start gap-2 text-sm text-gray-600 hover:text-red-600 transition-colors"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-400 mt-1.5 shrink-0 group-hover/item:bg-red-600" />
+                      <div className="min-w-0">
+                        <p className="font-medium text-gray-800 group-hover/item:text-red-600 transition-colors leading-snug line-clamp-1">
+                          {article.title}
+                        </p>
+                        <span className="text-[10px] text-gray-400">
+                          {new Date(article.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-400 text-sm mb-6">{t.services.noUpdates}</p>
+            )}
+
+            <Link
+              href="/news"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-red-600 hover:gap-3 transition-all"
+            >
+              {t.services.viewAll} ({publishedNewsCount})
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </Link>
+          </div>
+
+          {/* ── Card 2: Municipal Services ── */}
+          <div className="group relative bg-white rounded-2xl border border-emerald-100 hover:border-emerald-200 p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <div className="absolute top-0 left-6 right-6 h-1 bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full opacity-60 group-hover:opacity-100 transition-opacity" />
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-emerald-50 text-emerald-600 mb-6 group-hover:scale-110 transition-transform duration-300">
+              {serviceIcons.services}
+            </div>
+            <h3 className="text-lg font-bold text-emerald-600 mb-4">{t.services.municipalServices}</h3>
+
+            {loading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-4 bg-gray-100 rounded animate-pulse" />
+                ))}
+              </div>
+            ) : departments.length > 0 ? (
+              <>
+                <div className="flex items-baseline gap-2 mb-4">
+                  <span className="text-3xl font-black text-emerald-600">{deptCount}</span>
+                  <span className="text-sm text-gray-500">departments</span>
+                </div>
+                <ul className="space-y-2 mb-6">
+                  {departments.slice(0, 5).map((dept) => (
+                    <li key={dept.id}>
+                      <Link
+                        href={`/service/${dept.id}`}
+                        className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors group/item"
+                      >
+                        <span className="w-5 h-5 rounded bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px] font-bold shrink-0">
+                          {dept.name.charAt(0)}
+                        </span>
+                        <span className="truncate">{dept.name}</span>
+                      </Link>
+                    </li>
+                  ))}
+                  {deptCount > 5 && (
+                    <li className="text-xs text-gray-400 italic">
+                      +{deptCount - 5} more departments
+                    </li>
+                  )}
+                </ul>
+              </>
+            ) : (
+              <p className="text-gray-400 text-sm mb-6">{t.services.noUpdates}</p>
+            )}
+
+            <Link
+              href="/service"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 hover:gap-3 transition-all"
+            >
+              {t.services.viewAll}
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </Link>
+          </div>
+
+          {/* ── Card 3: About Gore (dynamic stats) ── */}
+          <div className="group relative bg-white rounded-2xl border border-amber-100 hover:border-amber-200 p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <div className="absolute top-0 left-6 right-6 h-1 bg-gradient-to-r from-amber-600 to-amber-400 rounded-full opacity-60 group-hover:opacity-100 transition-opacity" />
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-amber-50 text-amber-600 mb-6 group-hover:scale-110 transition-transform duration-300">
+              {serviceIcons.about}
+            </div>
+            <h3 className="text-lg font-bold text-amber-600 mb-4">{t.services.aboutGore}</h3>
+
+            {loading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-4 bg-gray-100 rounded animate-pulse" />
+                ))}
+              </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-2 gap-3 mb-6">
+                  <div className="bg-amber-50 rounded-xl p-3 text-center">
+                    <p className="text-xl font-black text-amber-700">{publishedNewsCount + deptCount}</p>
+                    <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wider">Updates</p>
+                  </div>
+                  <div className="bg-amber-50 rounded-xl p-3 text-center">
+                    <p className="text-xl font-black text-amber-700">{deptCount}</p>
+                    <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wider">Departments</p>
+                  </div>
+                  <div className="bg-amber-50 rounded-xl p-3 text-center">
+                    <p className="text-xl font-black text-amber-700">{projectCount}</p>
+                    <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wider">Active Projects</p>
+                  </div>
+                  <div className="bg-amber-50 rounded-xl p-3 text-center">
+                    <p className="text-xl font-black text-amber-700">{projects.length}</p>
+                    <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wider">Total Projects</p>
+                  </div>
+                </div>
+                <p className="text-gray-500 text-sm leading-relaxed mb-6">
+                  {t.services.aboutGoreDesc}
+                </p>
+              </>
+            )}
+
+            <Link
+              href="/about"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-amber-600 hover:gap-3 transition-all"
+            >
+              {t.services.readHistory}
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </Link>
+          </div>
         </div>
 
         {/* Bottom decorative element */}
