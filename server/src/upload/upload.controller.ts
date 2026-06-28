@@ -1,17 +1,22 @@
 import {
   Controller,
   Post,
+  Delete,
+  Param,
+  UseGuards,
   UseInterceptors,
   UploadedFile,
   BadRequestException,
+  NotFoundException,
   MaxFileSizeValidator,
   FileTypeValidator,
   ParseFilePipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { extname, join } from 'path';
-import { existsSync, mkdirSync } from 'fs';
+import { extname, join, basename } from 'path';
+import { existsSync, mkdirSync, unlinkSync } from 'fs';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 const UPLOADS_DIR = join(__dirname, '..', '..', 'uploads');
 
@@ -22,6 +27,7 @@ if (!existsSync(UPLOADS_DIR)) {
 
 @Controller('upload')
 export class UploadController {
+  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {
@@ -57,5 +63,26 @@ export class UploadController {
       size: file.size,
       mimetype: file.mimetype,
     };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':filename')
+  deleteFile(@Param('filename') filename: string) {
+    const safeFilename = basename(filename);
+    const filePath = join(UPLOADS_DIR, safeFilename);
+
+    if (!existsSync(filePath)) {
+      throw new NotFoundException(`File "${filename}" not found`);
+    }
+
+    try {
+      unlinkSync(filePath);
+      return {
+        success: true,
+        message: `File "${filename}" deleted successfully`,
+      };
+    } catch (error) {
+      throw new BadRequestException(`Failed to delete file "${filename}": ${error.message}`);
+    }
   }
 }
