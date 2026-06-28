@@ -13,8 +13,14 @@ const LocaleContext = createContext<LocaleContextType | null>(null);
 
 function getInitialLocale(): LocaleCode {
   if (typeof window !== 'undefined') {
+    // 1. Check user's explicit choice from a previous visit
     const stored = localStorage.getItem('locale') as LocaleCode | null;
     if (stored && ['en', 'am', 'om'].includes(stored)) return stored;
+
+    // 2. Detect from browser language (free, automatic)
+    const browserLang = navigator.language?.split('-')[0];
+    if (browserLang === 'am') return 'am';
+    if (browserLang === 'om') return 'om';
   }
   return 'en';
 }
