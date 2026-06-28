@@ -1,113 +1,161 @@
 'use client';
 
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocale } from '@/context/LocaleContext';
-import { newsApi, departmentsApi, projectsApi, announcementsApi } from '@/lib/api';
 import type { Messages } from '@/i18n/messages';
 
 interface StatsData {
   label: string;
   value: string;
   detail: string;
+  icon: string;
+  gradient: string;
 }
 
-const defaultStats = (t: Messages) => t.stats.stats as StatsData[];
+const defaultStats = (t: Messages): StatsData[] => [
+  {
+    ...t.stats.stats[0],
+    icon: '👥',
+    gradient: 'from-blue-600 to-blue-400',
+  },
+  {
+    ...t.stats.stats[1],
+    icon: '🌍',
+    gradient: 'from-emerald-600 to-emerald-400',
+  },
+  {
+    ...t.stats.stats[2],
+    icon: '🏛️',
+    gradient: 'from-amber-600 to-amber-400',
+  },
+  {
+    ...t.stats.stats[3],
+    icon: '🌱',
+    gradient: 'from-green-600 to-green-400',
+  },
+];
+
+function AnimatedCounter({ value, duration = 1500 }: { value: string; duration?: number }) {
+  const [displayed, setDisplayed] = useState(value);
+  const ref = useRef<HTMLSpanElement>(null);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    const numericMatch = value.match(/[\d,]+/);
+    if (!numericMatch || hasAnimated.current) {
+      setDisplayed(value);
+      return;
+    }
+
+    const target = parseInt(numericMatch[0].replace(/,/g, ''), 10);
+    const prefix = value.slice(0, value.indexOf(numericMatch[0]));
+    const suffix = value.slice(value.indexOf(numericMatch[0]) + numericMatch[0].length);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+          const increment = target / (duration / 16);
+          let current = 0;
+
+          const animate = () => {
+            current += increment;
+            if (current < target) {
+              setDisplayed(`${prefix}${Math.floor(current).toLocaleString()}${suffix}`);
+              requestAnimationFrame(animate);
+            } else {
+              setDisplayed(value);
+            }
+          };
+          requestAnimationFrame(animate);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [value, duration]);
+
+  return <span ref={ref}>{displayed}</span>;
+}
 
 export default function StatsGrid() {
   const { t } = useLocale();
-  const [stats, setStats] = useState<StatsData[]>(defaultStats(t));
-  const [loading, setLoading] = useState(true);
-
-  const fetched = useRef(false);
-
-  useEffect(() => {
-    if (fetched.current) return;
-    fetched.current = true;
-
-    async function fetchStats() {
-      try {
-        const [news, departments, projects, announcements] = await Promise.all([
-          newsApi.getAll(),
-          departmentsApi.getAll(),
-          projectsApi.getAll(),
-          announcementsApi.getAll(),
-        ]);
-
-        setStats([
-          {
-            label: t.stats.stats[0].label,
-            value: `${news.length + announcements.length}`,
-            detail: 'News & announcements published',
-          },
-          {
-            label: t.stats.stats[1].label,
-            value: `${departments.length}`,
-            detail: 'Municipal departments & offices',
-          },
-          {
-            label: t.stats.stats[2].label,
-            value: `${projects.length}`,
-            detail: 'Active & completed projects',
-          },
-          {
-            label: t.stats.stats[3].label,
-            value: 'Agriculture',
-            detail: 'Premium Tea, Coffee, & Apiculture',
-          },
-        ]);
-      } catch {
-        setStats(defaultStats(t));
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchStats();
-  }, [t]);
-
-  // Compute display stats with current locale labels
-  const displayStats = useMemo(() => {
-    if (loading) return defaultStats(t);
-    return stats.map((s, i) => ({
-      ...s,
-      label: defaultStats(t)[i]?.label || s.label,
-    }));
-  }, [stats, loading, t]);
+  const stats = defaultStats(t);
 
   return (
-    <section className="bg-white border-y border-gray-100 py-12 my-6">
-      <div className="container mx-auto px-6">
-        <div className="text-center max-w-xl mx-auto mb-10">
-          <h2 className="text-xs uppercase tracking-widest font-bold text-red-600 mb-2">{t.stats.title}</h2>
-          <p className="text-2xl font-black text-gray-900">{t.stats.subtitle}</p>
+    <section className="relative py-20 overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-gray-900">
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: `radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                            radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 0%, transparent 50%)`,
+        }} />
+        <div className="absolute inset-0" style={{
+          backgroundImage: `linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%,
+                            transparent 50%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.03) 75%, transparent 75%, transparent)`,
+          backgroundSize: '60px 60px',
+        }} />
+      </div>
+
+      <div className="relative container mx-auto px-6">
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white/80 text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
+            <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
+            {t.stats.title}
+          </div>
+          <h2 className="text-3xl md:text-4xl font-black text-white mb-3 tracking-tight">
+            {t.stats.subtitle}
+          </h2>
+          <div className="w-16 h-1 bg-gradient-to-r from-green-400 to-emerald-300 rounded-full mx-auto" />
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {loading ? (
-            defaultStats(t).map((_, idx) => (
-              <div key={idx} className="p-6 bg-gray-50/50 rounded-xl border border-gray-100 text-center animate-pulse">
-                <div className="h-3 bg-gray-200 rounded w-24 mx-auto mb-3" />
-                <div className="h-6 bg-gray-200 rounded w-20 mx-auto my-3" />
-                <div className="h-3 bg-gray-200 rounded w-32 mx-auto" />
+        {/* Stats Grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+          {stats.map((stat, idx) => (
+            <div
+              key={idx}
+              className="group relative bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-6 lg:p-8 text-center
+                         hover:bg-white/10 hover:border-white/20 transition-all duration-500 hover:-translate-y-1"
+            >
+              {/* Glow effect on hover */}
+              <div className={`absolute inset-0 bg-gradient-to-b ${stat.gradient} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-500`} />
+
+              {/* Icon */}
+              <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br ${stat.gradient}
+                            text-2xl mb-5 shadow-lg shadow-${stat.gradient.split(' ')[0].replace('from-', '')}/20
+                            group-hover:scale-110 transition-transform duration-500`}>
+                <span className="filter brightness-125">{stat.icon}</span>
               </div>
-            ))
-          ) : (
-            displayStats.map((stat, idx) => (
-              <div 
-                key={idx} 
-                className="p-6 bg-gray-50/50 rounded-xl border border-gray-100 text-center hover:border-red-100 hover:bg-white transition duration-300"
-              >
-                <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">
-                  {stat.label}
-                </p>
-                <p className="text-2xl font-black text-red-600 tracking-tight my-2">
-                  {stat.value}
-                </p>
-                <p className="text-xs text-gray-600 leading-relaxed font-light">
-                  {stat.detail}
-                </p>
-              </div>
-            ))
-          )}
+
+              {/* Value */}
+              <p className={`text-3xl lg:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r ${stat.gradient} mb-2 tracking-tight`}>
+                <AnimatedCounter value={stat.value} />
+              </p>
+
+              {/* Label */}
+              <p className="text-sm font-semibold text-white/90 uppercase tracking-wider mb-2">
+                {stat.label}
+              </p>
+
+              {/* Detail */}
+              <p className="text-xs text-white/50 leading-relaxed font-light">
+                {stat.detail}
+              </p>
+
+              {/* Decorative bar */}
+              <div className={`mt-4 w-12 h-0.5 bg-gradient-to-r ${stat.gradient} rounded-full mx-auto opacity-50 group-hover:opacity-100 transition-opacity duration-300`} />
+            </div>
+          ))}
+        </div>
+
+        {/* Live indicator */}
+        <div className="flex items-center justify-center gap-2 mt-10 text-white/30 text-xs">
+          <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
+          Live statistics · Updated in real-time
         </div>
       </div>
     </section>
