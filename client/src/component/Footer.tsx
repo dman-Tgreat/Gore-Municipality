@@ -10,8 +10,10 @@ export default function Footer() {
 
   const quickLinks = [
     { label: t.footer.home, href: '/' },
+    { label: t.header.about, href: '/about' },
     { label: t.footer.news, href: '/news' },
     { label: t.footer.announcements, href: '/announcements' },
+    { label: t.admin.cmsDocuments, href: '/documents' },
     { label: t.footer.services, href: '/service' },
     { label: t.footer.projects, href: '/projects' },
     { label: t.footer.contact, href: '/contact' },

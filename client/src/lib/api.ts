@@ -39,7 +39,7 @@ export interface NewsArticle {
 export const newsApi = {
   getAll: () => request<NewsArticle[]>('/news'),
   getOne: (id: number) => request<NewsArticle>(`/news/${id}`),
-  create: (token: string, data: { title: string; slug: string; summary: string; content: string; coverImage?: string; published?: boolean }) =>
+  create: (token: string, data: { title: string; slug?: string; summary: string; content: string; coverImage?: string; published?: boolean }) =>
     request<NewsArticle>('/news', { method: 'POST', headers: authHeaders(token), body: JSON.stringify(data) }),
   update: (token: string, id: number, data: { title?: string; slug?: string; summary?: string; content?: string; coverImage?: string; published?: boolean }) =>
     request<NewsArticle>(`/news/${id}`, { method: 'PATCH', headers: authHeaders(token), body: JSON.stringify(data) }),
