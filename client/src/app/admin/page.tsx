@@ -119,7 +119,7 @@ export default function AdminDashboardPage() {
         const updated = await newsApi.update(token, newsForm.editingId, newsForm.data);
         setNews((p) => p.map((n) => (n.id === newsForm.editingId ? updated : n)));
       } else {
-        const created = await newsApi.create(token, newsForm.data as any);
+        const created = await newsApi.create(token, newsForm.data);
         setNews((p) => [created, ...p]);
       }
       setNewsForm({ editing: false, editingId: null, data: { ...emptyNewsForm } });
@@ -143,7 +143,7 @@ export default function AdminDashboardPage() {
         const updated = await announcementsApi.update(token, annForm.editingId, annForm.data);
         setAnnouncements((p) => p.map((a) => (a.id === annForm.editingId ? updated : a)));
       } else {
-        const created = await announcementsApi.create(token, annForm.data as any);
+        const created = await announcementsApi.create(token, annForm.data);
         setAnnouncements((p) => [created, ...p]);
       }
       setAnnForm({ editing: false, editingId: null, data: { ...emptyAnnouncementForm } });
@@ -208,7 +208,7 @@ export default function AdminDashboardPage() {
         const updated = await documentsApi.update(token, docForm.editingId, docForm.data);
         setDocuments((p) => p.map((d) => (d.id === docForm.editingId ? updated : d)));
       } else {
-        const created = await documentsApi.create(token, docForm.data as any);
+        const created = await documentsApi.create(token, docForm.data);
         setDocuments((p) => [created, ...p]);
       }
       setDocForm({ editing: false, editingId: null, data: { ...emptyDocForm } });

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import { allMessages, type LocaleCode, type Messages } from '@/i18n/messages';
 
 type LocaleContextType = {
@@ -26,11 +26,7 @@ function getInitialLocale(): LocaleCode {
 }
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<LocaleCode>('en');
-
-  useEffect(() => {
-    setLocaleState(getInitialLocale());
-  }, []);
+  const [locale, setLocaleState] = useState<LocaleCode>(() => getInitialLocale());
 
   const setLocale = useCallback((code: LocaleCode) => {
     setLocaleState(code);
