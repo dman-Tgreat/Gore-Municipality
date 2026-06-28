@@ -216,6 +216,33 @@ export const documentsApi = {
     request<{ message: string }>(`/documents/${id}`, { method: 'DELETE', headers: authHeaders(token) }),
 };
 
+export interface Investment {
+  id: number;
+  title: string;
+  description: string;
+  content: string;
+  category: string;
+  coverImage?: string;
+  location?: string;
+  contactPhone?: string;
+  contactEmail?: string;
+  published: boolean;
+  createdBy: { id: number; fullName: string; email: string };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const investmentsApi = {
+  getAll: () => request<Investment[]>('/investments'),
+  getOne: (id: number) => request<Investment>(`/investments/${id}`),
+  create: (token: string, data: { title: string; description: string; content: string; category: string; coverImage?: string; location?: string; contactPhone?: string; contactEmail?: string; published?: boolean }) =>
+    request<Investment>('/investments', { method: 'POST', headers: authHeaders(token), body: JSON.stringify(data) }),
+  update: (token: string, id: number, data: { title?: string; description?: string; content?: string; category?: string; coverImage?: string; location?: string; contactPhone?: string; contactEmail?: string; published?: boolean }) =>
+    request<Investment>(`/investments/${id}`, { method: 'PATCH', headers: authHeaders(token), body: JSON.stringify(data) }),
+  remove: (token: string, id: number) =>
+    request<{ message: string }>(`/investments/${id}`, { method: 'DELETE', headers: authHeaders(token) }),
+};
+
 export const contactAdminApi = {
   getAll: (token: string) =>
     request<ContactMessage[]>('/contact', { headers: authHeaders(token) }),
