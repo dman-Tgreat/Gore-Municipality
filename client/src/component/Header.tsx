@@ -1,31 +1,133 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLocale, type LocaleCode } from '@/context/LocaleContext';
 import { locales } from '@/i18n/messages';
 
+interface DropdownItem {
+  key: string;
+  href: string;
+  icon: string;
+  section: 'invest' | 'news' | 'services' | 'projects';
+}
+
+const dropdownItems: DropdownItem[] = [
+  // News
+  { key: 'title', href: '/news', icon: '📰', section: 'news' },
+  { key: 'announcements', href: '/news?tab=announcements', icon: '📢', section: 'news' },
+  // Services
+  { key: 'municipalServices', href: '/service', icon: '🏛️', section: 'services' },
+  // Investment & Tourism
+  { key: 'overview', href: '/investment-tourism', icon: '📋', section: 'invest' },
+  { key: 'opportunities', href: '/investment-tourism/opportunities', icon: '💼', section: 'invest' },
+  { key: 'incentives', href: '/investment-tourism/incentives', icon: '⭐', section: 'invest' },
+  { key: 'attractions', href: '/investment-tourism/attractions', icon: '🌿', section: 'invest' },
+  { key: 'accommodation', href: '/investment-tourism/accommodation', icon: '🏨', section: 'invest' },
+  // Projects
+  { key: 'title', href: '/projects', icon: '📊', section: 'projects' },
+];
+
+function NavDropdown({ items, label, isActive, isOpen, onToggle, onClose, pathname, t }: {
+  items: DropdownItem[];
+  label: string;
+  isActive: boolean;
+  isOpen: boolean;
+  onToggle: () => void;
+  onClose: () => void;
+  pathname: string;
+  t: any;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [onClose]);
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={onToggle}
+        onMouseEnter={onToggle}
+        className={`flex items-center gap-1 transition font-medium text-sm whitespace-nowrap ${
+          isActive
+            ? 'text-red-600 font-bold border-b-2 border-red-600 pb-1'
+            : 'text-gray-600 hover:text-red-600'
+        }`}
+      >
+        {label}
+        <svg className={`w-3 h-3 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+        </svg>
+      </button>
+
+      {isOpen && (
+        <div
+          className="absolute left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 overflow-hidden z-50"
+          onMouseLeave={onClose}
+        >
+          {items.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={onClose}
+              className={`flex items-center gap-3 px-4 py-2.5 text-sm transition ${
+                (pathname === item.href || (item.href !== '/news' && item.href !== '/service' && item.href !== '/projects' && item.href !== '/investment-tourism' && pathname.startsWith(item.href)))
+                  ? 'text-red-600 bg-red-50 font-semibold'
+                  : 'text-gray-700 hover:bg-gray-50 hover:text-red-600'
+              }`}
+            >
+              <span className="text-base">{item.icon}</span>
+              {item.key === 'title' ? label : item.key === 'announcements' ? t.announcements.title : item.key === 'municipalServices' ? t.services.municipalServices : t.investmentTourism[item.key as keyof typeof t.investmentTourism]}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Header() {
   const pathname = usePathname();
   const { locale, setLocale, t } = useLocale();
-  const [isOpen, setIsOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleLanguageChange = (lang: { code: LocaleCode }) => {
+    setLocale(lang.code);
+    setLangOpen(false);
+  };
+
+  const currentLocale = locales.find((l) => l.code === locale)!;
 
   const linkStyle = (path: string) => {
-    const isActive = pathname === path || pathname.startsWith(path + '/');
-    return `transition font-medium text-sm ${
+    const isActive = pathname === path;
+    return `transition font-medium text-sm whitespace-nowrap ${
       isActive
         ? 'text-red-600 font-bold border-b-2 border-red-600 pb-1'
         : 'text-gray-600 hover:text-red-600'
     }`;
   };
 
-  const handleLanguageChange = (lang: { code: LocaleCode }) => {
-    setLocale(lang.code);
-    setIsOpen(false);
-  };
+  const closeAll = useCallback(() => setOpenDropdown(null), []);
+  const toggleDropdown = useCallback((name: string) => {
+    setOpenDropdown(prev => prev === name ? null : name);
+  }, []);
 
-  const currentLocale = locales.find((l) => l.code === locale)!;
+  const newsItems = dropdownItems.filter(i => i.section === 'news');
+  const servicesItems = dropdownItems.filter(i => i.section === 'services');
+  const investItems = dropdownItems.filter(i => i.section === 'invest');
+  const projectsItems = dropdownItems.filter(i => i.section === 'projects');
+
+  const isActive = (paths: string[]) => paths.some(p => pathname === p || pathname.startsWith(p + '/'));
 
   return (
     <header className="bg-white text-gray-800 shadow-sm border-b border-gray-100 relative z-50 sticky top-0">
@@ -34,20 +136,61 @@ export default function Header() {
         {/* Brand Identity */}
         <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition shrink-0">
           <img 
-            src="https://via.placeholder.com/50/cc0000/ffffff?text=GW" 
+            src="https://www.chora.pro.et/assets/logo_1781643314244-B4wJ3hZB.png" 
             alt="Gore Woreda Emblem" 
-            className="w-10 h-10 object-contain rounded-full bg-red-600 p-1"
+            className="w-14 h-14 object-contain rounded-full bg-red-600 p-1.5 shadow-md"
           />
-          <h1 className="text-xl font-black tracking-wide text-red-600">Gore Woreda</h1>
+          <h1 className="text-2xl font-black tracking-wide text-red-600">Gore Municipality</h1>
         </Link>
         
         {/* Navigation & Language */}
-        <nav className="flex items-center space-x-5">
+        <nav className="hidden lg:flex items-center space-x-5">
           <Link href="/" className={linkStyle('/')}>{t.header.home}</Link>
-          <Link href="/news" className={linkStyle('/news')}>{t.header.news}</Link>
-          <Link href="/announcements" className={linkStyle('/announcements')}>{t.header.announcements}</Link>
-          <Link href="/service" className={linkStyle('/service')}>{t.header.services}</Link>
-          <Link href="/projects" className={linkStyle('/projects')}>Projects</Link>
+
+          <NavDropdown
+            items={newsItems}
+            label={t.header.news}
+            isActive={isActive(['/news'])}
+            isOpen={openDropdown === 'news'}
+            onToggle={() => toggleDropdown('news')}
+            onClose={closeAll}
+            pathname={pathname}
+            t={t}
+          />
+
+          <NavDropdown
+            items={servicesItems}
+            label={t.header.services}
+            isActive={isActive(['/service'])}
+            isOpen={openDropdown === 'services'}
+            onToggle={() => toggleDropdown('services')}
+            onClose={closeAll}
+            pathname={pathname}
+            t={t}
+          />
+
+          <NavDropdown
+            items={investItems}
+            label={t.investmentTourism.title}
+            isActive={isActive(['/investment-tourism'])}
+            isOpen={openDropdown === 'invest'}
+            onToggle={() => toggleDropdown('invest')}
+            onClose={closeAll}
+            pathname={pathname}
+            t={t}
+          />
+
+          <NavDropdown
+            items={projectsItems}
+            label="Projects"
+            isActive={isActive(['/projects'])}
+            isOpen={openDropdown === 'projects'}
+            onToggle={() => toggleDropdown('projects')}
+            onClose={closeAll}
+            pathname={pathname}
+            t={t}
+          />
+
           <Link href="/contact" className={linkStyle('/contact')}>{t.header.contact}</Link>
 
           <span className="w-px h-5 bg-gray-200" />
@@ -55,15 +198,15 @@ export default function Header() {
           {/* Language Selector */}
           <div className="relative">
             <button 
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={() => setLangOpen(!langOpen)}
               className="flex items-center space-x-1.5 text-sm font-semibold text-gray-700 hover:text-red-600 border border-gray-200 rounded-md px-2.5 py-1.5 transition bg-gray-50"
             >
               <span>🌐</span>
               <span>{currentLocale.native}</span>
-              <span className={`text-xs transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>▼</span>
+              <span className={`text-xs transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`}>▼</span>
             </button>
 
-            {isOpen && (
+            {langOpen && (
               <div className="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-xl border border-gray-100 py-1 overflow-hidden z-50">
                 {locales.map((lang) => (
                   <button
@@ -81,7 +224,70 @@ export default function Header() {
             )}
           </div>
         </nav>
+
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg border border-gray-200 text-gray-600 hover:text-red-600 hover:border-red-200 transition"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            {mobileOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            )}
+          </svg>
+        </button>
       </div>
+
+      {/* Mobile Navigation */}
+      {mobileOpen && (
+        <div className="lg:hidden border-t border-gray-100 bg-white">
+          <div className="container mx-auto px-6 py-4 space-y-1">
+            <MobileNavLink href="/" label={t.header.home} pathname={pathname} onClick={() => setMobileOpen(false)} />
+
+            {/* News & Announcements */}
+            <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-3 mb-1 mt-3">{t.header.news}</p>
+            <MobileNavLink href="/news" label="📰 Latest News" pathname={pathname} onClick={() => setMobileOpen(false)} />
+            <MobileNavLink href="/news?tab=announcements" label="📢 Announcements" pathname={pathname} onClick={() => setMobileOpen(false)} />
+
+            {/* Services */}
+            <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-3 mb-1 mt-3">{t.header.services}</p>
+            <MobileNavLink href="/service" label="🏛️ Municipal Services" pathname={pathname} onClick={() => setMobileOpen(false)} />
+
+            {/* Investment & Tourism */}
+            <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-3 mb-1 mt-3">{t.investmentTourism.title}</p>
+            {investItems.map((item) => (
+              <MobileNavLink key={item.href} href={item.href} label={`${item.icon} ${t.investmentTourism[item.key as keyof typeof t.investmentTourism]}`} pathname={pathname} onClick={() => setMobileOpen(false)} />
+            ))}
+
+            {/* Projects */}
+            <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-3 mb-1 mt-3">Projects</p>
+            <MobileNavLink href="/projects" label="📊 All Projects" pathname={pathname} onClick={() => setMobileOpen(false)} />
+
+            <div className="border-t border-gray-100 pt-2 mt-3">
+              <MobileNavLink href="/contact" label={t.header.contact} pathname={pathname} onClick={() => setMobileOpen(false)} />
+            </div>
+          </div>
+        </div>
+      )}
     </header>
+  );
+}
+
+function MobileNavLink({ href, label, pathname, onClick }: { href: string; label: string; pathname: string; onClick: () => void }) {
+  // Handle query params in href (e.g. /news?tab=announcements)
+  const hrefPath = href.split('?')[0];
+  const isActive = pathname === href || (hrefPath !== '/' && pathname.startsWith(hrefPath));
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition ${
+        isActive ? 'text-red-600 bg-red-50 font-bold' : 'text-gray-700 hover:bg-gray-50 hover:text-red-600'
+      }`}
+    >
+      {label}
+    </Link>
   );
 }
