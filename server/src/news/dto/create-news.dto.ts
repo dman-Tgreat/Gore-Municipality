@@ -12,10 +12,10 @@ export class CreateNewsDto {
   @MaxLength(255)
   title!: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @MaxLength(255)
-  slug!: string;
+  slug?: string;
 
   @IsString()
   @IsNotEmpty()

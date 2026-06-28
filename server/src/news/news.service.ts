@@ -18,30 +18,39 @@ export class NewsService {
     private readonly adminRepository: Repository<Admin>,
   ) {}
 
-  async create(
-  createNewsDto: CreateNewsDto,
-  adminId: number,
-) {
-
-  const admin = await this.adminRepository.findOne({
-    where: {
-      id: adminId,
-    },
-  });
-
-  if (!admin) {
-    throw new NotFoundException(
-      'Admin not found',
-    );
+  private generateSlug(title: string): string {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '')
+      .substring(0, 255);
   }
 
-  const news = this.newsRepository.create({
-    ...createNewsDto,
-    createdBy: admin,
-  });
+  async create(
+    createNewsDto: CreateNewsDto,
+    adminId: number,
+  ) {
+    const admin = await this.adminRepository.findOne({
+      where: { id: adminId },
+    });
 
-  return await this.newsRepository.save(news);
-}
+    if (!admin) {
+      throw new NotFoundException('Admin not found');
+    }
+
+    // Auto-generate slug from title if not provided
+    const slug = createNewsDto.slug || this.generateSlug(createNewsDto.title);
+
+    const news = this.newsRepository.create({
+      ...createNewsDto,
+      slug,
+      createdBy: admin,
+    });
+
+    return await this.newsRepository.save(news);
+  }
   async findAll() {
     return await this.newsRepository.find({
       relations: {
