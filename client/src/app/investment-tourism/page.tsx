@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Header from '@/component/Header';
+import QuickLinks from '@/component/QuickLinks';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
 
@@ -234,6 +235,8 @@ export default function InvestmentTourismPage() {
           </div>
         </section>
       </div>
+
+      <QuickLinks page="investment" />
 
       <Footer />
     </div>

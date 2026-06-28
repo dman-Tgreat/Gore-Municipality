@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Header from '@/component/Header';
+import QuickLinks from '@/component/QuickLinks';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
 import { contactApi } from '@/lib/api';
@@ -160,6 +161,8 @@ export default function ContactPage() {
 
         </main>
       </div>
+
+      <QuickLinks page="contact" />
 
       <Footer />
     </div>

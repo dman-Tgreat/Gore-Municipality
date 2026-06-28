@@ -226,6 +226,14 @@ const enMessages = {
     exploreSubpages: 'Explore Investment & Tourism',
     overview: 'Overview',
   },
+  quickLinks: {
+    title: 'Quick Links',
+    newsDesc: 'Stay informed with the latest news, press releases, and public announcements from Gore Woreda.',
+    servicesDesc: 'Access municipal services, apply for certificates, permits, and licenses online.',
+    projectsDesc: 'View ongoing and completed development projects across Gore Woreda.',
+    investmentDesc: 'Explore investment opportunities and tourist attractions in Gore Woreda.',
+    contactDesc: 'Get in touch with the Gore Woreda administration for inquiries and support.',
+  },
 };
 
 const amMessages: Messages = {
@@ -446,6 +454,14 @@ const amMessages: Messages = {
     exploreSubpages: 'ኢንቨስትመንት እና ቱሪዝምን ያስሱ',
     overview: 'አጠቃላይ እይታ',
   },
+  quickLinks: {
+    title: 'ፈጣን አገናኞች',
+    newsDesc: 'ከጎሬ ወረዳ የቅርብ ጊዜ ዜናዎችን እና ማስታወቂያዎችን ይከታተሉ።',
+    servicesDesc: 'የማዘጋጃ ቤት አገልግሎቶችን ያግኙ፣ ለምስክር ወረቀት እና ፍቃድ በመስመር ላይ ያመልክቱ።',
+    projectsDesc: 'በጎሬ ወረዳ እየተከናወኑ ያሉ ፕሮጀክቶችን ይመልከቱ።',
+    investmentDesc: 'በጎሬ ወረዳ የኢንቨስትመንት እድሎችን እና የቱሪስት መስህቦችን ያስሱ።',
+    contactDesc: 'ለጥያቄ እና ድጋፍ ከጎሬ ወረዳ አስተዳደር ጋር ይገናኙ።',
+  },
 };
 
 const omMessages: Messages = {
@@ -665,6 +681,14 @@ const omMessages: Messages = {
     learnMore: 'Dabalataan Baradhu',
     exploreSubpages: 'Dhaabbata fi Turizimii Sakatta i',
     overview: 'Ibsa Waliggaa',
+  },
+  quickLinks: {
+    title: 'Geessituu Daddafoo',
+    newsDesc: 'Oduu haaraa, labsii fi beeksisa Gore Woredaa irraa yeroo hunda beekaa ta a.',
+    servicesDesc: 'Tajaajila magaalotaa argadhu, ragaa, hayyama fi liiseensii onlayiniin iyyadhu.',
+    projectsDesc: 'Pirojektoota misomaa Gore Woredaa keessatti ilaali.',
+    investmentDesc: 'Gore Woreda keessatti carraa dhaabbataa fi bashannanaa sakatta i.',
+    contactDesc: 'Gaaffiif gargaarsaaf bulchiinsa Gore Woredaa quunnamaa.',
   },
 };
 

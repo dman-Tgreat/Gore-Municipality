@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Header from '@/component/Header';
+import QuickLinks from '@/component/QuickLinks';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
 import { departmentsApi, type Department } from '@/lib/api';
@@ -101,6 +102,7 @@ export default function ServicesPage() {
           )}
         </main>
       </div>
+      <QuickLinks page="services" />
       <Footer />
     </div>
   );

@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation';
 import { useLocale } from '@/context/LocaleContext';
 import FileUpload from '@/component/FileUpload';
 import {
-  contactAdminApi, adminApi, newsApi, announcementsApi, projectsApi, departmentsApi, documentsApi,
-  type ContactMessage, type AdminUser, type NewsArticle, type Announcement, type Project, type Department, type Document,
+  contactAdminApi, adminApi, newsApi, announcementsApi, projectsApi, departmentsApi, documentsApi, investmentsApi,
+  type ContactMessage, type AdminUser, type NewsArticle, type Announcement, type Project, type Department, type Document, type Investment,
 } from '@/lib/api';
 
-type Tab = 'messages' | 'news' | 'announcements' | 'projects' | 'departments' | 'documents' | 'admins';
+type Tab = 'messages' | 'news' | 'announcements' | 'projects' | 'departments' | 'documents' | 'investments' | 'admins';
 
 interface CmsFormState<T> {
   editing: boolean;
@@ -22,6 +22,7 @@ const emptyAnnouncementForm = { title: '', description: '', content: '', publish
 const emptyProjectForm = { name: '', description: '', budget: 0, status: 'planned', startDate: '', endDate: '', location: '', coverImage: '', fundingSource: '', contractor: '', category: '' };
 const emptyDeptForm = { name: '', description: '', head: '', phone: '', email: '', office: '', image: '' };
 const emptyDocForm = { title: '', description: '', fileUrl: '', category: '' };
+const emptyInvestmentForm = { title: '', description: '', content: '', category: 'opportunity', coverImage: '', location: '', contactPhone: '', contactEmail: '', published: true };
 
 export default function AdminDashboardPage() {
   const { t } = useLocale();
@@ -37,6 +38,7 @@ export default function AdminDashboardPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
   const [documents, setDocuments] = useState<Document[]>([]);
+  const [investments, setInvestments] = useState<Investment[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<Tab>('messages');
 
@@ -64,6 +66,10 @@ export default function AdminDashboardPage() {
   const [docForm, setDocForm] = useState<CmsFormState<typeof emptyDocForm>>({ editing: false, editingId: null, data: { ...emptyDocForm } });
   const [docSubmitting, setDocSubmitting] = useState(false);
 
+  // Investment states
+  const [invForm, setInvForm] = useState<CmsFormState<typeof emptyInvestmentForm>>({ editing: false, editingId: null, data: { ...emptyInvestmentForm } });
+  const [invSubmitting, setInvSubmitting] = useState(false);
+
   // Admin states
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [adminForm, setAdminForm] = useState({ fullName: '', email: '', password: '' });
@@ -82,9 +88,10 @@ export default function AdminDashboardPage() {
       projectsApi.getAll(),
       departmentsApi.getAll(),
       documentsApi.getAll(),
+      investmentsApi.getAll(),
     ])
-      .then(([msgs, adms, n, a, p, d, docs]) => {
-        setMessages(msgs); setAdmins(adms); setNews(n); setAnnouncements(a); setProjects(p); setDepartments(d); setDocuments(docs);
+      .then(([msgs, adms, n, a, p, d, docs, i]) => {
+        setMessages(msgs); setAdmins(adms); setNews(n); setAnnouncements(a); setProjects(p); setDepartments(d); setDocuments(docs); setInvestments(i);
       })
       .catch(() => { localStorage.removeItem('admin_token'); router.push('/admin/login'); })
       .finally(() => setLoading(false));
@@ -219,6 +226,30 @@ export default function AdminDashboardPage() {
     try { await documentsApi.remove(token, id); setDocuments((p) => p.filter((d) => d.id !== id)); } catch {}
   };
 
+  // Investment CRUD
+  const handleSaveInvestment = async (e: React.FormEvent) => {
+    e.preventDefault(); if (!token) return;
+    setInvSubmitting(true);
+    try {
+      if (invForm.editingId) {
+        const updated = await investmentsApi.update(token, invForm.editingId, invForm.data);
+        setInvestments((p) => p.map((inv) => (inv.id === invForm.editingId ? updated : inv)));
+      } else {
+        const created = await investmentsApi.create(token, invForm.data);
+        setInvestments((p) => [created, ...p]);
+      }
+      setInvForm({ editing: false, editingId: null, data: { ...emptyInvestmentForm } });
+    } catch {} finally { setInvSubmitting(false); }
+  };
+  const handleDeleteInvestment = async (id: number) => {
+    if (!token) return;
+    try { await investmentsApi.remove(token, id); setInvestments((p) => p.filter((inv) => inv.id !== id)); } catch {}
+  };
+  const handleToggleInvestment = async (item: Investment) => {
+    if (!token) return;
+    try { const u = await investmentsApi.update(token, item.id, { published: !item.published }); setInvestments((p) => p.map((inv) => (inv.id === item.id ? u : inv))); } catch {}
+  };
+
   // Admin CRUD
   const handleCreateAdmin = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
@@ -279,6 +310,7 @@ export default function AdminDashboardPage() {
           <button onClick={() => setTab('projects')} className={tabClasses('projects')}>{t.admin.cmsProjects} ({projects.length})</button>
           <button onClick={() => setTab('departments')} className={tabClasses('departments')}>{t.admin.cmsDepartments} ({departments.length})</button>
           <button onClick={() => setTab('documents')} className={tabClasses('documents')}>{t.admin.cmsDocuments} ({documents.length})</button>
+          <button onClick={() => setTab('investments')} className={tabClasses('investments')}>Investments ({investments.length})</button>
           <button onClick={() => setTab('admins')} className={tabClasses('admins')}>{t.admin.admins} ({admins.length})</button>
         </div>
 
@@ -296,6 +328,7 @@ export default function AdminDashboardPage() {
           tab === 'projects' ? <ProjectsTab /> :
           tab === 'departments' ? <DepartmentsTab /> :
           tab === 'documents' ? <DocumentsTab /> :
+          tab === 'investments' ? <InvestmentsTab /> :
           <AdminsTab />}
       </div>
 
@@ -904,6 +937,133 @@ export default function AdminDashboardPage() {
           <button type="submit" disabled={docSubmitting}
             className="bg-green-700 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50">
             {docSubmitting ? t.admin.saving : t.admin.saveItem}
+          </button>
+        </div>
+      </form>
+    );
+  }
+
+  // ====== Investments Tab ======
+  function InvestmentsTab() {
+    if (invForm.editing) return <InvestmentsForm />;
+    return (
+      <>
+        <div className="flex justify-between items-center mb-4">
+          <p className="text-sm text-gray-500">{investments.length} investment{investments.length !== 1 ? 's' : ''}</p>
+          <button onClick={() => setInvForm({ editing: true, editingId: null, data: { ...emptyInvestmentForm } })}
+            className="bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-green-600 transition">{t.admin.createItem}</button>
+        </div>
+        {investments.length === 0 ? <p className="text-center text-gray-500 py-12">{t.admin.noItems}</p> : (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead><tr className="bg-gray-50 border-b border-gray-100">
+                <th className="text-left p-4 font-semibold text-gray-600">{t.admin.titleField}</th>
+                <th className="text-left p-4 font-semibold text-gray-600">{t.admin.categoryField}</th>
+                <th className="text-left p-4 font-semibold text-gray-600">{t.admin.statusField}</th>
+                <th className="text-left p-4 font-semibold text-gray-600 hidden md:table-cell">{t.admin.locationField}</th>
+                <th className="text-right p-4 font-semibold text-gray-600">{t.admin.editItem}</th>
+              </tr></thead>
+              <tbody>
+                {investments.map((item) => (
+                  <tr key={item.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition">
+                    <td className="p-4 font-medium text-gray-900 max-w-xs truncate">{item.title}</td>
+                    <td className="p-4">
+                      <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-indigo-100 text-indigo-700">{item.category}</span>
+                    </td>
+                    <td className="p-4">
+                      <button onClick={() => handleToggleInvestment(item)} className="hover:opacity-80">{badge(item.published)}</button>
+                    </td>
+                    <td className="p-4 text-gray-500 text-xs hidden md:table-cell">{item.location || '-'}</td>
+                    <td className="p-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button onClick={() => setInvForm({ editing: true, editingId: item.id, data: { title: item.title, description: item.description, content: item.content, category: item.category, coverImage: item.coverImage || '', location: item.location || '', contactPhone: item.contactPhone || '', contactEmail: item.contactEmail || '', published: item.published } })}
+                          className="text-xs text-blue-600 hover:text-blue-800 transition font-medium">{t.admin.editItem}</button>
+                        <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteInvestment(item.id); }}
+                          className="text-xs text-red-500 hover:text-red-700 transition font-medium">{t.admin.deleteItem}</button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </>
+    );
+  }
+  function InvestmentsForm() {
+    const d = invForm.data;
+    return (
+      <form onSubmit={handleSaveInvestment} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4 max-w-2xl">
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-lg font-bold text-gray-900">{invForm.editingId ? t.admin.editItem : t.admin.createItem} Investment</h2>
+          <button type="button" onClick={() => setInvForm({ editing: false, editingId: null, data: { ...emptyInvestmentForm } })}
+            className="text-sm text-gray-500 hover:text-gray-700 transition">{t.admin.cancelEdit}</button>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.titleField} *</label>
+            <input type="text" required value={d.title} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, title: e.target.value } }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+          </div>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-gray-600 mb-1">Category *</label>
+            <select value={d.category} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, category: e.target.value } }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none">
+              <option value="opportunity">Opportunity</option>
+              <option value="incentive">Incentive</option>
+              <option value="attraction">Attraction</option>
+              <option value="accommodation">Accommodation</option>
+              <option value="culture">Culture</option>
+              <option value="local-product">Local Product</option>
+            </select>
+          </div>
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.descriptionField} *</label>
+            <textarea required value={d.description} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, description: e.target.value } }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" rows={3} />
+          </div>
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.contentField} *</label>
+            <textarea required value={d.content} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, content: e.target.value } }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none font-mono" rows={8} />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.locationField}</label>
+            <input type="text" value={d.location} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, location: e.target.value } }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.statusField}</label>
+            <select value={d.published ? 'true' : 'false'} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, published: e.target.value === 'true' } }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none">
+              <option value="true">{t.admin.publishedBadge}</option>
+              <option value="false">{t.admin.draftBadge}</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">Contact Phone</label>
+            <input type="text" value={d.contactPhone} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, contactPhone: e.target.value } }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">Contact Email</label>
+            <input type="email" value={d.contactEmail} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, contactEmail: e.target.value } }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+          </div>
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.coverImageField}</label>
+            <FileUpload
+              existingUrl={d.coverImage}
+              onUpload={(url) => setInvForm((p) => ({ ...p, data: { ...p.data, coverImage: url } }))}
+              label="Upload Cover Image"
+            />
+          </div>
+        </div>
+        <div className="flex gap-3 pt-2">
+          <button type="submit" disabled={invSubmitting}
+            className="bg-green-700 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50">
+            {invSubmitting ? t.admin.saving : t.admin.saveItem}
           </button>
         </div>
       </form>
