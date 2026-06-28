@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Header from '@/component/Header';
+import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
 import { contactApi } from '@/lib/api';
 
@@ -160,12 +161,7 @@ export default function ContactPage() {
         </main>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 py-6 border-t border-gray-800">
-        <div className="container mx-auto px-6 text-center text-sm">
-          <p>&copy; {new Date().getFullYear()} {t.footer.copyright}</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

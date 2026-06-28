@@ -1,11 +1,24 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import Header from '@/component/Header';
+import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
 import { departmentsApi, type Department } from '@/lib/api';
 
 const icons = ['📋', '🌱', '🏢', '⚕️', '🔧', '📚', '🏛️', '⚖️'];
+
+const gradientPairs = [
+  'from-red-500 to-red-400',
+  'from-emerald-500 to-emerald-400',
+  'from-blue-500 to-blue-400',
+  'from-purple-500 to-purple-400',
+  'from-amber-500 to-amber-400',
+  'from-cyan-500 to-cyan-400',
+  'from-rose-500 to-rose-400',
+  'from-green-500 to-green-400',
+];
 
 export default function ServicesPage() {
   const { t } = useLocale();
@@ -24,18 +37,20 @@ export default function ServicesPage() {
       <div>
         <Header />
         
-        <section className="bg-green-800 text-white py-12 text-center">
+        <section className="bg-gradient-to-br from-green-800 via-green-700 to-emerald-800 text-white py-14 text-center">
           <div className="container mx-auto px-6">
-            <h1 className="text-3xl font-bold md:text-4xl">{t.servicesPage.title}</h1>
-            <p className="mt-2 text-green-100 max-w-xl mx-auto text-sm">
-              {t.servicesPage.subtitle}
-            </p>
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
+              <span className="w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse" />
+              {t.header.services}
+            </div>
+            <h1 className="text-3xl md:text-4xl font-black">{t.servicesPage.title}</h1>
+            <p className="mt-2 text-green-100 max-w-xl mx-auto text-sm">{t.servicesPage.subtitle}</p>
           </div>
         </section>
 
         <main className="container mx-auto px-6 py-12 max-w-6xl">
           {loading ? (
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="bg-white rounded-xl shadow-md border border-gray-100 animate-pulse p-6 space-y-4">
                   <div className="h-6 bg-gray-200 rounded w-3/4" />
@@ -46,33 +61,47 @@ export default function ServicesPage() {
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {departments.map((dept, idx) => (
-                <div key={dept.id} className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition">
-                  <div className="p-6 bg-green-50 border-b border-gray-100 flex items-center space-x-3">
-                    <span className="text-2xl">{icons[idx % icons.length]}</span>
-                    <div>
-                      <h2 className="text-lg font-bold text-green-800">{dept.name}</h2>
-                      <p className="text-xs text-gray-500">{dept.head}</p>
+              {departments.map((dept, idx) => {
+                const gradient = gradientPairs[idx % gradientPairs.length];
+                return (
+                  <Link
+                    key={dept.id}
+                    href={`/service/${dept.id}`}
+                    className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-1 group block"
+                  >
+                    <div className={`p-6 bg-gradient-to-r ${gradient} bg-opacity-10 border-b border-gray-100 flex items-center space-x-3`}>
+                      <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-2xl shadow-sm">
+                        {icons[idx % icons.length]}
+                      </div>
+                      <div className="text-white">
+                        <h2 className="text-lg font-bold">{dept.name}</h2>
+                        <p className="text-xs text-white/80">{dept.head}</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="p-6 space-y-3">
-                    <p className="text-sm text-gray-600 leading-relaxed">{dept.description}</p>
-                    <div className="text-xs text-gray-500 space-y-1 pt-2 border-t border-gray-100">
-                      {dept.phone && <p>📞 {dept.phone}</p>}
-                      {dept.email && <p>✉️ {dept.email}</p>}
-                      {dept.office && <p>📍 {dept.office}</p>}
+                    <div className="p-6 space-y-3">
+                      <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">{dept.description}</p>
+                      <div className="text-xs text-gray-500 space-y-1.5 pt-3 border-t border-gray-100">
+                        {dept.phone && <p className="flex items-center gap-1.5"><span>📞</span> {dept.phone}</p>}
+                        {dept.email && <p className="flex items-center gap-1.5"><span>✉️</span> {dept.email}</p>}
+                        {dept.office && <p className="flex items-center gap-1.5"><span>📍</span> {dept.office}</p>}
+                      </div>
+                      <div className="pt-2">
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-600 group-hover:gap-2 transition-all">
+                          {t.projects.viewDetails}
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                          </svg>
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  </Link>
+                );
+              })}
             </div>
           )}
         </main>
       </div>
-
-      <footer className="bg-gray-900 text-gray-400 py-6 text-center text-sm">
-        <p>&copy; {new Date().getFullYear()} {t.footer.copyright}</p>
-      </footer>
+      <Footer />
     </div>
   );
 }
