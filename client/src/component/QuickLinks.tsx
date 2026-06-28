@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useLocale } from '@/context/LocaleContext';
 
-type LinkSet = 'news' | 'services' | 'projects' | 'contact' | 'investment';
+type LinkSet = 'news' | 'services' | 'projects' | 'contact' | 'investment' | 'home';
 
 // Shared SVG icons keyed by type
 const newsIcon = (
@@ -75,6 +75,12 @@ const linkSets: Record<LinkSet, { href: string; key: string }[]> = {
     { href: '/service', key: 'services' },
     { href: '/projects', key: 'projects' },
     { href: '/contact', key: 'contact' },
+  ],
+  home: [
+    { href: '/news', key: 'news' },
+    { href: '/service', key: 'services' },
+    { href: '/projects', key: 'projects' },
+    { href: '/investment-tourism', key: 'investment' },
   ],
 };
 

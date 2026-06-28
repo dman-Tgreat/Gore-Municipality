@@ -310,7 +310,7 @@ export default function AdminDashboardPage() {
           <button onClick={() => setTab('projects')} className={tabClasses('projects')}>{t.admin.cmsProjects} ({projects.length})</button>
           <button onClick={() => setTab('departments')} className={tabClasses('departments')}>{t.admin.cmsDepartments} ({departments.length})</button>
           <button onClick={() => setTab('documents')} className={tabClasses('documents')}>{t.admin.cmsDocuments} ({documents.length})</button>
-          <button onClick={() => setTab('investments')} className={tabClasses('investments')}>Investments ({investments.length})</button>
+          <button onClick={() => setTab('investments')} className={tabClasses('investments')}>{t.admin.cmsInvestments} ({investments.length})</button>
           <button onClick={() => setTab('admins')} className={tabClasses('admins')}>{t.admin.admins} ({admins.length})</button>
         </div>
 

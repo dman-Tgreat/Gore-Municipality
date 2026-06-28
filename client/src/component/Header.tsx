@@ -263,7 +263,7 @@ export default function Header() {
             pathname={pathname}
             t={t}
             dynamicItems={projectDropdownItems}
-            dynamicLabel="Active Projects"
+            dynamicLabel={t.projects.activeProjects}
           />
 
           <Link href="/contact" className={linkStyle('/contact')}>{t.header.contact}</Link>

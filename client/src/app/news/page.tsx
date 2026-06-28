@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Header from '@/component/Header';
-import QuickLinks from '@/component/QuickLinks';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
 import { newsApi, announcementsApi, type NewsArticle, type Announcement } from '@/lib/api';
@@ -255,7 +254,6 @@ export default function NewsPage() {
         </main>
       </div>
 
-      <QuickLinks page="news" />
 
       <Footer />
     </div>

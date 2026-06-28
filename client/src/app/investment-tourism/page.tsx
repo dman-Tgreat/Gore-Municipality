@@ -1,11 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Header from '@/component/Header';
-import QuickLinks from '@/component/QuickLinks';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
+import { investmentsApi, type Investment } from '@/lib/api';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 const investmentIcon = (
   <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -100,8 +102,33 @@ const sections = [
   },
 ];
 
+const sectionToCategory: Record<string, string> = {
+  opportunities: 'opportunity',
+  incentives: 'incentive',
+  attractions: 'attraction',
+  accommodation: 'accommodation',
+  culture: 'culture',
+  localProducts: 'local-product',
+};
+
 export default function InvestmentTourismPage() {
   const { t } = useLocale();
+  const [investments, setInvestments] = useState<Investment[]>([]);
+  const [invLoading, setInvLoading] = useState(true);
+
+  useEffect(() => {
+    investmentsApi.getAll()
+      .then(setInvestments)
+      .catch(() => setInvestments([]))
+      .finally(() => setInvLoading(false));
+  }, []);
+
+  const publishedInvestments = investments.filter(inv => inv.published);
+  const groupedByCategory: Record<string, Investment[]> = {};
+  publishedInvestments.forEach(inv => {
+    if (!groupedByCategory[inv.category]) groupedByCategory[inv.category] = [];
+    groupedByCategory[inv.category].push(inv);
+  });
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans flex flex-col justify-between">
@@ -142,27 +169,84 @@ export default function InvestmentTourismPage() {
                 </div>
               </div>
 
-              {/* Sub-section cards */}
+              {/* Sub-section cards with dynamic investment items */}
               <div className="grid md:grid-cols-2 gap-5">
-                {sections.slice(0, 3).map((section) => (
-                  <Link
-                    key={section.key}
-                    href={section.href}
-                    className={`group flex items-start gap-4 p-5 rounded-xl border ${section.border} ${section.bg} hover:-translate-y-0.5 transition-all duration-200 hover:shadow-md`}
-                  >
-                    <div className={`shrink-0 w-11 h-11 rounded-xl ${section.bg} ${section.text} flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                      {section.icon}
+                {sections.slice(0, 3).map((section) => {
+                  const cat = sectionToCategory[section.key];
+                  const catInvestments = groupedByCategory[cat] || [];
+                  return (
+                    <div key={section.key} className="flex flex-col gap-3">
+                      {/* Category header card */}
+                      <Link
+                        href={section.href}
+                        className={`group flex items-start gap-4 p-5 rounded-xl border ${section.border} ${section.bg} hover:-translate-y-0.5 transition-all duration-200 hover:shadow-md`}
+                      >
+                        <div className={`shrink-0 w-11 h-11 rounded-xl ${section.bg} ${section.text} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                          {section.icon}
+                        </div>
+                        <div>
+                          <h3 className={`font-bold text-sm ${section.text} mb-1`}>
+                            {t.investmentTourism[section.key as keyof typeof t.investmentTourism] as unknown as string}
+                          </h3>
+                          <p className="text-gray-600 text-xs leading-relaxed">
+                            {t.investmentTourism[`${section.key}Desc` as keyof typeof t.investmentTourism] as unknown as string}
+                          </p>
+                        </div>
+                      </Link>
+
+                      {/* Dynamic investment cards for this category */}
+                      {catInvestments.length > 0 ? (
+                        <div className="space-y-2 pl-1">
+                          {catInvestments.slice(0, 3).map((inv) => (
+                            <Link
+                              key={inv.id}
+                              href={`/investment-tourism/${inv.id}`}
+                              className="flex items-center gap-3 p-3 rounded-lg border border-gray-100 bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group/card"
+                            >
+                              {inv.coverImage && (
+                                <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0">
+                                  <img
+                                    src={inv.coverImage.startsWith('/uploads/') ? `${API_BASE}${inv.coverImage}` : inv.coverImage}
+                                    alt={inv.title}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              )}
+                              <div className="min-w-0 flex-1">
+                                <h4 className="text-xs font-semibold text-gray-900 truncate group-hover/card:text-red-600 transition-colors">
+                                  {inv.title}
+                                </h4>
+                                <p className="text-[11px] text-gray-500 line-clamp-1">{inv.description}</p>
+                                {inv.location && (
+                                  <p className="text-[10px] text-gray-400 mt-0.5">📍 {inv.location}</p>
+                                )}
+                              </div>
+                              <svg className="w-3.5 h-3.5 text-gray-300 shrink-0 group-hover/card:text-red-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                              </svg>
+                            </Link>
+                          ))}
+                          {catInvestments.length > 3 && (
+                            <Link
+                              href={section.href}
+                              className="text-[11px] font-medium text-gray-500 hover:text-red-600 transition-colors inline-flex items-center gap-1 mt-0.5"
+                            >
+                              {t.projects.viewDetails} ({catInvestments.length}) →
+                            </Link>
+                          )}
+                        </div>
+                      ) : !invLoading ? (
+                        <p className="text-[11px] text-gray-400 italic pl-1">{t.services.noUpdates}</p>
+                      ) : (
+                        <div className="space-y-2 pl-1">
+                          {[1, 2].map((s) => (
+                            <div key={s} className="h-12 bg-gray-100 rounded-lg animate-pulse" />
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    <div>
-                      <h3 className={`font-bold text-sm ${section.text} mb-1`}>
-                        {t.investmentTourism[section.key as keyof typeof t.investmentTourism] as unknown as string}
-                      </h3>
-                      <p className="text-gray-600 text-xs leading-relaxed">
-                        {t.investmentTourism[`${section.key}Desc` as keyof typeof t.investmentTourism] as unknown as string}
-                      </p>
-                    </div>
-                  </Link>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -182,27 +266,84 @@ export default function InvestmentTourismPage() {
                 </div>
               </div>
 
-              {/* Sub-section cards */}
+              {/* Sub-section cards with dynamic investment items */}
               <div className="grid md:grid-cols-2 gap-5">
-                {sections.slice(3).map((section) => (
-                  <Link
-                    key={section.key}
-                    href={section.href}
-                    className={`group flex items-start gap-4 p-5 rounded-xl border ${section.border} ${section.bg} hover:-translate-y-0.5 transition-all duration-200 hover:shadow-md`}
-                  >
-                    <div className={`shrink-0 w-11 h-11 rounded-xl ${section.bg} ${section.text} flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                      {section.icon}
+                {sections.slice(3).map((section) => {
+                  const cat = sectionToCategory[section.key];
+                  const catInvestments = groupedByCategory[cat] || [];
+                  return (
+                    <div key={section.key} className="flex flex-col gap-3">
+                      {/* Category header card */}
+                      <Link
+                        href={section.href}
+                        className={`group flex items-start gap-4 p-5 rounded-xl border ${section.border} ${section.bg} hover:-translate-y-0.5 transition-all duration-200 hover:shadow-md`}
+                      >
+                        <div className={`shrink-0 w-11 h-11 rounded-xl ${section.bg} ${section.text} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                          {section.icon}
+                        </div>
+                        <div>
+                          <h3 className={`font-bold text-sm ${section.text} mb-1`}>
+                            {t.investmentTourism[section.key as keyof typeof t.investmentTourism] as unknown as string}
+                          </h3>
+                          <p className="text-gray-600 text-xs leading-relaxed">
+                            {t.investmentTourism[`${section.key}Desc` as keyof typeof t.investmentTourism] as unknown as string}
+                          </p>
+                        </div>
+                      </Link>
+
+                      {/* Dynamic investment cards for this category */}
+                      {catInvestments.length > 0 ? (
+                        <div className="space-y-2 pl-1">
+                          {catInvestments.slice(0, 3).map((inv) => (
+                            <Link
+                              key={inv.id}
+                              href={`/investment-tourism/${inv.id}`}
+                              className="flex items-center gap-3 p-3 rounded-lg border border-gray-100 bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group/card"
+                            >
+                              {inv.coverImage && (
+                                <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0">
+                                  <img
+                                    src={inv.coverImage.startsWith('/uploads/') ? `${API_BASE}${inv.coverImage}` : inv.coverImage}
+                                    alt={inv.title}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              )}
+                              <div className="min-w-0 flex-1">
+                                <h4 className="text-xs font-semibold text-gray-900 truncate group-hover/card:text-red-600 transition-colors">
+                                  {inv.title}
+                                </h4>
+                                <p className="text-[11px] text-gray-500 line-clamp-1">{inv.description}</p>
+                                {inv.location && (
+                                  <p className="text-[10px] text-gray-400 mt-0.5">📍 {inv.location}</p>
+                                )}
+                              </div>
+                              <svg className="w-3.5 h-3.5 text-gray-300 shrink-0 group-hover/card:text-red-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                              </svg>
+                            </Link>
+                          ))}
+                          {catInvestments.length > 3 && (
+                            <Link
+                              href={section.href}
+                              className="text-[11px] font-medium text-gray-500 hover:text-red-600 transition-colors inline-flex items-center gap-1 mt-0.5"
+                            >
+                              {t.projects.viewDetails} ({catInvestments.length}) →
+                            </Link>
+                          )}
+                        </div>
+                      ) : !invLoading ? (
+                        <p className="text-[11px] text-gray-400 italic pl-1">{t.services.noUpdates}</p>
+                      ) : (
+                        <div className="space-y-2 pl-1">
+                          {[1, 2].map((s) => (
+                            <div key={s} className="h-12 bg-gray-100 rounded-lg animate-pulse" />
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    <div>
-                      <h3 className={`font-bold text-sm ${section.text} mb-1`}>
-                        {t.investmentTourism[section.key as keyof typeof t.investmentTourism] as unknown as string}
-                      </h3>
-                      <p className="text-gray-600 text-xs leading-relaxed">
-                        {t.investmentTourism[`${section.key}Desc` as keyof typeof t.investmentTourism] as unknown as string}
-                      </p>
-                    </div>
-                  </Link>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -236,7 +377,6 @@ export default function InvestmentTourismPage() {
         </section>
       </div>
 
-      <QuickLinks page="investment" />
 
       <Footer />
     </div>

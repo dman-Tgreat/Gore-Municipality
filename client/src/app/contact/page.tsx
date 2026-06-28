@@ -2,10 +2,16 @@
 
 import React, { useState } from 'react';
 import Header from '@/component/Header';
-import QuickLinks from '@/component/QuickLinks';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
 import { contactApi } from '@/lib/api';
+
+const contactChannels = [
+  { key: 'address', icon: '📍', lines: ['officeAddress1', 'officeAddress2'], gradient: 'from-red-600 to-red-400' },
+  { key: 'phone', icon: '📞', lines: ['mainOffice', 'publicRelations'], gradient: 'from-green-600 to-emerald-400' },
+  { key: 'email', icon: '✉️', lines: ['emailLine1', 'emailLine2'], gradient: 'from-blue-600 to-blue-400' },
+  { key: 'hours', icon: '🕐', lines: ['hoursLine1', 'hoursLine2'], gradient: 'from-amber-500 to-yellow-400' },
+];
 
 export default function ContactPage() {
   const { t } = useLocale();
@@ -15,7 +21,6 @@ export default function ContactPage() {
     subject: '',
     message: '',
   });
-
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,135 +39,235 @@ export default function ContactPage() {
       <div>
         <Header />
 
-        {/* Page Title Header */}
-        <section className="bg-green-800 text-white py-12 text-center">
-          <div className="container mx-auto px-6">
-            <h1 className="text-3xl font-bold md:text-4xl">{t.contact.title}</h1>
-            <p className="mt-2 text-green-100 max-w-xl mx-auto text-sm md:text-base">
-              {t.contact.subtitle}
-            </p>
+        {/* ── Hero Banner ── */}
+        <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-emerald-800 text-white py-16 md:py-20 text-center overflow-hidden">
+          <div className="absolute inset-0 opacity-10" style={{
+            backgroundImage: `radial-gradient(circle at 15% 30%, rgba(255,255,255,0.25) 0%, transparent 45%),
+                              radial-gradient(circle at 85% 70%, rgba(255,255,255,0.15) 0%, transparent 40%),
+                              radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 60%)`,
+          }} />
+          <div className="relative container mx-auto px-6">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">
+              <span className="w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse" />
+              {t.header.contact}
+            </div>
+            <h1 className="text-3xl md:text-5xl font-black tracking-tight mb-4">{t.contact.title}</h1>
+            <p className="text-green-100 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">{t.contact.subtitle}</p>
           </div>
         </section>
 
-        {/* Main Content: Split Form & Info Split */}
-        <main className="container mx-auto px-6 py-12 max-w-6xl grid md:grid-cols-5 gap-12">
-          
-          {/* Column 1: Contact details Info (Takes 2/5 columns) */}
-          <div className="md:col-span-2 space-y-8">
-            <div>
-              <h2 className="text-2xl font-bold text-green-800 mb-4">{t.contact.getInTouch}</h2>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                {t.contact.description}
-              </p>
+        {/* ── Contact Info Cards ── */}
+        <section className="container mx-auto px-6 -mt-10 relative z-10">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
+            {contactChannels.map((channel) => (
+              <div key={channel.key} className="bg-white rounded-xl shadow-md border border-gray-100 p-5 hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5">
+                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${channel.gradient} text-white text-xl mb-4 shadow-sm`}>
+                  {channel.icon}
+                </div>
+                <h3 className="font-semibold text-gray-900 text-sm mb-2">
+                  {channel.key === 'address' ? t.contact.officeLocation :
+                   channel.key === 'phone' ? t.contact.phone :
+                   channel.key === 'email' ? t.contact.email :
+                   t.footer.workingHours}
+                </h3>
+                {channel.lines.map((line, i) => {
+                  let display = line;
+                  if (line === 'officeAddress1') display = t.contact.officeAddress1;
+                  else if (line === 'officeAddress2') display = t.contact.officeAddress2;
+                  else if (line === 'mainOffice') display = t.contact.mainOffice;
+                  else if (line === 'publicRelations') display = t.contact.publicRelations;
+                  else if (line === 'emailLine1') display = 'info@goreworeda.gov.et';
+                  else if (line === 'emailLine2') display = 'support@goreworeda.gov.et';
+                  else if (line === 'hoursLine1') display = t.footer.workingHours;
+                  else if (line === 'hoursLine2') display = 'Sat: 8:00 AM – 12:00 PM';
+                  return (
+                    <p key={i} className="text-gray-500 text-xs leading-relaxed">{display}</p>                  );
+                    })}
+                    {channel.key === 'hours' && (
+                  <div className="flex items-center gap-1.5 mt-3 text-[10px] text-green-600 font-semibold">
+                    <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                    Open Now
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Main Content: Form + Info ── */}
+        <main className="container mx-auto px-6 py-14 max-w-6xl">
+          <div className="grid lg:grid-cols-5 gap-10">
+            {/* Left — Get In Touch & Map */}
+            <div className="lg:col-span-2 space-y-8">
+              <div>
+                <div className="inline-flex items-center gap-2 bg-red-50 text-red-600 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
+                  <span className="w-1.5 h-1.5 bg-red-600 rounded-full" />
+                  {t.contact.getInTouch}
+                </div>
+                <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-3 tracking-tight">{t.contact.getInTouch}</h2>
+                <p className="text-gray-500 text-sm leading-relaxed">{t.contact.description}</p>
+              </div>
+
+              {/* Decorative Map / Location Illustration */}
+              <div className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
+                <div className="bg-gradient-to-br from-green-700 to-emerald-800 p-6 text-white relative overflow-hidden">
+                  <div className="absolute inset-0 opacity-[0.08]" style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                  }} />
+                  <div className="relative flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-3xl shadow-lg shrink-0">
+                      📍
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-base">{t.contact.officeLocation}</h3>
+                      <p className="text-green-200 text-xs mt-0.5">{t.contact.officeAddress1}</p>
+                      <p className="text-green-200 text-xs">{t.contact.officeAddress2}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-5 space-y-4">
+                  <div className="flex items-start gap-3">
+                    <span className="text-base shrink-0 mt-0.5">📞</span>
+                    <div>
+                      <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Phone</p>
+                      <p className="text-sm font-medium text-gray-800">{t.contact.mainOffice}</p>
+                      <p className="text-sm text-gray-600">{t.contact.publicRelations}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-base shrink-0 mt-0.5">✉️</span>
+                    <div>
+                      <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Email</p>
+                      <p className="text-sm font-medium text-gray-800">info@goreworeda.gov.et</p>
+                      <p className="text-sm text-gray-600">support@goreworeda.gov.et</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-base shrink-0 mt-0.5">🕐</span>
+                    <div>
+                      <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Working Hours</p>
+                      <p className="text-sm font-medium text-gray-800">Mon–Fri: 8:00 AM – 5:00 PM</p>
+                      <p className="text-sm text-gray-600">Sat: 8:00 AM – 12:00 PM</p>
+                    </div>
+                  </div>
+                  <div className="pt-2 border-t border-gray-100">
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                      <span className="font-semibold text-green-700">Open Now — We're here to help</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div className="space-y-4">
-              {/* Address */}
-              <div className="flex items-start space-x-4">
-                <div className="bg-green-100 p-3 rounded-lg text-green-700 font-bold">📍</div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">{t.contact.officeLocation}</h3>
-                  <p className="text-gray-600 text-sm">{t.contact.officeAddress1}</p>
-                  <p className="text-gray-600 text-sm">{t.contact.officeAddress2}</p>
+            {/* Right — Contact Form */}
+            <div className="lg:col-span-3">
+              <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-8 md:p-10">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-600 to-emerald-400 flex items-center justify-center text-white shadow-sm">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900">{t.contact.sendMessage}</h2>
+                    <p className="text-xs text-gray-500 mt-0.5">We typically respond within 24 hours</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Phone */}
-              <div className="flex items-start space-x-4">
-                <div className="bg-green-100 p-3 rounded-lg text-green-700 font-bold">📞</div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">{t.contact.phone}</h3>
-                  <p className="text-gray-600 text-sm">{t.contact.mainOffice}</p>
-                  <p className="text-gray-600 text-sm">{t.contact.publicRelations}</p>
-                </div>
-              </div>
+                {submitted ? (
+                  <div className="text-center py-16">
+                    <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
+                      <svg className="w-10 h-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      </svg>
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">{t.contact.thankYou}!</h3>
+                    <p className="text-gray-500 max-w-sm mx-auto">{t.contact.messageSent}</p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="grid md:grid-cols-2 gap-5">
+                      <div>
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">{t.contact.fullName}</label>
+                        <div className="relative">
+                          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">👤</span>
+                          <input
+                            type="text"
+                            required
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400 bg-gray-50/50 transition"
+                            placeholder="Abebe Kebede"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">{t.contact.emailAddress}</label>
+                        <div className="relative">
+                          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">✉️</span>
+                          <input
+                            type="email"
+                            required
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400 bg-gray-50/50 transition"
+                            placeholder="abebe@example.com"
+                          />
+                        </div>
+                      </div>
+                    </div>
 
-              {/* Email */}
-              <div className="flex items-start space-x-4">
-                <div className="bg-green-100 p-3 rounded-lg text-green-700 font-bold">✉️</div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">{t.contact.email}</h3>
-                  <p className="text-gray-600 text-sm">info@goreworeda.gov.et</p>
-                  <p className="text-gray-600 text-sm">support@goreworeda.gov.et</p>
-                </div>
+                    <div>
+                      <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">{t.contact.subject}</label>
+                      <div className="relative">
+                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">📋</span>
+                        <input
+                          type="text"
+                          required
+                          value={formData.subject}
+                          onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400 bg-gray-50/50 transition"
+                          placeholder="Inquiry regarding business permits"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">{t.contact.messageContent}</label>
+                      <div className="relative">
+                        <span className="absolute left-3.5 top-4 text-gray-400 text-sm">💬</span>
+                        <textarea
+                          rows={5}
+                          required
+                          value={formData.message}
+                          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400 bg-gray-50/50 transition resize-none"
+                          placeholder="Write your message in detail here..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4 pt-2">
+                      <button
+                        type="submit"
+                        className="inline-flex items-center gap-2 bg-gradient-to-r from-green-700 to-emerald-500 hover:from-green-600 hover:to-emerald-400 text-white font-semibold py-3.5 px-8 rounded-xl transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-green-600/20"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                        </svg>
+                        {t.contact.submit}
+                      </button>
+                      <p className="text-[11px] text-gray-400">We respect your privacy</p>
+                    </div>
+                  </form>
+                )}
               </div>
             </div>
           </div>
-
-          {/* Column 2: The Interactive Contact Form (Takes 3/5 columns) */}
-          <div className="md:col-span-3 bg-white p-8 rounded-xl shadow-md border border-gray-100">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">{t.contact.sendMessage}</h2>
-            
-            {submitted ? (
-              <div className="text-center py-12">
-                <p className="text-xl font-semibold text-green-700">✓ {t.contact.thankYou}!</p>
-                <p className="text-gray-600 mt-2">{t.contact.messageSent}</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-2">{t.contact.fullName}</label>
-                    <input 
-                      type="text" 
-                      required
-                      value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm transition"
-                      placeholder="Abebe Kebede"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-2">{t.contact.emailAddress}</label>
-                    <input 
-                      type="email" 
-                      required
-                      value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm transition"
-                      placeholder="abebe@example.com"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-2">{t.contact.subject}</label>
-                  <input 
-                    type="text" 
-                    required
-                    value={formData.subject}
-                    onChange={(e) => setFormData({...formData, subject: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm transition"
-                    placeholder="Inquiry regarding business permits"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-2">{t.contact.messageContent}</label>
-                  <textarea 
-                    rows={5}
-                    required
-                    value={formData.message}
-                    onChange={(e) => setFormData({...formData, message: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm transition resize-none"
-                    placeholder="Write your message detailed here..."
-                  />
-                </div>
-
-                <button 
-                  type="submit" 
-                  className="w-full bg-green-700 text-white font-semibold py-3 px-4 rounded-md hover:bg-green-600 transition shadow-md"
-                >
-                  {t.contact.submit}
-                </button>
-              </form>
-            )}
-          </div>
-
         </main>
       </div>
 
-      <QuickLinks page="contact" />
 
       <Footer />
     </div>

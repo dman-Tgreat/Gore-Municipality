@@ -5,6 +5,7 @@ import Header from '@/component/Header';
 import Hero from '@/component/Hero';
 import StatsGrid from '@/component/StatsGrid'; 
 import Services from '@/component/Services';
+import QuickLinks from '@/component/QuickLinks';
 import Footer from '@/component/Footer';
 
 export default function Home() {
@@ -14,6 +15,7 @@ export default function Home() {
       <Hero />
       <StatsGrid />
       <Services />
+      <QuickLinks page="home" />
       <Footer />
     </div>
   );

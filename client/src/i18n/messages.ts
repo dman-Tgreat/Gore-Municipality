@@ -105,6 +105,7 @@ const enMessages = {
     from: 'From',
     to: 'To',
     noProjects: 'No projects listed yet.',
+    activeProjects: 'Active Projects',
     viewDetails: 'View Details',
   },
   admin: {
@@ -171,6 +172,7 @@ const enMessages = {
     officeField: 'Office',
     imageField: 'Image URL',
     cmsDocuments: 'Documents',
+    cmsInvestments: 'Investments',
     documentFileUrlField: 'File URL',
     documentCategoryField: 'Category',
   },
@@ -333,6 +335,7 @@ const amMessages: Messages = {
     from: 'ከ',
     to: 'እስከ',
     noProjects: 'ምንም ፕሮጀክቶች የሉም።',
+    activeProjects: 'ንቁ ፕሮጀክቶች',
     viewDetails: 'ዝርዝር ይመልከቱ',
   },
   admin: {
@@ -399,6 +402,7 @@ const amMessages: Messages = {
     officeField: 'ቢሮ',
     imageField: 'የምስል URL',
     cmsDocuments: 'ሰነዶች',
+    cmsInvestments: 'ኢንቨስትመንቶች',
     documentFileUrlField: 'የፋይል URL',
     documentCategoryField: 'ምድብ',
   },
@@ -561,6 +565,7 @@ const omMessages: Messages = {
     from: 'Irraa',
     to: 'Hanga',
     noProjects: 'Pirojektoonni hin galmeeffamne.',
+    activeProjects: 'Pirojektoota Sochoa',
     viewDetails: 'Gadi Fageenyaan Ilaali',
   },
   admin: {
@@ -627,6 +632,7 @@ const omMessages: Messages = {
     officeField: 'Waajjira',
     imageField: 'URL Fakkii',
     cmsDocuments: 'Dokumentii',
+    cmsInvestments: 'Dhaabbata',
     documentFileUrlField: 'URL Faayilii',
     documentCategoryField: 'Ramaddii',
   },
