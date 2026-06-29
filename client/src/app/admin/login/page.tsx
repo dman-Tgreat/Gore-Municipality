@@ -34,32 +34,32 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-xl shadow-md border border-gray-100 w-full max-w-sm">
+    <div className="min-h-screen bg-white dark:bg-slate-900 flex items-center justify-center">
+      <div className="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-md border border-slate-200 dark:border-slate-700 w-full max-w-sm">
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">{t.admin.login}</h1>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-white">{t.admin.login}</h1>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">{t.admin.email}</label>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">{t.admin.email}</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400"
+              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-md focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800"
               placeholder="admin@gore.gov.et"
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">{t.admin.password}</label>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">{t.admin.password}</label>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400"
+              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-md focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800"
             />
           </div>
 
@@ -68,7 +68,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-green-700 text-white font-semibold py-2.5 px-4 rounded-md hover:bg-green-600 transition disabled:opacity-50"
+            className="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2.5 px-4 rounded-md transition disabled:opacity-50"
           >
             {loading ? '...' : t.admin.signIn}
           </button>

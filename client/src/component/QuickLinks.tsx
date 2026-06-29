@@ -6,7 +6,6 @@ import { useLocale } from '@/context/LocaleContext';
 
 type LinkSet = 'news' | 'services' | 'projects' | 'contact' | 'investment' | 'home';
 
-// Shared SVG icons keyed by type
 const newsIcon = (
   <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" />
@@ -84,13 +83,6 @@ const linkSets: Record<LinkSet, { href: string; key: string }[]> = {
   ],
 };
 
-const cardGradients = [
-  { from: 'from-red-600', to: 'to-red-400', bg: 'bg-red-50', text: 'text-red-600', border: 'border-red-100', hover: 'hover:border-red-200' },
-  { from: 'from-emerald-600', to: 'to-emerald-400', bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-100', hover: 'hover:border-emerald-200' },
-  { from: 'from-amber-600', to: 'to-amber-400', bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-100', hover: 'hover:border-amber-200' },
-  { from: 'from-blue-600', to: 'to-blue-400', bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-100', hover: 'hover:border-blue-200' },
-];
-
 interface QuickLinksProps {
   page: LinkSet;
 }
@@ -122,52 +114,48 @@ export default function QuickLinks({ page }: QuickLinksProps) {
   };
 
   return (
-    <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-16 bg-slate-50 dark:bg-slate-900">
       <div className="container mx-auto px-6">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 bg-red-50 text-red-600 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-            <span className="w-1.5 h-1.5 bg-red-600 rounded-full" />
+          <div className="inline-flex items-center gap-2 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
+            <span className="w-1.5 h-1.5 bg-slate-600 dark:bg-slate-400 rounded-full" />
             {t.footer.quickLinks}
           </div>
-          <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-3 tracking-tight">
+          <h2 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white mb-3 tracking-tight">
             {t.footer.quickLinks}
           </h2>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-6xl mx-auto">
-          {links.map((link, idx) => {
-            const grad = cardGradients[idx % cardGradients.length];
+          {links.map((link) => (
+            <div
+              key={link.key}
+              className="group relative bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 p-6 sm:p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+            >
+              <div className="absolute top-0 left-6 right-6 h-1 bg-slate-800 dark:bg-slate-600 rounded-full opacity-20 group-hover:opacity-40 transition-opacity" />
 
-            return (
-              <div
-                key={link.key}
-                className={`group relative bg-white rounded-2xl border border-gray-100 ${grad.hover} p-6 sm:p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg`}
-              >
-                <div className={`absolute top-0 left-6 right-6 h-1 bg-gradient-to-r ${grad.from} ${grad.to} rounded-full opacity-60 group-hover:opacity-100 transition-opacity`} />
-
-                <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl ${grad.bg} ${grad.text} mb-5 group-hover:scale-110 transition-transform duration-300`}>
-                  {iconMap[link.key]}
-                </div>
-
-                <h3 className={`text-lg font-bold ${grad.text} mb-3`}>
-                  {getTitle(link.key)}
-                </h3>
-                <p className="text-gray-500 text-sm leading-relaxed mb-6">
-                  {getDesc(link.key)}
-                </p>
-
-                <Link
-                  href={link.href}
-                  className={`inline-flex items-center gap-2 text-sm font-semibold ${grad.text} hover:gap-3 transition-all`}
-                >
-                  {t.services.viewAll}
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                  </svg>
-                </Link>
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 mb-5 group-hover:scale-110 transition-transform duration-300">
+                {iconMap[link.key]}
               </div>
-            );
-          })}
+
+              <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-3">
+                {getTitle(link.key)}
+              </h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                {getDesc(link.key)}
+              </p>
+
+              <Link
+                href={link.href}
+                className="inline-flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-white hover:gap-3 transition-all"
+              >
+                {t.services.viewAll}
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </Link>
+            </div>
+          ))}
         </div>
       </div>
     </section>

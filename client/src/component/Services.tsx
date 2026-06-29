@@ -49,18 +49,18 @@ export default function Services() {
   const projectCount = projects.filter((p) => p.status === 'ongoing').length;
 
   return (
-    <section id="services" className="py-20 bg-gradient-to-b from-gray-50 to-white">
+    <section id="services" className="py-20 bg-slate-50 dark:bg-slate-900">
       <div className="container mx-auto px-6">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 bg-red-50 text-red-600 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-            <span className="w-1.5 h-1.5 bg-red-600 rounded-full" />
+          <div className="inline-flex items-center gap-2 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
+            <span className="w-1.5 h-1.5 bg-slate-600 dark:bg-slate-400 rounded-full" />
             {t.header.services}
           </div>
-          <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-3 tracking-tight">
+          <h2 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white mb-3 tracking-tight">
             {t.services.latestNews}
           </h2>
-          <p className="text-gray-500 text-sm max-w-xl mx-auto">
+          <p className="text-slate-500 dark:text-slate-400 text-sm max-w-xl mx-auto">
             {t.services.latestNewsDesc}
           </p>
         </div>
@@ -68,17 +68,17 @@ export default function Services() {
         {/* Service Cards */}
         <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
           {/* ── Card 1: Latest News ── */}
-          <div className="group relative bg-white rounded-2xl border border-red-100 hover:border-red-200 p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-            <div className="absolute top-0 left-6 right-6 h-1 bg-gradient-to-r from-red-600 to-red-400 rounded-full opacity-60 group-hover:opacity-100 transition-opacity" />
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-red-50 text-red-600 mb-6 group-hover:scale-110 transition-transform duration-300">
+          <div className="group relative bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <div className="absolute top-0 left-6 right-6 h-1 bg-slate-800 dark:bg-slate-600 rounded-full opacity-20 group-hover:opacity-40 transition-opacity" />
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 mb-6 group-hover:scale-110 transition-transform duration-300">
               {serviceIcons.news}
             </div>
-            <h3 className="text-lg font-bold text-red-600 mb-4">{t.services.latestNews}</h3>
+            <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-4">{t.services.latestNews}</h3>
 
             {loading ? (
               <div className="space-y-3">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-4 bg-gray-100 rounded animate-pulse" />
+                  <div key={i} className="h-4 bg-slate-100 dark:bg-slate-700 rounded animate-pulse" />
                 ))}
               </div>
             ) : news.length > 0 ? (
@@ -87,14 +87,14 @@ export default function Services() {
                   <li key={article.id}>
                     <Link
                       href={`/news`}
-                      className="group/item flex items-start gap-2 text-sm text-gray-600 hover:text-red-600 transition-colors"
+                      className="group/item flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-400 mt-1.5 shrink-0 group-hover/item:bg-red-600" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500 mt-1.5 shrink-0 group-hover/item:bg-slate-800 dark:group-hover/item:bg-white" />
                       <div className="min-w-0">
-                        <p className="font-medium text-gray-800 group-hover/item:text-red-600 transition-colors leading-snug line-clamp-1">
+                        <p className="font-medium text-slate-800 dark:text-slate-200 group-hover/item:text-slate-800 dark:group-hover/item:text-white transition-colors leading-snug line-clamp-1">
                           {article.title}
                         </p>
-                        <span className="text-[10px] text-gray-400">
+                        <span className="text-[10px] text-slate-400 dark:text-slate-500">
                           {new Date(article.createdAt).toLocaleDateString()}
                         </span>
                       </div>
@@ -103,12 +103,12 @@ export default function Services() {
                 ))}
               </ul>
             ) : (
-              <p className="text-gray-400 text-sm mb-6">{t.services.noUpdates}</p>
+              <p className="text-slate-400 dark:text-slate-500 text-sm mb-6">{t.services.noUpdates}</p>
             )}
 
             <Link
               href="/news"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-red-600 hover:gap-3 transition-all"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-white hover:gap-3 transition-all"
             >
               {t.services.viewAll} ({publishedNewsCount})
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -118,33 +118,33 @@ export default function Services() {
           </div>
 
           {/* ── Card 2: Municipal Services ── */}
-          <div className="group relative bg-white rounded-2xl border border-emerald-100 hover:border-emerald-200 p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-            <div className="absolute top-0 left-6 right-6 h-1 bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full opacity-60 group-hover:opacity-100 transition-opacity" />
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-emerald-50 text-emerald-600 mb-6 group-hover:scale-110 transition-transform duration-300">
+          <div className="group relative bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <div className="absolute top-0 left-6 right-6 h-1 bg-slate-800 dark:bg-slate-600 rounded-full opacity-20 group-hover:opacity-40 transition-opacity" />
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 mb-6 group-hover:scale-110 transition-transform duration-300">
               {serviceIcons.services}
             </div>
-            <h3 className="text-lg font-bold text-emerald-600 mb-4">{t.services.municipalServices}</h3>
+            <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-4">{t.services.municipalServices}</h3>
 
             {loading ? (
               <div className="space-y-3">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-4 bg-gray-100 rounded animate-pulse" />
+                  <div key={i} className="h-4 bg-slate-100 dark:bg-slate-700 rounded animate-pulse" />
                 ))}
               </div>
             ) : departments.length > 0 ? (
               <>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-3xl font-black text-emerald-600">{deptCount}</span>
-                  <span className="text-sm text-gray-500">{t.services.departmentsLabel}</span>
+                  <span className="text-3xl font-black text-slate-800 dark:text-white">{deptCount}</span>
+                  <span className="text-sm text-slate-500 dark:text-slate-400">{t.services.departmentsLabel}</span>
                 </div>
                 <ul className="space-y-2 mb-6">
                   {departments.slice(0, 5).map((dept) => (
                     <li key={dept.id}>
                       <Link
                         href={`/service/${dept.id}`}
-                        className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors group/item"
+                        className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors group/item"
                       >
-                        <span className="w-5 h-5 rounded bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px] font-bold shrink-0">
+                        <span className="w-5 h-5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center text-[10px] font-bold shrink-0">
                           {dept.name.charAt(0)}
                         </span>
                         <span className="truncate">{dept.name}</span>
@@ -152,19 +152,19 @@ export default function Services() {
                     </li>
                   ))}
                   {deptCount > 5 && (
-                    <li className="text-xs text-gray-400 italic">
+                    <li className="text-xs text-slate-400 dark:text-slate-500 italic">
                       +{deptCount - 5} more departments
                     </li>
                   )}
                 </ul>
               </>
             ) : (
-              <p className="text-gray-400 text-sm mb-6">{t.services.noUpdates}</p>
+              <p className="text-slate-400 dark:text-slate-500 text-sm mb-6">{t.services.noUpdates}</p>
             )}
 
             <Link
               href="/service"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 hover:gap-3 transition-all"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-white hover:gap-3 transition-all"
             >
               {t.services.viewAll}
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -174,40 +174,40 @@ export default function Services() {
           </div>
 
           {/* ── Card 3: About Gore (dynamic stats) ── */}
-          <div className="group relative bg-white rounded-2xl border border-amber-100 hover:border-amber-200 p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-            <div className="absolute top-0 left-6 right-6 h-1 bg-gradient-to-r from-amber-600 to-amber-400 rounded-full opacity-60 group-hover:opacity-100 transition-opacity" />
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-amber-50 text-amber-600 mb-6 group-hover:scale-110 transition-transform duration-300">
+          <div className="group relative bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <div className="absolute top-0 left-6 right-6 h-1 bg-slate-800 dark:bg-slate-600 rounded-full opacity-20 group-hover:opacity-40 transition-opacity" />
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 mb-6 group-hover:scale-110 transition-transform duration-300">
               {serviceIcons.about}
             </div>
-            <h3 className="text-lg font-bold text-amber-600 mb-4">{t.services.aboutGore}</h3>
+            <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-4">{t.services.aboutGore}</h3>
 
             {loading ? (
               <div className="space-y-3">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-4 bg-gray-100 rounded animate-pulse" />
+                  <div key={i} className="h-4 bg-slate-100 dark:bg-slate-700 rounded animate-pulse" />
                 ))}
               </div>
             ) : (
               <>
                 <div className="grid grid-cols-2 gap-3 mb-6">
-                  <div className="bg-amber-50 rounded-xl p-3 text-center">
-                    <p className="text-xl font-black text-amber-700">{publishedNewsCount + deptCount}</p>
-                    <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wider">{t.services.updatesLabel}</p>
+                  <div className="bg-slate-100 dark:bg-slate-700 rounded-xl p-3 text-center">
+                    <p className="text-xl font-black text-slate-800 dark:text-white">{publishedNewsCount + deptCount}</p>
+                    <p className="text-[10px] text-slate-600 dark:text-slate-400 font-medium uppercase tracking-wider">{t.services.updatesLabel}</p>
                   </div>
-                  <div className="bg-amber-50 rounded-xl p-3 text-center">
-                    <p className="text-xl font-black text-amber-700">{deptCount}</p>
-                    <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wider">{t.services.departmentsLabel}</p>
+                  <div className="bg-slate-100 dark:bg-slate-700 rounded-xl p-3 text-center">
+                    <p className="text-xl font-black text-slate-800 dark:text-white">{deptCount}</p>
+                    <p className="text-[10px] text-slate-600 dark:text-slate-400 font-medium uppercase tracking-wider">{t.services.departmentsLabel}</p>
                   </div>
-                  <div className="bg-amber-50 rounded-xl p-3 text-center">
-                    <p className="text-xl font-black text-amber-700">{projectCount}</p>
-                    <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wider">{t.services.activeProjectsLabel}</p>
+                  <div className="bg-slate-100 dark:bg-slate-700 rounded-xl p-3 text-center">
+                    <p className="text-xl font-black text-slate-800 dark:text-white">{projectCount}</p>
+                    <p className="text-[10px] text-slate-600 dark:text-slate-400 font-medium uppercase tracking-wider">{t.services.activeProjectsLabel}</p>
                   </div>
-                  <div className="bg-amber-50 rounded-xl p-3 text-center">
-                    <p className="text-xl font-black text-amber-700">{projects.length}</p>
-                    <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wider">{t.services.totalProjectsLabel}</p>
+                  <div className="bg-slate-100 dark:bg-slate-700 rounded-xl p-3 text-center">
+                    <p className="text-xl font-black text-slate-800 dark:text-white">{projects.length}</p>
+                    <p className="text-[10px] text-slate-600 dark:text-slate-400 font-medium uppercase tracking-wider">{t.services.totalProjectsLabel}</p>
                   </div>
                 </div>
-                <p className="text-gray-500 text-sm leading-relaxed mb-6">
+                <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
                   {t.services.aboutGoreDesc}
                 </p>
               </>
@@ -215,7 +215,7 @@ export default function Services() {
 
             <Link
               href="/about"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-amber-600 hover:gap-3 transition-all"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-white hover:gap-3 transition-all"
             >
               {t.services.readHistory}
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -226,10 +226,10 @@ export default function Services() {
         </div>
 
         {/* Bottom decorative element */}
-        <div className="flex items-center justify-center gap-3 mt-12 text-gray-300">
-          <div className="h-px w-12 bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
+        <div className="flex items-center justify-center gap-3 mt-12 text-slate-400 dark:text-slate-500">
+          <div className="h-px w-12 bg-gradient-to-r from-transparent via-slate-300 dark:via-slate-600 to-transparent" />
           <span className="text-[10px] uppercase tracking-[0.2em] font-semibold">{t.services.goreWoredaTagline}</span>
-          <div className="h-px w-12 bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
+          <div className="h-px w-12 bg-gradient-to-r from-transparent via-slate-300 dark:via-slate-600 to-transparent" />
         </div>
       </div>
     </section>

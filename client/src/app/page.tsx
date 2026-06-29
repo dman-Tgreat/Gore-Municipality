@@ -10,7 +10,7 @@ import Footer from '@/component/Footer';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
+    <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans">
       <Header />
       <Hero />
       <StatsGrid />

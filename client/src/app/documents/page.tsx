@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import Header from '@/component/Header';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
@@ -51,6 +52,7 @@ export default function DocumentsPage() {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     documentsApi.getAll()
@@ -60,38 +62,69 @@ export default function DocumentsPage() {
   }, []);
 
   const categories = ['all', ...new Set(documents.map((d) => d.category))];
-  const filtered = categoryFilter === 'all'
-    ? documents
-    : documents.filter((d) => d.category === categoryFilter);
+  const filtered = documents.filter((d) => {
+    const matchesCategory = categoryFilter === 'all' || d.category === categoryFilter;
+    if (!searchQuery.trim()) return matchesCategory;
+    const q = searchQuery.toLowerCase();
+    const matchesSearch = d.title.toLowerCase().includes(q) || d.description.toLowerCase().includes(q);
+    return matchesCategory && matchesSearch;
+  });
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans flex flex-col justify-between">
+    <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans flex flex-col justify-between">
       <div>
         <Header />
 
-        <section className="bg-gradient-to-br from-green-800 via-green-700 to-emerald-800 text-white py-14 px-4 text-center">
+        <section className="bg-slate-800 text-white py-14 px-4 text-center">
           <div className="container mx-auto">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
               <span className="w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse" />
               {t.admin.cmsDocuments}
             </div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-black px-2">{t.documents.title}</h1>
-            <p className="mt-2 text-green-100 max-w-xl mx-auto text-xs sm:text-sm px-4">{t.documents.subtitle}</p>
+            <p className="mt-2 text-slate-300 max-w-xl mx-auto text-xs sm:text-sm px-4">{t.documents.subtitle}</p>
           </div>
         </section>
 
         <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-6xl">
+          {/* Search Bar */}
+          <div className="mb-5">
+            <div className="relative max-w-md">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+              </span>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t.documents.searchPlaceholder}
+                className="w-full pl-9 pr-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none transition placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition p-1"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+          </div>
+
           {/* Category Filter */}
           <div className="flex gap-2 mb-6 sm:mb-8 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide snap-x">
             {categories.map((cat) => (
               <button
                 key={cat}
-                onClick={() => setCategoryFilter(cat)}
-                className={`px-3 sm:px-4 py-1.5 text-xs sm:text-sm rounded-full font-medium transition whitespace-nowrap snap-start shrink-0 ${
-                  categoryFilter === cat
-                    ? 'bg-green-700 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
+                onClick={() => setCategoryFilter(cat)}                  className={`px-3 sm:px-4 py-1.5 text-xs sm:text-sm rounded-full font-medium transition whitespace-nowrap snap-start shrink-0 ${
+                    categoryFilter === cat
+                      ? 'bg-slate-800 text-white shadow-md'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                  }`}
               >
                 {cat === 'all'
                   ? t.documents.allCategories
@@ -103,7 +136,7 @@ export default function DocumentsPage() {
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-100 animate-pulse p-4 sm:p-6 space-y-3">
+                <div key={i} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 animate-pulse p-4 sm:p-6 space-y-3">
                   <div className="h-5 bg-gray-200 rounded w-3/4" />
                   <div className="h-4 bg-gray-200 rounded w-full" />
                   <div className="h-4 bg-gray-200 rounded w-1/2" />
@@ -113,7 +146,7 @@ export default function DocumentsPage() {
           ) : filtered.length === 0 ? (
             <div className="text-center py-12 sm:py-16">
               <p className="text-3xl sm:text-4xl mb-3">📂</p>
-              <p className="text-gray-500 text-sm sm:text-base">{t.documents.noDocuments}</p>
+              <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base">{t.documents.noDocuments}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -123,10 +156,10 @@ export default function DocumentsPage() {
                 return (
                   <div
                     key={doc.id}
-                    className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-1 group"
+                    className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-1 group"
                   >
-                    {/* Header with category gradient */}
-                    <div className={`bg-gradient-to-r ${gradient} px-4 sm:px-5 py-3 sm:py-4 flex items-center gap-3`}>
+                    {/* Header */}
+                    <div className="bg-slate-700 px-4 sm:px-5 py-3 sm:py-4 flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-xl shadow-sm shrink-0">
                         {icon}
                       </div>
@@ -140,11 +173,11 @@ export default function DocumentsPage() {
 
                     {/* Body */}
                     <div className="p-4 sm:p-5 space-y-3">
-                      <p className="text-xs sm:text-sm text-gray-600 leading-relaxed line-clamp-3">
+                      <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">
                         {doc.description}
                       </p>
 
-                      <div className="text-[10px] sm:text-xs text-gray-500 space-y-1.5 pt-2 border-t border-gray-100">
+                      <div className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 space-y-1.5 pt-2 border-t border-slate-200 dark:border-slate-700">
                         <p className="flex items-center gap-1.5">
                           <span>📎</span>
                           <span className="font-medium">{getFileType(doc.fileUrl)}</span>
@@ -163,21 +196,19 @@ export default function DocumentsPage() {
 
                       {/* Action buttons */}
                       <div className="flex gap-2 pt-1">
-                        <a
-                          href={doc.fileUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 bg-green-700 hover:bg-green-600 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
+                        <Link
+                          href={`/documents/${doc.id}`}
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
                         >
                           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                           </svg>
                           {t.documents.view}
-                        </a>
+                        </Link>
                         <a
                           href={doc.fileUrl}
                           download
-                          className="inline-flex items-center justify-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
+                          className="inline-flex items-center justify-center gap-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
                         >
                           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />

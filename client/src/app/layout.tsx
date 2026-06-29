@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { LocaleProvider } from "@/context/LocaleContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -27,9 +28,32 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        {/* Blocking script to prevent FOUC — sets .dark class before paint */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('gore_theme');
+                  if (!theme) {
+                    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                  }
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
-        <LocaleProvider>{children}</LocaleProvider>
+        <ThemeProvider>
+          <LocaleProvider>{children}</LocaleProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

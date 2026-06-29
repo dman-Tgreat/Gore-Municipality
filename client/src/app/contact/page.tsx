@@ -53,24 +53,23 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans flex flex-col justify-between">
+    <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans flex flex-col justify-between">
       <div>
         <Header />
 
         {/* ── Hero Banner ── */}
-        <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-emerald-800 text-white py-16 md:py-20 text-center overflow-hidden">
+        <section className="relative bg-slate-800 text-white py-16 md:py-20 text-center overflow-hidden">
           <div className="absolute inset-0 opacity-10" style={{
             backgroundImage: `radial-gradient(circle at 15% 30%, rgba(255,255,255,0.25) 0%, transparent 45%),
                               radial-gradient(circle at 85% 70%, rgba(255,255,255,0.15) 0%, transparent 40%),
                               radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 60%)`,
           }} />
           <div className="relative container mx-auto px-6">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">
-              <span className="w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse" />
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">                  <span className="w-1.5 h-1.5 bg-white/60 rounded-full animate-pulse" />
               {t.header.contact}
             </div>
             <h1 className="text-3xl md:text-5xl font-black tracking-tight mb-4">{t.contact.title}</h1>
-            <p className="text-green-100 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">{t.contact.subtitle}</p>
+            <p className="text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">{t.contact.subtitle}</p>
           </div>
         </section>
 
@@ -78,11 +77,11 @@ export default function ContactPage() {
         <section className="container mx-auto px-6 -mt-10 relative z-10">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
             {contactChannels.map((channel) => (
-              <div key={channel.key} className="bg-white rounded-xl shadow-md border border-gray-100 p-5 hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5">
-                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${channel.gradient} text-white text-xl mb-4 shadow-sm`}>
+              <div key={channel.key} className="bg-white dark:bg-slate-800 rounded-xl shadow-md border border-slate-200 dark:border-slate-700 p-5 hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5">
+                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-700 text-white text-xl mb-4 shadow-sm`}>
                   {channel.icon}
                 </div>
-                <h3 className="font-semibold text-gray-900 text-sm mb-2">
+                <h3 className="font-semibold text-slate-800 dark:text-white text-sm mb-2">
                   {channel.key === 'address' ? t.contact.officeLocation :
                    channel.key === 'phone' ? t.contact.phone :
                    channel.key === 'email' ? t.contact.email :
@@ -99,11 +98,11 @@ export default function ContactPage() {
                   else if (line === 'hoursLine1') display = settingsHoursWeekday;
                   else if (line === 'hoursLine2') display = settingsHoursSaturday;
                   return (
-                    <p key={i} className="text-gray-500 text-xs leading-relaxed">{display}</p>                  );
+                    <p key={i} className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">{display}</p>                  );
                     })}
                     {channel.key === 'hours' && (
-                  <div className="flex items-center gap-1.5 mt-3 text-[10px] text-green-600 font-semibold">
-                    <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                  <div className="flex items-center gap-1.5 mt-3 text-[10px] text-slate-600 dark:text-slate-400 font-semibold">
+                    <span className="w-1.5 h-1.5 bg-slate-500 rounded-full animate-pulse" />
                     {t.contact.openNow}
                   </div>
                 )}
@@ -118,17 +117,17 @@ export default function ContactPage() {
             {/* Left — Get In Touch & Map */}
             <div className="lg:col-span-2 space-y-8">
               <div>
-                <div className="inline-flex items-center gap-2 bg-red-50 text-red-600 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-                  <span className="w-1.5 h-1.5 bg-red-600 rounded-full" />
+                <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
+                  <span className="w-1.5 h-1.5 bg-slate-600 dark:bg-slate-400 rounded-full" />
                   {t.contact.getInTouch}
                 </div>
-                <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-3 tracking-tight">{t.contact.getInTouch}</h2>
-                <p className="text-gray-500 text-sm leading-relaxed">{t.contact.description}</p>
+                <h2 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white mb-3 tracking-tight">{t.contact.getInTouch}</h2>
+                <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{t.contact.description}</p>
               </div>
 
               {/* Decorative Map / Location Illustration */}
-              <div className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
-                <div className="bg-gradient-to-br from-green-700 to-emerald-800 p-6 text-white relative overflow-hidden">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-200 dark:border-slate-700 overflow-hidden">
+                <div className="bg-slate-700 p-6 text-white relative overflow-hidden">
                   <div className="absolute inset-0 opacity-[0.08]" style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
                   }} />
@@ -138,8 +137,8 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-bold text-base">{t.contact.officeLocation}</h3>
-                      <p className="text-green-200 text-xs mt-0.5">{t.contact.officeAddress1}</p>
-                      <p className="text-green-200 text-xs">{t.contact.officeAddress2}</p>
+                      <p className="text-slate-300 text-xs mt-0.5">{t.contact.officeAddress1}</p>
+                      <p className="text-slate-300 text-xs">{t.contact.officeAddress2}</p>
                     </div>
                   </div>
                 </div>
@@ -147,31 +146,30 @@ export default function ContactPage() {
                   <div className="flex items-start gap-3">
                     <span className="text-base shrink-0 mt-0.5">📞</span>
                     <div>
-                      <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">{t.contact.phone}</p>
-                      <p className="text-sm font-medium text-gray-800">{t.contact.mainOffice}</p>
-                      <p className="text-sm text-gray-600">{t.contact.publicRelations}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">{t.contact.phone}</p>
+                      <p className="text-sm font-medium text-slate-800 dark:text-white">{t.contact.mainOffice}</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{t.contact.publicRelations}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <span className="text-base shrink-0 mt-0.5">✉️</span>
                     <div>
-                      <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">{t.contact.email}</p>
-                      <p className="text-sm font-medium text-gray-800">{settingsEmailMain}</p>
-                      <p className="text-sm text-gray-600">{settingsEmailSupport}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">{t.contact.email}</p>
+                      <p className="text-sm font-medium text-slate-800 dark:text-white">{settingsEmailMain}</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{settingsEmailSupport}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <span className="text-base shrink-0 mt-0.5">🕐</span>
                     <div>
-                      <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">{t.footer.workingHours}</p>
-                      <p className="text-sm font-medium text-gray-800">{settingsHoursWeekday}</p>
-                      <p className="text-sm text-gray-600">{settingsHoursSaturday}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">{t.footer.workingHours}</p>
+                      <p className="text-sm font-medium text-slate-800 dark:text-white">{settingsHoursWeekday}</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{settingsHoursSaturday}</p>
                     </div>
-                  </div>
-                  <div className="pt-2 border-t border-gray-100">
+                  </div>                    <div className="pt-2 border-t border-slate-200 dark:border-slate-700">
                     <div className="flex items-center gap-2 text-xs">
-                      <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                      <span className="font-semibold text-green-700">{t.contact.openNow} — {t.contact.weAreHereToHelp}</span>
+                      <span className="w-2 h-2 bg-slate-500 rounded-full animate-pulse" />
+                      <span className="font-semibold text-slate-700 dark:text-slate-300">{t.contact.openNow} — {t.contact.weAreHereToHelp}</span>
                     </div>
                   </div>
                 </div>
@@ -180,34 +178,34 @@ export default function ContactPage() {
 
             {/* Right — Contact Form */}
             <div className="lg:col-span-3">
-              <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-8 md:p-10">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-200 dark:border-slate-700 p-8 md:p-10">
                 <div className="flex items-center gap-3 mb-8">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-600 to-emerald-400 flex items-center justify-center text-white shadow-sm">
+                  <div className="w-10 h-10 rounded-xl bg-slate-700 flex items-center justify-center text-white shadow-sm">
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                     </svg>
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900">{t.contact.sendMessage}</h2>
-                    <p className="text-xs text-gray-500 mt-0.5">{t.contact.respondWithinHours}</p>
+                    <h2 className="text-xl font-bold text-slate-800 dark:text-white">{t.contact.sendMessage}</h2>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{t.contact.respondWithinHours}</p>
                   </div>
                 </div>
 
                 {submitted ? (
                   <div className="text-center py-16">
-                    <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
-                      <svg className="w-10 h-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <div className="w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center mx-auto mb-6">
+                      <svg className="w-10 h-10 text-slate-600 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                       </svg>
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">{t.contact.thankYou}!</h3>
-                    <p className="text-gray-500 max-w-sm mx-auto">{t.contact.messageSent}</p>
+                    <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">{t.contact.thankYou}!</h3>
+                    <p className="text-slate-500 dark:text-slate-400 max-w-sm mx-auto">{t.contact.messageSent}</p>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="grid md:grid-cols-2 gap-5">
                       <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">{t.contact.fullName}</label>
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">{t.contact.fullName}</label>
                         <div className="relative">
                           <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">👤</span>
                           <input
@@ -215,13 +213,13 @@ export default function ContactPage() {
                             required
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400 bg-gray-50/50 transition"
+                            className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800 transition"
                             placeholder={t.contact.namePlaceholder}
                           />
                         </div>
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">{t.contact.emailAddress}</label>
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">{t.contact.emailAddress}</label>
                         <div className="relative">
                           <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">✉️</span>
                           <input
@@ -229,15 +227,14 @@ export default function ContactPage() {
                             required
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400 bg-gray-50/50 transition"
+                            className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800 transition"
                             placeholder={t.contact.emailPlaceholder}
                           />
                         </div>
                       </div>
                     </div>
 
-                    <div>
-                      <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">{t.contact.subject}</label>
+                    <div>                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">{t.contact.subject}</label>
                       <div className="relative">
                         <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">📋</span>
                         <input
@@ -245,13 +242,12 @@ export default function ContactPage() {
                           required
                           value={formData.subject}
                           onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400 bg-gray-50/50 transition"                            placeholder={t.contact.subjectPlaceholder}
+                          className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800 transition"                            placeholder={t.contact.subjectPlaceholder}
                         />
                       </div>
                     </div>
 
-                    <div>
-                      <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">{t.contact.messageContent}</label>
+                    <div>                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">{t.contact.messageContent}</label>
                       <div className="relative">
                         <span className="absolute left-3.5 top-4 text-gray-400 text-sm">💬</span>
                         <textarea
@@ -259,7 +255,7 @@ export default function ContactPage() {
                           required
                           value={formData.message}
                           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400 bg-gray-50/50 transition resize-none"                            placeholder={t.contact.messagePlaceholder}
+                          className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800 transition resize-none"                            placeholder={t.contact.messagePlaceholder}
                         />
                       </div>
                     </div>
@@ -267,14 +263,14 @@ export default function ContactPage() {
                     <div className="flex items-center gap-4 pt-2">
                       <button
                         type="submit"
-                        className="inline-flex items-center gap-2 bg-gradient-to-r from-green-700 to-emerald-500 hover:from-green-600 hover:to-emerald-400 text-white font-semibold py-3.5 px-8 rounded-xl transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-green-600/20"
+                        className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3.5 px-8 rounded-xl transition-all duration-200 hover:-translate-y-0.5 shadow-lg"
                       >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
                         </svg>
                         {t.contact.submit}
                       </button>
-                      <p className="text-[11px] text-gray-400">{t.contact.privacyLabel}</p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">{t.contact.privacyLabel}</p>
                     </div>
                   </form>
                 )}

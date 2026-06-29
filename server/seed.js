@@ -21,6 +21,8 @@ async function seed() {
   await conn.execute('DELETE FROM announcement');
   await conn.execute('DELETE FROM department');
   await conn.execute('DELETE FROM news');
+  await conn.execute('DELETE FROM hero_slide');
+  await conn.execute('DELETE FROM setting');
   console.log('Cleared existing seed data.\n');
 
   // ====== 1. Admins ======
@@ -120,6 +122,82 @@ async function seed() {
     );
   }
   console.log(`Contact Messages: ${contactData.length} inserted`);
+
+  // ====== 7. Hero Slides ======
+  const heroSlideData = [
+    {
+      imageUrl: 'https://www.connect4climate.org/sites/default/files/2024-11/EthiopiaBanner3.png',
+      description: 'Empowering the Gore Woreda community through modern digital administration.',
+      sortOrder: 0,
+      isActive: true,
+    },
+    {
+      imageUrl: 'https://figures.academia-assets.com/65833206/figure_020.jpg',
+      description: 'Promoting local agricultural development and sustainable resources.',
+      sortOrder: 1,
+      isActive: true,
+    },
+    {
+      imageUrl: 'https://i0.wp.com/qbo-abo-wbo.org/wp-content/uploads/2024/07/IMG-20240714-WA0001.jpg?fit=1080%2C621&ssl=1&w=640',
+      description: 'Efficient and transparent civil registry and licensing services for everyone.',
+      sortOrder: 2,
+      isActive: true,
+    },
+  ];
+
+  for (const slide of heroSlideData) {
+    await conn.execute(
+      `INSERT IGNORE INTO hero_slide (imageUrl, description, sortOrder, isActive) VALUES (?, ?, ?, ?)`,
+      [slide.imageUrl, slide.description, slide.sortOrder, slide.isActive],
+    );
+  }
+  console.log(`Hero Slides: ${heroSlideData.length} inserted`);
+
+  // ====== 8. Site Settings ======
+  const settingsData = [
+    { settingKey: 'contact_phone_main', settingValue: '+251 47 XXX XXXX' },
+    { settingKey: 'contact_phone_pr', settingValue: '+251 47 XXX XXXX' },
+    { settingKey: 'contact_email_main', settingValue: 'info@goreworeda.gov.et' },
+    { settingKey: 'contact_email_support', settingValue: 'support@goreworeda.gov.et' },
+    { settingKey: 'contact_hours_weekday', settingValue: 'Mon–Fri: 8:00 AM – 5:00 PM' },
+    { settingKey: 'contact_hours_saturday', settingValue: 'Sat: 8:00 AM – 12:00 PM' },
+    { settingKey: 'contact_address', settingValue: 'Main Municipal Building, Gore Woreda, Illubabor Zone, Oromia, Ethiopia' },
+    { settingKey: 'footer_tagline1', settingValue: 'Gore Woreda' },
+    { settingKey: 'footer_tagline2', settingValue: 'Illubabor Zone' },
+    { settingKey: 'footer_tagline3', settingValue: 'Oromia' },
+    // --- About Page Content ---
+    { settingKey: 'about_mayor_name', settingValue: 'Ato Tessema Abebe' },
+    { settingKey: 'about_mayor_bio', settingValue: 'Mayor Tessema Abebe has been leading Gore Woreda with a vision for sustainable development, transparency, and community engagement. With over 15 years of public service experience, he is committed to improving infrastructure, expanding municipal services, and fostering economic growth through agricultural development and investment promotion.' },
+    { settingKey: 'about_vice_mayor_name', settingValue: 'W/ro Genet Mekonnen' },
+    { settingKey: 'about_vice_mayor_bio', settingValue: 'Vice Mayor Genet Mekonnen oversees municipal operations and community outreach programs. Her leadership focuses on social services, women empowerment initiatives, and strengthening local governance structures across all 22 kebeles.' },
+    { settingKey: 'about_council_members', settingValue: '[{"name":"Ato Birhanu Tesfaye","role":"Council Chairperson","desc":"Oversees legislative proceedings and policy direction."},{"name":"W/ro Almaz Wondimu","role":"Finance & Budget Committee Head","desc":"Manages municipal financial planning and budget oversight."},{"name":"Ato Desta Hailu","role":"Infrastructure Development Lead","desc":"Leads road, water, and public facility development projects."},{"name":"W/ro Tirunesh Girma","role":"Social Services Coordinator","desc":"Coordinates health, education, and social welfare programs."},{"name":"Ato Kebede Assefa","role":"Agriculture & Environment Rep","desc":"Advises on agricultural policy and environmental conservation."},{"name":"W/ro Meseret Tadesse","role":"Women & Youth Affairs","desc":"Champions gender equality and youth empowerment initiatives."}]' },
+    { settingKey: 'about_history_desc', settingValue: 'Gore Woreda is a historic administrative district in the Illubabor Zone of Oromia, Ethiopia. Founded in the late 19th century around the Ras Tessema Nadew compound, Gore has grown from a small settlement into a vibrant administrative and commercial center. The woreda is renowned for its premium coffee trade legacy, organic honey cultivation, and local tea manufacturing at the famous Gummaro Tea Plantation. Today, Gore Woreda serves as a model for sustainable rural development and community governance in the region.' },
+    { settingKey: 'about_geography_desc', settingValue: 'Covering approximately 650 km² of rich highland forest geography, Gore Woreda is home to over 90,000 residents across urban and rural settlements. The woreda is administratively divided into 22 kebeles, each governed by municipal sectors that ensure effective service delivery and community participation.' },
+    { settingKey: 'about_vision_text', settingValue: 'To transform Gore Woreda into a model municipality where sustainable development, transparent governance, and community prosperity go hand in hand, leveraging our rich agricultural heritage and strategic location in the Illubabor Zone.' },
+    { settingKey: 'about_mission_text', settingValue: 'To deliver efficient municipal services, promote inclusive economic growth, preserve our cultural and environmental heritage, and ensure every citizen has access to quality public services through innovative and participatory governance.' },
+    // --- News Quick Facts ---
+    { settingKey: 'news_quickfacts_title', settingValue: 'Gore Quick Facts' },
+    { settingKey: 'news_quickfact_1_value', settingValue: 'Gore Town (Capital of Gore Woreda, Illubabor Zone, Oromia)' },
+    { settingKey: 'news_quickfact_2_value', settingValue: 'Founded in the late 19th Century around Ras Tessema Nadew compound.' },
+    { settingKey: 'news_quickfact_3_value', settingValue: 'Renowned for coffee trade legacy, organic honey cultivation, and local tea manufacturing.' },
+    // --- Stats Grid ---
+    { settingKey: 'stats_label_1', settingValue: 'Total Population' },
+    { settingKey: 'stats_detail_1', settingValue: 'Urban & rural settlements combined' },
+    { settingKey: 'stats_label_2', settingValue: 'Total Area Coverage' },
+    { settingKey: 'stats_detail_2', settingValue: 'Rich highland forest geography' },
+    { settingKey: 'stats_label_3', settingValue: 'Administrative Division' },
+    { settingKey: 'stats_detail_3', settingValue: 'Governed municipal sectors' },
+    { settingKey: 'stats_label_4', settingValue: 'Primary Economic Engine' },
+    { settingKey: 'stats_detail_4', settingValue: 'Premium Tea, Coffee, & Apiculture' },
+  ];
+
+  for (const s of settingsData) {
+    await conn.execute(
+      `INSERT IGNORE INTO setting (settingKey, settingValue) VALUES (?, ?)`,
+      [s.settingKey, s.settingValue],
+    );
+  }
+  console.log(`Site Settings: ${settingsData.length} inserted`);
 
   console.log('\n✅ Database seeding complete!');
   await conn.end();

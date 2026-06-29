@@ -39,13 +39,12 @@ export default function Hero() {
     return () => clearInterval(timer);
   }, [isHovering, goNext, slides.length]);
 
-  // Fallback if no slides: show placeholder
   if (!loading && slides.length === 0) {
     return (
-      <section className="relative h-[520px] lg:h-[600px] w-full overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
+      <section className="relative h-[520px] lg:h-[600px] w-full overflow-hidden bg-slate-900 flex items-center justify-center">
         <div className="text-center text-white px-6">
-          <div className="inline-flex items-center gap-2 bg-red-600/20 backdrop-blur-sm border border-red-500/30 text-red-200 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-6">
-            <span className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse" />
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-6">
+            <span className="w-1.5 h-1.5 bg-white/60 rounded-full animate-pulse" />
             {t.header.home}
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-5 drop-shadow-lg tracking-tight max-w-4xl">
@@ -53,7 +52,7 @@ export default function Hero() {
           </h1>
           <Link
             href="/service"
-            className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-8 py-3.5 rounded-xl font-semibold transition-all"
+            className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-8 py-3.5 rounded-xl font-semibold transition-all"
           >
             {t.hero.exploreServices}
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -67,11 +66,11 @@ export default function Hero() {
 
   if (loading || slides.length === 0) {
     return (
-      <section className="relative h-[520px] lg:h-[600px] w-full overflow-hidden bg-gray-900 animate-pulse flex items-center justify-center">
+      <section className="relative h-[520px] lg:h-[600px] w-full overflow-hidden bg-slate-800 animate-pulse flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 bg-gray-700 rounded-full mx-auto mb-4" />
-          <div className="h-6 bg-gray-700 rounded w-64 mx-auto mb-2" />
-          <div className="h-4 bg-gray-700 rounded w-48 mx-auto" />
+          <div className="w-16 h-16 bg-slate-700 rounded-full mx-auto mb-4" />
+          <div className="h-6 bg-slate-700 rounded w-64 mx-auto mb-2" />
+          <div className="h-4 bg-slate-700 rounded w-48 mx-auto" />
         </div>
       </section>
     );
@@ -85,7 +84,7 @@ export default function Hero() {
 
   return (
     <section
-      className="relative h-[520px] lg:h-[600px] w-full overflow-hidden bg-gray-900 group"
+      className="relative h-[520px] lg:h-[600px] w-full overflow-hidden bg-slate-900 group"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
@@ -103,17 +102,17 @@ export default function Hero() {
             className="w-full h-full object-cover object-center"
           />
 
-          {/* Gradient Overlay - left to right */}
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/60 to-gray-900/30" />
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-800/60 to-slate-800/30" />
 
           {/* Bottom gradient fade */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-900 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-900 to-transparent" />
 
           {/* Content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-6">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-red-600/20 backdrop-blur-sm border border-red-500/30 text-red-200 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-6 animate-fade-in">
-              <span className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse" />
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-6 animate-fade-in">
+              <span className="w-1.5 h-1.5 bg-white/60 rounded-full animate-pulse" />
               {t.header.home}
             </div>
 
@@ -123,14 +122,14 @@ export default function Hero() {
             </h1>
 
             {/* Description from API */}
-            <p className="text-lg md:text-xl max-w-2xl mx-auto drop-shadow-md font-light text-gray-200 mb-8 min-h-[3rem]">
+            <p className="text-lg md:text-xl max-w-2xl mx-auto drop-shadow-md font-light text-slate-200 mb-8 min-h-[3rem]">
               {slide.description}
             </p>
 
             {/* CTA Button */}
             <Link
               href="/service"
-              className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-8 py-3.5 rounded-xl font-semibold transition-all duration-300 shadow-xl shadow-red-600/20 hover:shadow-red-600/30 hover:-translate-y-0.5 group"
+              className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-8 py-3.5 rounded-xl font-semibold transition-all duration-300 shadow-xl shadow-black/20 hover:shadow-black/30 hover:-translate-y-0.5 group"
             >
               {t.hero.exploreServices}
               <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -171,7 +170,7 @@ export default function Hero() {
                 onClick={() => goToSlide(index)}
                 className={`rounded-full transition-all duration-300 ${
                   index === currentIndex
-                    ? 'w-10 h-2.5 bg-red-500 shadow-lg shadow-red-500/30'
+                    ? 'w-10 h-2.5 bg-white shadow-lg shadow-white/30'
                     : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/70'
                 }`}
                 aria-label={`Go to slide ${index + 1}`}

@@ -332,24 +332,24 @@ export default function AdminDashboardPage() {
 
   const tabClasses = (tabName: Tab) =>
     `px-4 py-2 text-sm font-medium rounded-lg transition ${
-      tab === tabName ? 'bg-green-700 text-white' : 'bg-white text-gray-600 hover:bg-gray-100'
+      tab === tabName ? 'bg-slate-800 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700'
     }`;
 
   const badge = (published: boolean) =>
     published
-      ? <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">{t.admin.publishedBadge}</span>
-      : <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">{t.admin.draftBadge}</span>;
+      ? <span className="text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-2 py-0.5 rounded-full font-medium">{t.admin.publishedBadge}</span>
+      : <span className="text-xs bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full font-medium">{t.admin.draftBadge}</span>;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white dark:bg-slate-900">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
+      <div className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-800">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold text-gray-900">{t.admin.dashboard}</h1>
+            <h1 className="text-xl font-bold text-slate-800 dark:text-white">{t.admin.dashboard}</h1>
             {unreadCount > 0 && <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{unreadCount}</span>}
           </div>
-          <button onClick={handleLogout} className="text-sm text-gray-500 hover:text-red-600 transition">{t.admin.logout}</button>
+          <button onClick={handleLogout} className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition">{t.admin.logout}</button>
         </div>
       </div>
 
@@ -372,9 +372,8 @@ export default function AdminDashboardPage() {
 
         {loading ? (
           <div className="animate-pulse space-y-4">
-            {[1,2,3].map((i) => (
-              <div key={i} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <div className="h-4 bg-gray-200 rounded w-1/2 mb-2" /><div className="h-3 bg-gray-200 rounded w-3/4" />
+            {[1,2,3].map((i) => (                <div key={i} className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+                <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/2 mb-2" /><div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-3/4" />
               </div>
             ))}
           </div>
@@ -391,33 +390,32 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Admin Create Modal */}
-      {showAdminModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={() => setShowAdminModal(false)}>
-          <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-lg font-bold text-gray-900 mb-2">{t.admin.addAdmin}</h2>
-            <p className="text-sm text-gray-500 mb-6">{t.admin.createAdmin}</p>
+      {showAdminModal && (          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={() => setShowAdminModal(false)}>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-2">{t.admin.addAdmin}</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">{t.admin.createAdmin}</p>
             <form onSubmit={handleCreateAdmin} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">{t.admin.fullNameLabel}</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">{t.admin.fullNameLabel}</label>
                 <input type="text" required value={adminForm.fullName} onChange={(e) => setAdminForm((p) => ({ ...p, fullName: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400" placeholder="e.g. John Doe" />
+                  className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-md focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800" placeholder="e.g. John Doe" />
               </div>
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">{t.admin.email}</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">{t.admin.email}</label>
                 <input type="email" required value={adminForm.email} onChange={(e) => setAdminForm((p) => ({ ...p, email: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400" placeholder="admin@example.com" />
+                  className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-md focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800" placeholder="admin@example.com" />
               </div>
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">{t.admin.password}</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">{t.admin.password}</label>
                 <input type="password" required minLength={8} value={adminForm.password} onChange={(e) => setAdminForm((p) => ({ ...p, password: e.target.value }))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400" placeholder="Min. 8 characters" />
+                  className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-md focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800" placeholder="Min. 8 characters" />
               </div>
-              {adminError && <p className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">{adminError}</p>}
+              {adminError && <p className="text-red-600 text-sm bg-red-50 dark:bg-red-900/20 p-3 rounded-lg">{adminError}</p>}
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={() => setShowAdminModal(false)}
-                  className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">{t.admin.cancel}</button>
+                  className="flex-1 px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition">{t.admin.cancel}</button>
                 <button type="submit" disabled={submitting}
-                  className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-green-700 rounded-lg hover:bg-green-600 transition disabled:opacity-50">
+                  className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-slate-800 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
                   {submitting ? t.admin.creating : t.admin.createAdmin}
                 </button>
               </div>
@@ -462,9 +460,9 @@ export default function AdminDashboardPage() {
                       <p className="text-sm text-gray-600 whitespace-pre-wrap">{msg.message}</p>
                       <div className="flex gap-2 mt-4">
                         {!msg.isRead && <button onClick={(e) => { e.stopPropagation(); handleMarkRead(msg.id); }}
-                          className="text-xs bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition font-medium">{t.admin.markRead}</button>}
+                          className="text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition font-medium">{t.admin.markRead}</button>}
                         <button onClick={(e) => { e.stopPropagation(); handleDeleteMsg(msg.id); }}
-                          className="text-xs bg-red-50 text-red-700 px-3 py-1.5 rounded-lg hover:bg-red-100 transition font-medium">{t.admin.delete}</button>
+                          className="text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition font-medium">{t.admin.delete}</button>
                       </div>
                     </div>
                   )}
@@ -486,7 +484,7 @@ export default function AdminDashboardPage() {
         <div className="flex justify-between items-center mb-4">
           <p className="text-sm text-gray-500">{news.length} article{news.length !== 1 ? 's' : ''}</p>
           <button onClick={() => setNewsForm({ editing: true, editingId: null, data: { ...emptyNewsForm } })}
-            className="bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-green-600 transition">{t.admin.createItem}</button>
+            className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
         </div>
         {news.length === 0 ? <p className="text-center text-gray-500 py-12">{t.admin.noItems}</p> : (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -534,38 +532,32 @@ export default function AdminDashboardPage() {
             className="text-sm text-gray-500 hover:text-gray-700 transition">{t.admin.cancelEdit}</button>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.titleField} *</label>
+          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.titleField} *</label>
             <input type="text" required value={d.title} onChange={(e) => setNewsForm((p) => ({ ...p, data: { ...p.data, title: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.slugField}</label>
+          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.slugField}</label>
             <input type="text" value={d.slug} onChange={(e) => setNewsForm((p) => ({ ...p, data: { ...p.data, slug: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" placeholder="Auto-generated from title if empty" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder="Auto-generated from title if empty" />
           </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.summaryField} *</label>
+          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.summaryField} *</label>
             <textarea required value={d.summary} onChange={(e) => setNewsForm((p) => ({ ...p, data: { ...p.data, summary: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" rows={2} />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={2} />
           </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.contentField} *</label>
+          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.contentField} *</label>
             <textarea required value={d.content} onChange={(e) => setNewsForm((p) => ({ ...p, data: { ...p.data, content: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none font-mono" rows={8} />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none font-mono bg-white dark:bg-slate-800" rows={8} />
           </div>
-          <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.coverImageField}</label>
+          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.coverImageField}</label>
             <FileUpload
               existingUrl={d.coverImage}
               onUpload={(url) => setNewsForm((p) => ({ ...p, data: { ...p.data, coverImage: url } }))}
               label="Upload Cover Image"
             />
           </div>
-          <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.statusField}</label>
+          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.statusField}</label>
             <select value={d.published ? 'true' : 'false'} onChange={(e) => setNewsForm((p) => ({ ...p, data: { ...p.data, published: e.target.value === 'true' } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none">
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800">
               <option value="true">{t.admin.publishedBadge}</option>
               <option value="false">{t.admin.draftBadge}</option>
             </select>
@@ -573,7 +565,7 @@ export default function AdminDashboardPage() {
         </div>
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={newsSubmitting}
-            className="bg-green-700 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50">
+            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
             {newsSubmitting ? t.admin.saving : t.admin.saveItem}
           </button>
         </div>
@@ -589,7 +581,7 @@ export default function AdminDashboardPage() {
         <div className="flex justify-between items-center mb-4">
           <p className="text-sm text-gray-500">{announcements.length} announcement{announcements.length !== 1 ? 's' : ''}</p>
           <button onClick={() => setAnnForm({ editing: true, editingId: null, data: { ...emptyAnnouncementForm } })}
-            className="bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-green-600 transition">{t.admin.createItem}</button>
+            className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
         </div>
         {announcements.length === 0 ? <p className="text-center text-gray-500 py-12">{t.admin.noItems}</p> : (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -639,29 +631,29 @@ export default function AdminDashboardPage() {
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.titleField} *</label>
           <input type="text" required value={d.title} onChange={(e) => setAnnForm((p) => ({ ...p, data: { ...p.data, title: e.target.value } }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
         </div>
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.summaryField} *</label>
           <textarea required value={d.description} onChange={(e) => setAnnForm((p) => ({ ...p, data: { ...p.data, description: e.target.value } }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" rows={2} />
+            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={2} />
         </div>
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.contentField} *</label>
           <textarea required value={d.content} onChange={(e) => setAnnForm((p) => ({ ...p, data: { ...p.data, content: e.target.value } }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none font-mono" rows={8} />
+            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none font-mono bg-white dark:bg-slate-800" rows={8} />
         </div>
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.statusField}</label>
           <select value={d.published ? 'true' : 'false'} onChange={(e) => setAnnForm((p) => ({ ...p, data: { ...p.data, published: e.target.value === 'true' } }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none">
+            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800">
             <option value="true">{t.admin.publishedBadge}</option>
             <option value="false">{t.admin.draftBadge}</option>
           </select>
         </div>
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={annSubmitting}
-            className="bg-green-700 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50">
+            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
             {annSubmitting ? t.admin.saving : t.admin.saveItem}
           </button>
         </div>
@@ -677,7 +669,7 @@ export default function AdminDashboardPage() {
         <div className="flex justify-between items-center mb-4">
           <p className="text-sm text-gray-500">{projects.length} project{projects.length !== 1 ? 's' : ''}</p>
           <button onClick={() => setProjForm({ editing: true, editingId: null, data: { ...emptyProjectForm } })}
-            className="bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-green-600 transition">{t.admin.createItem}</button>
+            className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
         </div>
         {projects.length === 0 ? <p className="text-center text-gray-500 py-12">{t.admin.noItems}</p> : (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -695,7 +687,7 @@ export default function AdminDashboardPage() {
                     <td className="p-4 font-medium text-gray-900 max-w-xs truncate">{item.name}</td>
                     <td className="p-4">
                       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                        item.status === 'completed' ? 'bg-green-100 text-green-700' :
+                        item.status === 'completed' ? 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200' :
                         item.status === 'ongoing' ? 'bg-blue-100 text-blue-700' :
                         'bg-amber-100 text-amber-700'
                       }`}>{item.status}</span>
@@ -729,63 +721,52 @@ export default function AdminDashboardPage() {
             className="text-sm text-gray-500 hover:text-gray-700 transition">{t.admin.cancelEdit}</button>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.nameField} *</label>
+          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.nameField} *</label>
             <input type="text" required value={d.name} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, name: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.statusField}</label>
+          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.statusField}</label>
             <select value={d.status} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, status: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none">
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800">
               <option value="planned">Planned</option>
               <option value="ongoing">Ongoing</option>
               <option value="completed">Completed</option>
               <option value="on-hold">On Hold</option>
             </select>
           </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.descriptionField} *</label>
+          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.descriptionField} *</label>
             <textarea required value={d.description} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, description: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" rows={3} />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={3} />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.budgetField}</label>
+          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.budgetField}</label>
             <input type="number" value={d.budget} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, budget: Number(e.target.value) } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.categoryField}</label>
+          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.categoryField}</label>
             <input type="text" value={d.category} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, category: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.locationField}</label>
+          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.locationField}</label>
             <input type="text" value={d.location} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, location: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.fundingSourceField}</label>
+          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.fundingSourceField}</label>
             <input type="text" value={d.fundingSource} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, fundingSource: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.contractorField}</label>
+          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.contractorField}</label>
             <input type="text" value={d.contractor} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, contractor: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.startDateField}</label>
+          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.startDateField}</label>
             <input type="date" value={d.startDate} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, startDate: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.endDateField}</label>
+          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.endDateField}</label>
             <input type="date" value={d.endDate} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, endDate: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.coverImageField}</label>
+          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.coverImageField}</label>
             <FileUpload
               existingUrl={d.coverImage}
               onUpload={(url) => setProjForm((p) => ({ ...p, data: { ...p.data, coverImage: url } }))}
@@ -795,7 +776,7 @@ export default function AdminDashboardPage() {
         </div>
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={projSubmitting}
-            className="bg-green-700 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50">
+            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
             {projSubmitting ? t.admin.saving : t.admin.saveItem}
           </button>
         </div>
@@ -811,7 +792,7 @@ export default function AdminDashboardPage() {
         <div className="flex justify-between items-center mb-4">
           <p className="text-sm text-gray-500">{departments.length} department{departments.length !== 1 ? 's' : ''}</p>
           <button onClick={() => setDeptForm({ editing: true, editingId: null, data: { ...emptyDeptForm } })}
-            className="bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-green-600 transition">{t.admin.createItem}</button>
+            className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
         </div>
         {departments.length === 0 ? <p className="text-center text-gray-500 py-12">{t.admin.noItems}</p> : (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -857,38 +838,31 @@ export default function AdminDashboardPage() {
             className="text-sm text-gray-500 hover:text-gray-700 transition">{t.admin.cancelEdit}</button>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.nameField} *</label>
+          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.nameField} *</label>
             <input type="text" required value={d.name} onChange={(e) => setDeptForm((p) => ({ ...p, data: { ...p.data, name: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.headField} *</label>
+          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.headField} *</label>
             <input type="text" required value={d.head} onChange={(e) => setDeptForm((p) => ({ ...p, data: { ...p.data, head: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.descriptionField} *</label>
+          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.descriptionField} *</label>
             <textarea required value={d.description} onChange={(e) => setDeptForm((p) => ({ ...p, data: { ...p.data, description: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" rows={3} />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={3} />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.phoneField} *</label>
+          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.phoneField} *</label>
             <input type="text" required value={d.phone} onChange={(e) => setDeptForm((p) => ({ ...p, data: { ...p.data, phone: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" placeholder="+251 47 XXX XXXX" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder="+251 47 XXX XXXX" />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.email} *</label>
+          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.email} *</label>
             <input type="email" required value={d.email} onChange={(e) => setDeptForm((p) => ({ ...p, data: { ...p.data, email: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.officeField} *</label>
+          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.officeField} *</label>
             <input type="text" required value={d.office} onChange={(e) => setDeptForm((p) => ({ ...p, data: { ...p.data, office: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.imageField}</label>
+          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.imageField}</label>
             <FileUpload
               existingUrl={d.image}
               onUpload={(url) => setDeptForm((p) => ({ ...p, data: { ...p.data, image: url } }))}
@@ -898,7 +872,7 @@ export default function AdminDashboardPage() {
         </div>
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={deptSubmitting}
-            className="bg-green-700 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50">
+            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
             {deptSubmitting ? t.admin.saving : t.admin.saveItem}
           </button>
         </div>
@@ -914,7 +888,7 @@ export default function AdminDashboardPage() {
         <div className="flex justify-between items-center mb-4">
           <p className="text-sm text-gray-500">{documents.length} document{documents.length !== 1 ? 's' : ''}</p>
           <button onClick={() => setDocForm({ editing: true, editingId: null, data: { ...emptyDocForm } })}
-            className="bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-green-600 transition">{t.admin.createItem}</button>
+            className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
         </div>
         {documents.length === 0 ? <p className="text-center text-gray-500 py-12">{t.admin.noItems}</p> : (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -966,23 +940,29 @@ export default function AdminDashboardPage() {
             className="text-sm text-gray-500 hover:text-gray-700 transition">{t.admin.cancelEdit}</button>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.titleField} *</label>
+          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.titleField} *</label>
             <input type="text" required value={d.title} onChange={(e) => setDocForm((p) => ({ ...p, data: { ...p.data, title: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.documentCategoryField} *</label>
-            <input type="text" required value={d.category} onChange={(e) => setDocForm((p) => ({ ...p, data: { ...p.data, category: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" placeholder="e.g. Policy, Report, Form" />
+          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.documentCategoryField} *</label>
+            <select required value={d.category} onChange={(e) => setDocForm((p) => ({ ...p, data: { ...p.data, category: e.target.value } }))}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800">
+              <option value="" disabled className="text-gray-400">Select a category</option>
+              <option value="policy">Policy</option>
+              <option value="report">Report</option>
+              <option value="form">Form</option>
+              <option value="regulation">Regulation</option>
+              <option value="minutes">Minutes</option>
+              <option value="budget">Budget</option>
+              <option value="plan">Plan</option>
+              <option value="notice">Notice</option>
+            </select>
           </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.descriptionField} *</label>
+          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.descriptionField} *</label>
             <textarea required value={d.description} onChange={(e) => setDocForm((p) => ({ ...p, data: { ...p.data, description: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" rows={3} />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={3} />
           </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.documentFileUrlField} *</label>
+          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.documentFileUrlField} *</label>
             <FileUpload
               existingUrl={d.fileUrl}
               onUpload={(url) => setDocForm((p) => ({ ...p, data: { ...p.data, fileUrl: url } }))}
@@ -993,7 +973,7 @@ export default function AdminDashboardPage() {
         </div>
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={docSubmitting}
-            className="bg-green-700 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50">
+            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
             {docSubmitting ? t.admin.saving : t.admin.saveItem}
           </button>
         </div>
@@ -1009,7 +989,7 @@ export default function AdminDashboardPage() {
         <div className="flex justify-between items-center mb-4">
           <p className="text-sm text-gray-500">{investments.length} investment{investments.length !== 1 ? 's' : ''}</p>
           <button onClick={() => setInvForm({ editing: true, editingId: null, data: { ...emptyInvestmentForm } })}
-            className="bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-green-600 transition">{t.admin.createItem}</button>
+            className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
         </div>
         {investments.length === 0 ? <p className="text-center text-gray-500 py-12">{t.admin.noItems}</p> : (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -1059,15 +1039,13 @@ export default function AdminDashboardPage() {
             className="text-sm text-gray-500 hover:text-gray-700 transition">{t.admin.cancelEdit}</button>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.titleField} *</label>
+          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.titleField} *</label>
             <input type="text" required value={d.title} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, title: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Category *</label>
+          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Category *</label>
             <select value={d.category} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, category: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none">
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800">
               <option value="opportunity">Opportunity</option>
               <option value="incentive">Incentive</option>
               <option value="attraction">Attraction</option>
@@ -1076,41 +1054,34 @@ export default function AdminDashboardPage() {
               <option value="local-product">Local Product</option>
             </select>
           </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.descriptionField} *</label>
+          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.descriptionField} *</label>
             <textarea required value={d.description} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, description: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" rows={3} />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={3} />
           </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.contentField} *</label>
+          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.contentField} *</label>
             <textarea required value={d.content} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, content: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none font-mono" rows={8} />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none font-mono bg-white dark:bg-slate-800" rows={8} />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.locationField}</label>
+          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.locationField}</label>
             <input type="text" value={d.location} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, location: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.statusField}</label>
+          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.statusField}</label>
             <select value={d.published ? 'true' : 'false'} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, published: e.target.value === 'true' } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none">
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800">
               <option value="true">{t.admin.publishedBadge}</option>
               <option value="false">{t.admin.draftBadge}</option>
             </select>
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Contact Phone</label>
+          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Contact Phone</label>
             <input type="text" value={d.contactPhone} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, contactPhone: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Contact Email</label>
+          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Contact Email</label>
             <input type="email" value={d.contactEmail} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, contactEmail: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.coverImageField}</label>
+          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.coverImageField}</label>
             <FileUpload
               existingUrl={d.coverImage}
               onUpload={(url) => setInvForm((p) => ({ ...p, data: { ...p.data, coverImage: url } }))}
@@ -1120,7 +1091,7 @@ export default function AdminDashboardPage() {
         </div>
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={invSubmitting}
-            className="bg-green-700 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50">
+            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
             {invSubmitting ? t.admin.saving : t.admin.saveItem}
           </button>
         </div>
@@ -1137,7 +1108,7 @@ export default function AdminDashboardPage() {
         <div className="flex justify-between items-center mb-4">
           <p className="text-sm text-gray-500">{heroSlides.length} slide{heroSlides.length !== 1 ? 's' : ''}</p>
           <button onClick={() => setSlideForm({ editing: true, editingId: null, data: { imageUrl: '', description: '', sortOrder: heroSlides.length, isActive: true } })}
-            className="bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-green-600 transition">{t.admin.createItem}</button>
+            className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
         </div>
         {heroSlides.length === 0 ? <p className="text-center text-gray-500 py-12">{t.admin.noItems}</p> : (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -1158,7 +1129,7 @@ export default function AdminDashboardPage() {
                     <td className="p-4 text-gray-700 text-xs max-w-xs truncate">{slide.description}</td>
                     <td className="p-4 text-gray-500 text-xs">{slide.sortOrder}</td>
                     <td className="p-4">
-                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${slide.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${slide.isActive ? 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200' : 'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400'}`}>
                         {slide.isActive ? t.admin.publishedBadge : t.admin.draftBadge}
                       </span>
                     </td>
@@ -1189,25 +1160,21 @@ export default function AdminDashboardPage() {
             className="text-sm text-gray-500 hover:text-gray-700 transition">{t.admin.cancelEdit}</button>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Image URL *</label>
+          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Image URL *</label>
             <input type="text" required value={d.imageUrl} onChange={(e) => setSlideForm((p) => ({ ...p, data: { ...p.data, imageUrl: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" placeholder="https://example.com/image.jpg" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder="https://example.com/image.jpg" />
           </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Description *</label>
+          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Description *</label>
             <textarea required value={d.description} onChange={(e) => setSlideForm((p) => ({ ...p, data: { ...p.data, description: e.target.value } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" rows={3} placeholder="Slide caption text" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={3} placeholder="Slide caption text" />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Sort Order</label>
+          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Sort Order</label>
             <input type="number" value={d.sortOrder} onChange={(e) => setSlideForm((p) => ({ ...p, data: { ...p.data, sortOrder: parseInt(e.target.value) || 0 } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Active</label>
+          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Active</label>
             <select value={d.isActive ? 'true' : 'false'} onChange={(e) => setSlideForm((p) => ({ ...p, data: { ...p.data, isActive: e.target.value === 'true' } }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none">
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800">
               <option value="true">Active</option>
               <option value="false">Inactive</option>
             </select>
@@ -1215,7 +1182,7 @@ export default function AdminDashboardPage() {
         </div>
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={slideSubmitting}
-            className="bg-green-700 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50">
+            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
             {slideSubmitting ? t.admin.saving : t.admin.saveItem}
           </button>
         </div>
@@ -1236,6 +1203,30 @@ export default function AdminDashboardPage() {
       { key: 'footer_tagline1', label: 'Footer Tagline 1', placeholder: 'Gore Woreda' },
       { key: 'footer_tagline2', label: 'Footer Tagline 2', placeholder: 'Illubabor Zone' },
       { key: 'footer_tagline3', label: 'Footer Tagline 3', placeholder: 'Oromia' },
+      // --- About Page Content ---
+      { key: 'about_mayor_name', label: 'Mayor Name', placeholder: 'Ato Tessema Abebe' },
+      { key: 'about_mayor_bio', label: 'Mayor Biography', placeholder: 'Mayor biography text...', textarea: true },
+      { key: 'about_vice_mayor_name', label: 'Vice Mayor Name', placeholder: 'W/ro Genet Mekonnen' },
+      { key: 'about_vice_mayor_bio', label: 'Vice Mayor Biography', placeholder: 'Vice mayor biography text...', textarea: true },
+      { key: 'about_council_members', label: 'Council Members (JSON)', placeholder: '[{"name":"...","role":"...","desc":"..."},...]', textarea: true },
+      { key: 'about_history_desc', label: 'History Description', placeholder: 'History text...', textarea: true },
+      { key: 'about_geography_desc', label: 'Geography Description', placeholder: 'Geography text...', textarea: true },
+      { key: 'about_vision_text', label: 'Vision Text', placeholder: 'Vision statement...', textarea: true },
+      { key: 'about_mission_text', label: 'Mission Text', placeholder: 'Mission statement...', textarea: true },
+      // --- News Quick Facts ---
+      { key: 'news_quickfacts_title', label: 'Quick Facts Section Title', placeholder: 'Gore Quick Facts' },
+      { key: 'news_quickfact_1_value', label: 'Quick Fact 1 — Value', placeholder: 'Gore Town (Capital of Gore Woreda...)' },
+      { key: 'news_quickfact_2_value', label: 'Quick Fact 2 — Value', placeholder: 'Founded in the late 19th Century...' },
+      { key: 'news_quickfact_3_value', label: 'Quick Fact 3 — Value', placeholder: 'Renowned for coffee trade legacy...' },
+      // --- Stats Grid ---
+      { key: 'stats_label_1', label: 'Stat 1 — Label', placeholder: 'Total Population' },
+      { key: 'stats_detail_1', label: 'Stat 1 — Detail', placeholder: 'Urban & rural settlements combined' },
+      { key: 'stats_label_2', label: 'Stat 2 — Label', placeholder: 'Total Area Coverage' },
+      { key: 'stats_detail_2', label: 'Stat 2 — Detail', placeholder: 'Rich highland forest geography' },
+      { key: 'stats_label_3', label: 'Stat 3 — Label', placeholder: 'Administrative Division' },
+      { key: 'stats_detail_3', label: 'Stat 3 — Detail', placeholder: 'Governed municipal sectors' },
+      { key: 'stats_label_4', label: 'Stat 4 — Label', placeholder: 'Primary Economic Engine' },
+      { key: 'stats_detail_4', label: 'Stat 4 — Detail', placeholder: 'Premium Tea, Coffee, & Apiculture' },
     ];
     return (
       <form onSubmit={handleSaveSettings} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-5 max-w-2xl">
@@ -1246,20 +1237,29 @@ export default function AdminDashboardPage() {
           {t.admin.settingsDescription}
         </p>
         {settingFields.map((field) => (
-          <div key={field.key}>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">{field.label}</label>
-            <input
-              type="text"
-              value={settingsForm[field.key] || ''}
-              onChange={(e) => setSettingsForm((p) => ({ ...p, [field.key]: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none"
-              placeholder={field.placeholder}
-            />
+          <div key={field.key}>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{field.label}</label>
+            {'textarea' in field && field.textarea ? (
+              <textarea
+                rows={field.key === 'about_council_members' ? 6 : 4}
+                value={settingsForm[field.key] || ''}
+                onChange={(e) => setSettingsForm((p) => ({ ...p, [field.key]: e.target.value }))}
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none font-mono bg-white dark:bg-slate-800"
+                placeholder={field.placeholder}
+              />
+            ) : (
+              <input
+                type="text"
+                value={settingsForm[field.key] || ''}
+                onChange={(e) => setSettingsForm((p) => ({ ...p, [field.key]: e.target.value }))}
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800"
+                placeholder={field.placeholder}
+              />
+            )}
           </div>
         ))}
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={settingsSaving}
-            className="bg-green-700 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50">
+            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
             {settingsSaving ? t.admin.saving : t.admin.saveAllSettings}
           </button>
         </div>
@@ -1274,7 +1274,7 @@ export default function AdminDashboardPage() {
         <div className="flex justify-between items-center mb-4">
           <p className="text-sm text-gray-500">{admins.length} {t.admin.registered}</p>
           <button onClick={() => setShowAdminModal(true)}
-            className="bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-green-600 transition">+ {t.admin.addAdmin}</button>
+            className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">+ {t.admin.addAdmin}</button>
         </div>
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <table className="w-full text-sm">
@@ -1292,7 +1292,7 @@ export default function AdminDashboardPage() {
                   <td className="p-4 text-gray-500">{admin.email}</td>
                   <td className="p-4">
                     <button onClick={() => handleToggleActive(admin)} disabled={togglingId === admin.id}
-                      className={`text-xs px-2.5 py-1 rounded-full font-medium transition ${togglingId === admin.id ? 'opacity-50 cursor-not-allowed' : admin.isActive ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-red-100 text-red-700 hover:bg-red-200'}`}>
+                      className={`text-xs px-2.5 py-1 rounded-full font-medium transition ${togglingId === admin.id ? 'opacity-50 cursor-not-allowed' : admin.isActive ? 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600' : 'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600'}`}>
                       {admin.isActive ? t.admin.activeBadge : t.admin.disabledBadge}
                     </button>
                   </td>
