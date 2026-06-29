@@ -22,6 +22,18 @@ export class News {
   title!: string;
 
   @Column({
+    length: 255,
+    nullable: true,
+  })
+  titleAm!: string;
+
+  @Column({
+    length: 255,
+    nullable: true,
+  })
+  titleOm!: string;
+
+  @Column({
     unique: true,
     length: 255,
   })
@@ -33,9 +45,33 @@ export class News {
   summary!: string;
 
   @Column({
+    type: 'text',
+    nullable: true,
+  })
+  summaryAm!: string;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  summaryOm!: string;
+
+  @Column({
     type: 'longtext',
   })
   content!: string;
+
+  @Column({
+    type: 'longtext',
+    nullable: true,
+  })
+  contentAm!: string;
+
+  @Column({
+    type: 'longtext',
+    nullable: true,
+  })
+  contentOm!: string;
 
   @Column({
     nullable: true,

@@ -12,9 +12,25 @@ export class CreateDepartmentDto {
   @IsNotEmpty()
   name!: string;
 
+  @IsOptional()
+  @IsString()
+  nameAm?: string;
+
+  @IsOptional()
+  @IsString()
+  nameOm?: string;
+
   @IsString()
   @IsNotEmpty()
   description!: string;
+
+  @IsOptional()
+  @IsString()
+  descriptionAm?: string;
+
+  @IsOptional()
+  @IsString()
+  descriptionOm?: string;
 
   @IsString()
   @IsNotEmpty()

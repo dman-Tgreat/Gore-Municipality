@@ -20,16 +20,52 @@ export class Announcement {
         length: 255,
       })
       title!: string;
-    
+
+      @Column({
+        length: 255,
+        nullable: true,
+      })
+      titleAm!: string;
+
+      @Column({
+        length: 255,
+        nullable: true,
+      })
+      titleOm!: string;
+
       @Column({
         length: 255,
       })
       description!: string;
-    
+
+      @Column({
+        length: 255,
+        nullable: true,
+      })
+      descriptionAm!: string;
+
+      @Column({
+        length: 255,
+        nullable: true,
+      })
+      descriptionOm!: string;
+
       @Column({
         type: 'longtext',
       })
       content!: string;
+
+      @Column({
+        type: 'longtext',
+        nullable: true,
+      })
+      contentAm!: string;
+
+      @Column({
+        type: 'longtext',
+        nullable: true,
+      })
+      contentOm!: string;
     
       @Column({
         default: true,

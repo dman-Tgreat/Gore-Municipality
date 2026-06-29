@@ -21,8 +21,32 @@ export class Department {
 
     @Column({
     type: 'text',
+    nullable: true,
+    })
+    nameAm!: string;
+
+    @Column({
+    type: 'text',
+    nullable: true,
+    })
+    nameOm!: string;
+
+    @Column({
+    type: 'text',
     })
     description!: string;
+
+    @Column({
+    type: 'text',
+    nullable: true,
+    })
+    descriptionAm!: string;
+
+    @Column({
+    type: 'text',
+    nullable: true,
+    })
+    descriptionOm!: string;
 
     @Column({
     type: 'text',

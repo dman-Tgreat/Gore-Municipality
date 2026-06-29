@@ -21,9 +21,33 @@ export class Project {
   name!: string;
 
   @Column({
+    length: 255,
+    nullable: true,
+  })
+  nameAm!: string;
+
+  @Column({
+    length: 255,
+    nullable: true,
+  })
+  nameOm!: string;
+
+  @Column({
     type: 'text',
   })
   description!: string;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  descriptionAm!: string;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  descriptionOm!: string;
 
   @Column({
     type: 'decimal',

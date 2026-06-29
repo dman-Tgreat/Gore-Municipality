@@ -15,15 +15,41 @@ export class CreateNewsDto {
   @IsOptional()
   @IsString()
   @MaxLength(255)
+  titleAm?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  titleOm?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
   slug?: string;
 
   @IsString()
   @IsNotEmpty()
   summary!: string;
 
+  @IsOptional()
+  @IsString()
+  summaryAm?: string;
+
+  @IsOptional()
+  @IsString()
+  summaryOm?: string;
+
   @IsString()
   @IsNotEmpty()
   content!: string;
+
+  @IsOptional()
+  @IsString()
+  contentAm?: string;
+
+  @IsOptional()
+  @IsString()
+  contentOm?: string;
 
   @IsOptional()
   @IsString()
