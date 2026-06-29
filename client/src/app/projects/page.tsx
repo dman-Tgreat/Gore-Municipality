@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Header from '@/component/Header';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
+import { tField } from '@/lib/locale';
 import { projectsApi, type Project } from '@/lib/api';
 
 const statusColors: Record<string, string> = {
@@ -15,7 +16,7 @@ const statusColors: Record<string, string> = {
 };
 
 export default function ProjectsPage() {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -97,12 +98,12 @@ export default function ProjectsPage() {
                   )}
                   <div className="p-4 sm:p-6 space-y-2.5 sm:space-y-3">
                     <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-bold text-sm sm:text-base text-slate-800 dark:text-white leading-tight line-clamp-2">{project.name}</h3>
+                      <h3 className="font-bold text-sm sm:text-base text-slate-800 dark:text-white leading-tight line-clamp-2">{tField(project, 'name', locale)}</h3>
                       <span className={`text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full font-medium shrink-0 whitespace-nowrap ${statusColors[project.status] || 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400'}`}>
                         {project.status}
                       </span>
                     </div>
-                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-2 sm:line-clamp-3">{project.description}</p>
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-2 sm:line-clamp-3">{tField(project, 'description', locale)}</p>
 
                     {/* Budget Progress Bar */}
                     {project.budget && (

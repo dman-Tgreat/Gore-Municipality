@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Header from '@/component/Header';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
+import { tField } from '@/lib/locale';
 import { documentsApi, type Document } from '@/lib/api';
 
 const categoryIcons: Record<string, string> = {
@@ -18,16 +19,7 @@ const categoryIcons: Record<string, string> = {
   notice: '📢',
 };
 
-const categoryGradients = [
-  'from-blue-500 to-blue-400',
-  'from-emerald-500 to-emerald-400',
-  'from-purple-500 to-purple-400',
-  'from-amber-500 to-amber-400',
-  'from-rose-500 to-rose-400',
-  'from-cyan-500 to-cyan-400',
-  'from-indigo-500 to-indigo-400',
-  'from-teal-500 to-teal-400',
-];
+
 
 function getFileIcon(fileUrl: string): string {
   const ext = fileUrl.split('.').pop()?.toLowerCase() || '';
@@ -48,7 +40,7 @@ function getFileType(fileUrl: string): string {
 }
 
 export default function DocumentsPage() {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
@@ -78,7 +70,7 @@ export default function DocumentsPage() {
         <section className="bg-slate-800 text-white py-14 px-4 text-center">
           <div className="container mx-auto">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-              <span className="w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse" />
+              <span className="w-1.5 h-1.5 bg-white/60 rounded-full animate-pulse" />
               {t.admin.cmsDocuments}
             </div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-black px-2">{t.documents.title}</h1>
@@ -150,8 +142,7 @@ export default function DocumentsPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {filtered.map((doc, idx) => {
-                const gradient = categoryGradients[idx % categoryGradients.length];
+              {filtered.map((doc) => {
                 const icon = categoryIcons[doc.category] || getFileIcon(doc.fileUrl);
                 return (
                   <div
@@ -164,7 +155,7 @@ export default function DocumentsPage() {
                         {icon}
                       </div>
                       <div className="min-w-0 text-white">
-                        <h3 className="font-bold text-sm sm:text-base leading-tight truncate">{doc.title}</h3>
+                        <h3 className="font-bold text-sm sm:text-base leading-tight truncate">{tField(doc, 'title', locale)}</h3>
                         <p className="text-[10px] sm:text-xs text-white/80 truncate">
                           {doc.category.charAt(0).toUpperCase() + doc.category.slice(1)}
                         </p>
@@ -174,7 +165,7 @@ export default function DocumentsPage() {
                     {/* Body */}
                     <div className="p-4 sm:p-5 space-y-3">
                       <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">
-                        {doc.description}
+                        {tField(doc, 'description', locale)}
                       </p>
 
                       <div className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 space-y-1.5 pt-2 border-t border-slate-200 dark:border-slate-700">

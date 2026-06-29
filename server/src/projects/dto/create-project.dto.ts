@@ -13,9 +13,27 @@ export class CreateProjectDto {
   @MaxLength(255)
   name!: string;
 
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  nameAm?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  nameOm?: string;
+
   @IsString()
   @IsNotEmpty()
   description!: string;
+
+  @IsOptional()
+  @IsString()
+  descriptionAm?: string;
+
+  @IsOptional()
+  @IsString()
+  descriptionOm?: string;
 
   @IsOptional()
   @IsNumber()

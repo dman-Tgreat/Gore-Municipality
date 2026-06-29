@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Header from '@/component/Header';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
+import { tField } from '@/lib/locale';
 import { investmentsApi, type Investment } from '@/lib/api';
 
 const categoryConfig: Record<string, { label: string; icon: string }> = {
@@ -20,7 +21,7 @@ const categoryConfig: Record<string, { label: string; icon: string }> = {
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 export default function InvestmentDetailPage() {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
   const params = useParams();
   const [investment, setInvestment] = useState<Investment | null>(null);
   const [loading, setLoading] = useState(true);
@@ -90,7 +91,7 @@ export default function InvestmentDetailPage() {
         ) : (
           <div className="w-full h-full bg-slate-800" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 via-gray-900/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-slate-900/50 to-transparent" />
         <div className="absolute inset-0 flex flex-col justify-center">
           <div className="container mx-auto px-6">
             <Link href="/investment-tourism" className="inline-flex items-center gap-1 text-white/70 hover:text-white text-sm mb-4 transition-colors">
@@ -107,7 +108,7 @@ export default function InvestmentDetailPage() {
                 <span className="text-xs px-3 py-1 rounded-full font-semibold bg-white/20 text-white inline-block mb-2">
                   {cfg.label}
                 </span>
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white">{investment.title}</h1>
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white">{tField(investment, 'title', locale)}</h1>
               </div>
             </div>
           </div>
@@ -124,7 +125,7 @@ export default function InvestmentDetailPage() {
                 <span className="w-1.5 h-6 rounded-full bg-slate-700" />
                 Overview
               </h2>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-base">{investment.description}</p>
+              <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-base">{tField(investment, 'description', locale)}</p>
             </div>
 
             {/* Full Content */}
@@ -135,7 +136,7 @@ export default function InvestmentDetailPage() {
                   Details
                 </h2>
                 <div className="text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
-                  {investment.content}
+                  {tField(investment, 'content', locale)}
                 </div>
               </div>
             )}

@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Header from '@/component/Header';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
+import { tField } from '@/lib/locale';
 import { newsApi, announcementsApi, settingsApi, type NewsArticle, type Announcement, type SiteSetting } from '@/lib/api';
 
 type Tab = 'news' | 'announcements';
@@ -12,7 +13,7 @@ type Tab = 'news' | 'announcements';
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 export default function NewsPage() {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>(() => {
     const tab = searchParams.get('tab');
@@ -66,7 +67,7 @@ export default function NewsPage() {
           }} />
           <div className="relative container mx-auto px-6">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-              <span className="w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse" />
+              <span className="w-1.5 h-1.5 bg-white/60 rounded-full animate-pulse" />
               {t.header.home}
             </div>
             <h1 className="text-3xl md:text-4xl font-black tracking-tight">
@@ -157,10 +158,10 @@ export default function NewsPage() {
                           </span>
                         </div>
                         <h3 className="text-lg font-bold text-slate-800 dark:text-white hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer">
-                          {article.title}
+                          {tField(article, 'title', locale)}
                         </h3>
                         <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                          {article.summary}
+                          {tField(article, 'summary', locale)}
                         </p>
                         <button className="text-slate-700 dark:text-slate-300 text-sm font-semibold hover:text-slate-800 dark:hover:text-white transition-colors inline-flex items-center gap-1">
                           {t.announcements.readMore}
@@ -234,8 +235,8 @@ export default function NewsPage() {
                               {new Date(announcement.createdAt).toLocaleDateString()}
                             </span>
                           </div>
-                          <h3 className="text-lg font-bold text-slate-800 dark:text-white">{announcement.title}</h3>
-                          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">{announcement.description}</p>
+                          <h3 className="text-lg font-bold text-slate-800 dark:text-white">{tField(announcement, 'title', locale)}</h3>
+                          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">{tField(announcement, 'description', locale)}</p>
                         </div>
                         <div className={`shrink-0 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center transition-all duration-200 ${
                           expandedId === announcement.id ? 'rotate-180 bg-slate-200 dark:bg-slate-600 text-slate-700 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500'
@@ -249,7 +250,7 @@ export default function NewsPage() {
                         <div className="px-6 pb-6 border-t border-slate-200 dark:border-slate-700 pt-4">
                           <div className="p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
                             <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed whitespace-pre-line">
-                              {announcement.content}
+                              {tField(announcement, 'content', locale)}
                             </p>
                           </div>
                         </div>

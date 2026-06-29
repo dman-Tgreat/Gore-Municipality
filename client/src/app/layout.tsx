@@ -1,22 +1,28 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import { LocaleProvider } from "@/context/LocaleContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Gore Woreda Municipal Portal",
-  description: "Official website of Gore Woreda Administration",
+  title: "Gore Woreda — Official Municipal Portal",
+  description:
+    "Official website of the Gore Woreda Administration, Illubabor Zone, Oromia, Ethiopia. Access municipal services, news, documents, and public information.",
+  keywords: [
+    "Gore Woreda",
+    "Gore Municipality",
+    "Illubabor",
+    "Oromia",
+    "Ethiopia",
+    "municipal services",
+    "government",
+  ],
 };
 
 export default function RootLayout({
@@ -27,7 +33,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} font-sans h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
@@ -50,7 +56,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
         <ThemeProvider>
           <LocaleProvider>{children}</LocaleProvider>
         </ThemeProvider>

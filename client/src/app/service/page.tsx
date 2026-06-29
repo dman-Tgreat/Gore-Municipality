@@ -5,12 +5,13 @@ import Link from 'next/link';
 import Header from '@/component/Header';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
+import { tField } from '@/lib/locale';
 import { departmentsApi, type Department } from '@/lib/api';
 
 const icons = ['📋', '🌱', '🏢', '⚕️', '🔧', '📚', '🏛️', '⚖️'];
 
 export default function ServicesPage() {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
   const [departments, setDepartments] = useState<Department[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -61,12 +62,12 @@ export default function ServicesPage() {
                       {icons[idx % icons.length]}
                     </div>
                     <div className="text-white">
-                      <h2 className="text-lg font-bold">{dept.name}</h2>
+                      <h2 className="text-lg font-bold">{tField(dept, 'name', locale)}</h2>
                       <p className="text-xs text-slate-300">{dept.head}</p>
                     </div>
                   </div>
                   <div className="p-6 space-y-3">
-                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">{dept.description}</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">{tField(dept, 'description', locale)}</p>
                     <div className="text-xs text-slate-500 dark:text-slate-400 space-y-1.5 pt-3 border-t border-slate-200 dark:border-slate-700">
                       {dept.phone && <p className="flex items-center gap-1.5"><span>📞</span> {dept.phone}</p>}
                       {dept.email && <p className="flex items-center gap-1.5"><span>✉️</span> {dept.email}</p>}

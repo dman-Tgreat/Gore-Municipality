@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Header from '@/component/Header';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
+import { tField } from '@/lib/locale';
 import { investmentsApi, type Investment } from '@/lib/api';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
@@ -88,7 +89,7 @@ const sectionToCategory: Record<string, string> = {
 };
 
 export default function InvestmentTourismPage() {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
   const [investments, setInvestments] = useState<Investment[]>([]);
   const [invLoading, setInvLoading] = useState(true);
 

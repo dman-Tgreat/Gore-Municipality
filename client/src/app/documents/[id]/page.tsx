@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Header from '@/component/Header';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
+import { tField } from '@/lib/locale';
 import { documentsApi, type Document } from '@/lib/api';
 
 const categoryIcons: Record<string, string> = {
@@ -17,17 +18,6 @@ const categoryIcons: Record<string, string> = {
   budget: '💰',
   plan: '📐',
   notice: '📢',
-};
-
-const categoryGradients: Record<string, string> = {
-  policy: 'from-blue-500 to-blue-400',
-  report: 'from-emerald-500 to-emerald-400',
-  form: 'from-purple-500 to-purple-400',
-  regulation: 'from-amber-500 to-amber-400',
-  minutes: 'from-rose-500 to-rose-400',
-  budget: 'from-cyan-500 to-cyan-400',
-  plan: 'from-indigo-500 to-indigo-400',
-  notice: 'from-teal-500 to-teal-400',
 };
 
 function getFileTypeLabel(fileUrl: string): string {
@@ -49,7 +39,7 @@ function isPdfFile(fileUrl: string): boolean {
 }
 
 export default function DocumentDetailPage() {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
   const params = useParams();
   const id = Number(params.id);
 
@@ -85,8 +75,6 @@ export default function DocumentDetailPage() {
       .catch(() => {});
   }, [doc]);
 
-  const defaultGradient = 'from-green-500 to-emerald-400';
-  const gradient = categoryGradients[doc?.category || ''] || defaultGradient;
   const icon = categoryIcons[doc?.category || ''] || '📁';
 
   const formatDate = (dateStr: string) =>
@@ -157,7 +145,7 @@ export default function DocumentDetailPage() {
                 <span className="inline-block bg-white/20 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full mb-2">
                   {doc.category.charAt(0).toUpperCase() + doc.category.slice(1)}
                 </span>
-                <h1 className="text-2xl md:text-3xl font-black leading-tight">{doc.title}</h1>
+                <h1 className="text-2xl md:text-3xl font-black leading-tight">{tField(doc, 'title', locale)}</h1>
               </div>
             </div>
           </div>
@@ -193,7 +181,7 @@ export default function DocumentDetailPage() {
               {/* Description */}
               <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
                 <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-3">{t.documents.documentDetail}</h2>
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed whitespace-pre-line">{doc.description}</p>
+                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed whitespace-pre-line">{tField(doc, 'description', locale)}</p>
               </div>
 
               {/* Action Buttons */}
@@ -264,7 +252,6 @@ export default function DocumentDetailPage() {
                   <div className="space-y-3">
                     {related.map((relDoc) => {
                       const relIcon = categoryIcons[relDoc.category] || '📁';
-                      const relGradient = categoryGradients[relDoc.category] || defaultGradient;
                       return (
                         <Link
                           key={relDoc.id}
@@ -276,9 +263,9 @@ export default function DocumentDetailPage() {
                           </div>
                           <div className="min-w-0">
                             <p className="text-xs font-semibold text-slate-800 dark:text-white group-hover:text-slate-700 dark:group-hover:text-slate-300 transition truncate">
-                              {relDoc.title}
+                              {tField(relDoc, 'title', locale)}
                             </p>
-                            <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{relDoc.description}</p>
+                            <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{tField(relDoc, 'description', locale)}</p>
                           </div>
                         </Link>
                       );

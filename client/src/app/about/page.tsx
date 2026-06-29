@@ -13,11 +13,6 @@ const councilIcon = (
   </svg>
 );
 
-const mayorSeal = (
-  <svg className="w-7 h-7 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-  </svg>
-);
 
 const visionIcon = (
   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -75,8 +70,8 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDE4YzEuNjU3IDAgMy0xLjM0MyAzLTNzLTEuMzQzLTMtMy0zLTMgMS4zNDMtMyAzIDEuMzQzIDMgMyAzem0tMTIgMGMxLjY1NyAwIDMtMS4zNDMgMy0zcy0xLjM0My0zLTMtMy0zIDEuMzQzLTMgMyAxLjM0MyAzIDMgM3oiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40" />
         <div className="container mx-auto px-6 py-20 md:py-28 relative z-10">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 bg-red-500/20 text-red-300 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4 backdrop-blur-sm border border-red-500/10">
-              <span className="w-1.5 h-1.5 bg-red-400 rounded-full" />
+            <div className="inline-flex items-center gap-2 bg-white/10 text-white/70 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4 backdrop-blur-sm border border-white/10">
+              <span className="w-1.5 h-1.5 bg-white/60 rounded-full" />
               {t.header.about}
             </div>
             <h1 className="text-4xl md:text-5xl font-black mb-4 tracking-tight">{t.about.title}</h1>
@@ -170,8 +165,7 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
             {/* Mayor Card */}
             <div className="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg text-center">
-              <div className="w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-700 mx-auto mb-5 flex items-center justify-center border-2 border-slate-200 dark:border-slate-600 group-hover:border-slate-400 dark:group-hover:border-slate-500 transition-colors">
-                <span className="text-4xl text-slate-700 dark:text-slate-300">{mayorSeal}</span>
+              <div className="w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-700 mx-auto mb-5 flex items-center justify-center border-2 border-slate-200 dark:border-slate-600 group-hover:border-slate-400 dark:group-hover:border-slate-500 transition-colors">                  <span className="text-4xl text-slate-700 dark:text-slate-300">👤</span>
               </div>
               <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-1">{t.about.mayorTitle}</h3>
               <p className="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-3">{getSetting('about_mayor_name', t.about.mayorName)}</p>
@@ -180,8 +174,7 @@ export default function AboutPage() {
 
             {/* Vice Mayor Card */}
             <div className="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg text-center">
-              <div className="w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-700 mx-auto mb-5 flex items-center justify-center border-2 border-slate-200 dark:border-slate-600 group-hover:border-slate-400 dark:group-hover:border-slate-500 transition-colors">
-                <span className="text-4xl text-slate-700 dark:text-slate-300">{mayorSeal}</span>
+              <div className="w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-700 mx-auto mb-5 flex items-center justify-center border-2 border-slate-200 dark:border-slate-600 group-hover:border-slate-400 dark:group-hover:border-slate-500 transition-colors">                  <span className="text-4xl text-slate-700 dark:text-slate-300">👤</span>
               </div>
               <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-1">{t.about.viceMayorTitle}</h3>
               <p className="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-3">{getSetting('about_vice_mayor_name', t.about.viceMayorName)}</p>

@@ -26,9 +26,15 @@ function authHeaders(token: string): Record<string, string> {
 export interface NewsArticle {
   id: number;
   title: string;
+  titleAm?: string;
+  titleOm?: string;
   slug: string;
   summary: string;
+  summaryAm?: string;
+  summaryOm?: string;
   content: string;
+  contentAm?: string;
+  contentOm?: string;
   coverImage?: string;
   published: boolean;
   createdBy: { id: number; fullName: string; email: string };
@@ -50,8 +56,14 @@ export const newsApi = {
 export interface Announcement {
   id: number;
   title: string;
+  titleAm?: string;
+  titleOm?: string;
   description: string;
+  descriptionAm?: string;
+  descriptionOm?: string;
   content: string;
+  contentAm?: string;
+  contentOm?: string;
   published: boolean;
   createdBy: { id: number; fullName: string; email: string };
   createdAt: string;
@@ -72,7 +84,11 @@ export const announcementsApi = {
 export interface Department {
   id: number;
   name: string;
+  nameAm?: string;
+  nameOm?: string;
   description: string;
+  descriptionAm?: string;
+  descriptionOm?: string;
   head: string;
   phone: string;
   email: string;
@@ -96,7 +112,11 @@ export const departmentsApi = {
 export interface Project {
   id: number;
   name: string;
+  nameAm?: string;
+  nameOm?: string;
   description: string;
+  descriptionAm?: string;
+  descriptionOm?: string;
   budget?: number;
   status: string;
   startDate?: string;
@@ -197,7 +217,11 @@ export const adminApi = {
 export interface Document {
   id: number;
   title: string;
+  titleAm?: string;
+  titleOm?: string;
   description: string;
+  descriptionAm?: string;
+  descriptionOm?: string;
   fileUrl: string;
   category: string;
   createdBy: { id: number; fullName: string; email: string };
@@ -219,8 +243,14 @@ export const documentsApi = {
 export interface Investment {
   id: number;
   title: string;
+  titleAm?: string;
+  titleOm?: string;
   description: string;
+  descriptionAm?: string;
+  descriptionOm?: string;
   content: string;
+  contentAm?: string;
+  contentOm?: string;
   category: string;
   coverImage?: string;
   location?: string;

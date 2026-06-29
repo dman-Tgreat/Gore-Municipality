@@ -35,24 +35,29 @@ export default function Hero() {
 
   useEffect(() => {
     if (isHovering || slides.length <= 1) return;
-    const timer = setInterval(goNext, 5000);
+    const timer = setInterval(goNext, 6000);
     return () => clearInterval(timer);
   }, [isHovering, goNext, slides.length]);
 
+  // Fallback when no slides
   if (!loading && slides.length === 0) {
     return (
-      <section className="relative h-[520px] lg:h-[600px] w-full overflow-hidden bg-slate-900 flex items-center justify-center">
-        <div className="text-center text-white px-6">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-6">
-            <span className="w-1.5 h-1.5 bg-white/60 rounded-full animate-pulse" />
+      <section className="relative min-h-[500px] lg:min-h-[580px] w-full overflow-hidden bg-slate-800 flex items-center justify-center">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
+        <div className="relative text-center text-white px-6 max-w-3xl mx-auto">
+          {/* Seal */}
+          <div className="mx-auto mb-8 w-20 h-20 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center">
+            <span className="text-3xl font-black text-white/80">GW</span>
+          </div>
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 text-white/70 text-xs font-bold uppercase tracking-[0.15em] px-4 py-1.5 rounded-full mb-6">
             {t.header.home}
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-5 drop-shadow-lg tracking-tight max-w-4xl">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-5 tracking-tight leading-[1.1]">
             {t.hero.welcome}
           </h1>
           <Link
             href="/service"
-            className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-8 py-3.5 rounded-xl font-semibold transition-all"
+            className="inline-flex items-center gap-2.5 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white/20 px-7 py-3 rounded-xl font-semibold transition-all hover:-translate-y-0.5"
           >
             {t.hero.exploreServices}
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -66,10 +71,10 @@ export default function Hero() {
 
   if (loading || slides.length === 0) {
     return (
-      <section className="relative h-[520px] lg:h-[600px] w-full overflow-hidden bg-slate-800 animate-pulse flex items-center justify-center">
+      <section className="relative min-h-[500px] lg:min-h-[580px] w-full bg-slate-800 animate-pulse flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 bg-slate-700 rounded-full mx-auto mb-4" />
-          <div className="h-6 bg-slate-700 rounded w-64 mx-auto mb-2" />
+          <div className="w-20 h-20 bg-slate-700 rounded-full mx-auto mb-6" />
+          <div className="h-6 bg-slate-700 rounded w-72 mx-auto mb-3" />
           <div className="h-4 bg-slate-700 rounded w-48 mx-auto" />
         </div>
       </section>
@@ -84,7 +89,7 @@ export default function Hero() {
 
   return (
     <section
-      className="relative h-[520px] lg:h-[600px] w-full overflow-hidden bg-slate-900 group"
+      className="relative min-h-[500px] lg:min-h-[580px] w-full overflow-hidden bg-slate-900"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
@@ -103,36 +108,40 @@ export default function Hero() {
           />
 
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-800/60 to-slate-800/30" />
-
-          {/* Bottom gradient fade */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-800/60 to-slate-900/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-slate-900/20" />
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-900 to-transparent" />
 
           {/* Content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-6">
+            {/* Seal */}
+            <div className="mx-auto mb-6 w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
+              <span className="text-xl font-black text-white/80">GW</span>
+            </div>
+
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-6 animate-fade-in">
-              <span className="w-1.5 h-1.5 bg-white/60 rounded-full animate-pulse" />
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 text-white/70 text-xs font-bold uppercase tracking-[0.15em] px-4 py-1.5 rounded-full mb-4">
+              <span className="w-1.5 h-1.5 bg-white/60 rounded-full" />
               {t.header.home}
             </div>
 
             {/* Main Title */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-5 drop-shadow-lg tracking-tight leading-tight max-w-4xl">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4 tracking-tight leading-[1.1]">
               {t.hero.welcome}
             </h1>
 
             {/* Description from API */}
-            <p className="text-lg md:text-xl max-w-2xl mx-auto drop-shadow-md font-light text-slate-200 mb-8 min-h-[3rem]">
+            <p className="text-base md:text-lg max-w-2xl mx-auto font-light text-slate-200/90 mb-8 min-h-[1.5rem]">
               {slide.description}
             </p>
 
             {/* CTA Button */}
             <Link
               href="/service"
-              className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-8 py-3.5 rounded-xl font-semibold transition-all duration-300 shadow-xl shadow-black/20 hover:shadow-black/30 hover:-translate-y-0.5 group"
+              className="inline-flex items-center gap-2.5 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white/20 px-7 py-3 rounded-xl font-semibold transition-all hover:-translate-y-0.5"
             >
               {t.hero.exploreServices}
-              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
               </svg>
             </Link>
@@ -145,7 +154,7 @@ export default function Hero() {
         <>
           <button
             onClick={goPrev}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all duration-200 opacity-0 group-hover:opacity-100"
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white/70 hover:bg-white/15 hover:text-white transition-all duration-200 opacity-0 group-hover:opacity-100"
             aria-label="Previous slide"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -154,7 +163,7 @@ export default function Hero() {
           </button>
           <button
             onClick={goNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all duration-200 opacity-0 group-hover:opacity-100"
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white/70 hover:bg-white/15 hover:text-white transition-all duration-200 opacity-0 group-hover:opacity-100"
             aria-label="Next slide"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -163,24 +172,19 @@ export default function Hero() {
           </button>
 
           {/* Navigation Dots */}
-          <div className="absolute bottom-8 left-0 right-0 flex items-center justify-center gap-3 z-20">
+          <div className="absolute bottom-8 left-0 right-0 flex items-center justify-center gap-2 z-20">
             {slides.map((slide, index) => (
               <button
                 key={slide.id}
                 onClick={() => goToSlide(index)}
-                className={`rounded-full transition-all duration-300 ${
+                className={`transition-all duration-300 ${
                   index === currentIndex
-                    ? 'w-10 h-2.5 bg-white shadow-lg shadow-white/30'
-                    : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/70'
+                    ? 'w-10 h-2 bg-white rounded-full'
+                    : 'w-2 h-2 bg-white/30 hover:bg-white/60 rounded-full'
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
-          </div>
-
-          {/* Slide counter */}
-          <div className="absolute top-6 right-6 z-20 bg-black/30 backdrop-blur-sm rounded-lg px-3 py-1.5 text-xs text-white/70 font-mono">
-            {String(currentIndex + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}
           </div>
         </>
       )}

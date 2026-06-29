@@ -114,24 +114,21 @@ export default function StatsGrid() {
   ];
 
   return (
-    <section className="relative py-20 overflow-hidden bg-slate-900 dark:bg-slate-950">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10" style={{
-        backgroundImage: `radial-gradient(circle at 25% 25%, rgba(255,255,255,0.05) 0%, transparent 50%),
-                          radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 0%, transparent 50%)`,
-      }} />
+    <section className="relative py-20 bg-slate-50 dark:bg-slate-900 overflow-hidden">
+      {/* Subtle top border */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-slate-300 dark:bg-slate-700 rounded-full" />
 
       <div className="relative container mx-auto px-6">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white/80 text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-            <span className="w-1.5 h-1.5 bg-white/60 rounded-full animate-pulse" />
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <div className="section-badge mb-4">
+            <span className="w-1.5 h-1.5 bg-slate-500 dark:bg-white/60 rounded-full" />
             {t.stats.title}
           </div>
-          <h2 className="text-3xl md:text-4xl font-black text-white mb-3 tracking-tight">
+          <h2 className="section-title mb-3">
             {t.stats.subtitle}
           </h2>
-          <div className="w-16 h-1 bg-white/20 rounded-full mx-auto" />
+          <div className="w-12 h-0.5 bg-slate-300 dark:bg-slate-600 rounded-full mx-auto" />
         </div>
 
         {/* Stats Grid */}
@@ -139,32 +136,29 @@ export default function StatsGrid() {
           {stats.map((stat, idx) => (
             <div
               key={idx}
-              className="group relative bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-6 lg:p-8 text-center
-                         hover:bg-white/10 hover:border-white/20 transition-all duration-500 hover:-translate-y-1"
+              className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 lg:p-8 text-center shadow-sm
+                         hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-md transition-all duration-300 hover:-translate-y-0.5"
             >
               {/* Icon */}
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/10
-                            text-2xl mb-5 shadow-lg group-hover:scale-110 transition-transform duration-500">
-                <span className="text-white brightness-125">{stat.icon}</span>
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300
+                            text-2xl mb-5 group-hover:scale-110 transition-transform duration-300">
+                <span>{stat.icon}</span>
               </div>
 
               {/* Value */}
-              <p className="text-3xl lg:text-4xl font-black text-white mb-2 tracking-tight">
+              <p className="text-3xl lg:text-4xl font-black text-slate-800 dark:text-white mb-2 tracking-tight">
                 <AnimatedCounter value={stat.value} />
               </p>
 
               {/* Label */}
-              <p className="text-sm font-semibold text-white/80 uppercase tracking-wider mb-2">
+              <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                 {stat.label}
               </p>
 
               {/* Detail */}
-              <p className="text-xs text-white/50 leading-relaxed font-light">
+              <p className="text-xs text-slate-400 dark:text-slate-500 leading-relaxed font-light">
                 {stat.detail}
               </p>
-
-              {/* Decorative bar */}
-              <div className="mt-4 w-12 h-0.5 bg-white/20 rounded-full mx-auto opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
           ))}
         </div>

@@ -19,12 +19,46 @@ interface CmsFormState<T> {
   data: T;
 }
 
-const emptyNewsForm = { title: '', slug: '', summary: '', content: '', coverImage: '', published: true };
-const emptyAnnouncementForm = { title: '', description: '', content: '', published: true };
-const emptyProjectForm = { name: '', description: '', budget: 0, status: 'planned', startDate: '', endDate: '', location: '', coverImage: '', fundingSource: '', contractor: '', category: '' };
-const emptyDeptForm = { name: '', description: '', head: '', phone: '', email: '', office: '', image: '' };
-const emptyDocForm = { title: '', description: '', fileUrl: '', category: '' };
-const emptyInvestmentForm = { title: '', description: '', content: '', category: 'opportunity', coverImage: '', location: '', contactPhone: '', contactEmail: '', published: true };
+const emptyNewsForm = { title: '', titleAm: '', titleOm: '', slug: '', summary: '', summaryAm: '', summaryOm: '', content: '', contentAm: '', contentOm: '', coverImage: '', published: true };
+const emptyAnnouncementForm = { title: '', titleAm: '', titleOm: '', description: '', descriptionAm: '', descriptionOm: '', content: '', contentAm: '', contentOm: '', published: true };
+const emptyProjectForm = { name: '', nameAm: '', nameOm: '', description: '', descriptionAm: '', descriptionOm: '', budget: 0, status: 'planned', startDate: '', endDate: '', location: '', coverImage: '', fundingSource: '', contractor: '', category: '' };
+const emptyDeptForm = { name: '', nameAm: '', nameOm: '', description: '', descriptionAm: '', descriptionOm: '', head: '', phone: '', email: '', office: '', image: '' };
+const emptyDocForm = { title: '', titleAm: '', titleOm: '', description: '', descriptionAm: '', descriptionOm: '', fileUrl: '', category: '' };
+const emptyInvestmentForm = { title: '', titleAm: '', titleOm: '', description: '', descriptionAm: '', descriptionOm: '', content: '', contentAm: '', contentOm: '', category: 'opportunity', coverImage: '', location: '', contactPhone: '', contactEmail: '', published: true };
+
+// ── Loading Spinner Component ──
+function Spinner({ className = 'w-5 h-5' }: { className?: string }) {
+  return (
+    <svg className={`animate-spin text-slate-400 ${className}`} fill="none" viewBox="0 0 24 24">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+    </svg>
+  );
+}
+
+// ── Skeleton row for table tabs ──
+function SkeletonRow({ cols }: { cols: number }) {
+  return (
+    <tr className="border-b border-gray-50">
+      {Array.from({ length: cols }).map((_, i) => (
+        <td key={i} className="p-4">
+          <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded animate-pulse" style={{ width: i === 0 ? '55%' : i === cols - 1 ? '30%' : '40%' }} />
+        </td>
+      ))}
+    </tr>
+  );
+}
+
+// ── Skeleton card for list-style tabs ──
+function SkeletonCard() {
+  return (
+    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-5 animate-pulse space-y-3">
+      <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4" />
+      <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/2" />
+      <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-full" />
+    </div>
+  );
+}
 
 export default function AdminDashboardPage() {
   const { t } = useLocale();
@@ -45,6 +79,34 @@ export default function AdminDashboardPage() {
   const [siteSettings, setSiteSettings] = useState<SiteSetting[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<Tab>('messages');
+
+  // Form language
+  const [formLang, setFormLang] = useState<'en' | 'am' | 'om'>('en');
+
+  // Language tab bar (reused across forms)
+  function LangBar() {
+    return (
+      <div className="flex gap-1 mb-4 bg-slate-100 dark:bg-slate-700/50 rounded-lg p-1 w-fit">
+        {(['en', 'am', 'om'] as const).map((lang) => (
+          <button key={lang} type="button" onClick={() => setFormLang(lang)}
+            className={`text-xs px-3 py-1.5 rounded-md font-medium transition ${
+              formLang === lang
+                ? 'bg-white dark:bg-slate-600 text-slate-800 dark:text-white shadow-sm'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
+            }`}>
+            {lang === 'en' ? 'EN' : lang === 'am' ? 'AM' : 'OM'}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
+  // Get/set form field value based on selected language
+  const langVal = <T extends Record<string, unknown>>(data: T, field: string): string => {
+    if (formLang === 'en') return (data[field] as string) || '';
+    const key = `${field}${formLang === 'am' ? 'Am' : 'Om'}`;
+    return (data[key] as string) || '';
+  };
 
   // Message states
   const [msgFilter, setMsgFilter] = useState<'all' | 'unread' | 'read'>('all');
@@ -110,7 +172,6 @@ export default function AdminDashboardPage() {
       .then(([msgs, adms, n, a, p, d, docs, i, slides, sets]) => {
         setMessages(msgs); setAdmins(adms); setNews(n); setAnnouncements(a); setProjects(p); setDepartments(d); setDocuments(docs); setInvestments(i);
         setHeroSlides(slides); setSiteSettings(sets);
-        // Build settings form from fetched data
         const formMap: Record<string, string> = {};
         (sets as SiteSetting[]).forEach((s) => { formMap[s.settingKey] = s.settingValue; });
         setSettingsForm(formMap);
@@ -129,7 +190,8 @@ export default function AdminDashboardPage() {
   // Logout
   const handleLogout = () => { localStorage.removeItem('admin_token'); router.push('/admin/login'); };
 
-  // Messages
+  // ── CRUD Handlers (unchanged) ──
+
   const handleMarkRead = async (id: number) => {
     if (!token) return;
     try { await contactAdminApi.markRead(token, id); setMessages((p) => p.map((m) => (m.id === id ? { ...m, isRead: true } : m))); } catch {}
@@ -139,7 +201,6 @@ export default function AdminDashboardPage() {
     try { await contactAdminApi.delete(token, id); setMessages((p) => p.filter((m) => m.id !== id)); } catch {}
   };
 
-  // News CRUD
   const handleSaveNews = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
     setNewsSubmitting(true);
@@ -163,7 +224,6 @@ export default function AdminDashboardPage() {
     try { const u = await newsApi.update(token, item.id, { published: !item.published }); setNews((p) => p.map((n) => (n.id === item.id ? u : n))); } catch {}
   };
 
-  // Announcements CRUD
   const handleSaveAnn = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
     setAnnSubmitting(true);
@@ -187,7 +247,6 @@ export default function AdminDashboardPage() {
     try { const u = await announcementsApi.update(token, item.id, { published: !item.published }); setAnnouncements((p) => p.map((a) => (a.id === item.id ? u : a))); } catch {}
   };
 
-  // Projects CRUD
   const handleSaveProject = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
     setProjSubmitting(true);
@@ -208,7 +267,6 @@ export default function AdminDashboardPage() {
     try { await projectsApi.remove(token, id); setProjects((p) => p.filter((pr) => pr.id !== id)); } catch {}
   };
 
-  // Departments CRUD
   const handleSaveDept = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
     setDeptSubmitting(true);
@@ -228,7 +286,6 @@ export default function AdminDashboardPage() {
     try { await departmentsApi.remove(token, id); setDepartments((p) => p.filter((d) => d.id !== id)); } catch {}
   };
 
-  // Documents CRUD
   const handleSaveDoc = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
     setDocSubmitting(true);
@@ -248,7 +305,6 @@ export default function AdminDashboardPage() {
     try { await documentsApi.remove(token, id); setDocuments((p) => p.filter((d) => d.id !== id)); } catch {}
   };
 
-  // Investment CRUD
   const handleSaveInvestment = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
     setInvSubmitting(true);
@@ -272,7 +328,6 @@ export default function AdminDashboardPage() {
     try { const u = await investmentsApi.update(token, item.id, { published: !item.published }); setInvestments((p) => p.map((inv) => (inv.id === item.id ? u : inv))); } catch {}
   };
 
-  // Hero Slides CRUD
   const handleSaveSlide = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
     setSlideSubmitting(true);
@@ -292,7 +347,6 @@ export default function AdminDashboardPage() {
     try { await heroSlidesApi.remove(token, id); setHeroSlides((p) => p.filter((s) => s.id !== id)); } catch {}
   };
 
-  // Settings CRUD
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
     setSettingsSaving(true);
@@ -304,7 +358,6 @@ export default function AdminDashboardPage() {
     } catch {} finally { setSettingsSaving(false); }
   };
 
-  // Admin CRUD
   const handleCreateAdmin = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
     setSubmitting(true); setAdminError('');
@@ -340,6 +393,77 @@ export default function AdminDashboardPage() {
       ? <span className="text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-2 py-0.5 rounded-full font-medium">{t.admin.publishedBadge}</span>
       : <span className="text-xs bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full font-medium">{t.admin.draftBadge}</span>;
 
+  // ── Tab-aware Loading Skeleton ──
+  function TabLoadingSkeleton() {
+    switch (tab) {
+      case 'messages':
+        return (
+          <div className="space-y-3">
+            <div className="flex gap-2 mb-4">
+              {[1, 2, 3].map((i) => <div key={i} className="h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-full animate-pulse" />)}
+            </div>
+            {[1, 2, 3, 4].map((i) => <SkeletonCard key={i} />)}
+          </div>
+        );
+      case 'settings':
+        return (
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-5 max-w-2xl animate-pulse">
+            <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded w-48" />
+            <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-96" />
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i}>
+                <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-32 mb-2" />
+                <div className="h-10 bg-slate-200 dark:bg-slate-700 rounded-lg w-full" />
+              </div>
+            ))}
+          </div>
+        );
+      case 'hero-slides':
+        return (
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 animate-pulse">
+            <div className="p-4 border-b border-gray-100">
+              <div className="flex justify-between">
+                <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-32" />
+                <div className="h-9 bg-slate-200 dark:bg-slate-700 rounded-lg w-28" />
+              </div>
+            </div>
+            <table className="w-full">
+              <thead><tr className="bg-gray-50">
+                {[1, 2, 3, 4, 5].map((i) => <th key={i} className="p-4"><div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-16" /></th>)}
+              </tr></thead>
+              <tbody>
+                {[1, 2, 3].map((i) => <SkeletonRow key={i} cols={5} />)}
+              </tbody>
+            </table>
+          </div>
+        );
+      default:
+        // Table-based tabs (news, announcements, projects, departments, documents, investments, admins)
+        const colCount =
+          tab === 'projects' ? 5 :
+          tab === 'departments' ? 5 :
+          tab === 'documents' ? 5 :
+          tab === 'investments' ? 5 :
+          tab === 'admins' ? 5 : 5;
+        return (
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 animate-pulse">
+            <div className="p-4 border-b border-gray-100 flex justify-between">
+              <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-32" />
+              <div className="h-9 bg-slate-200 dark:bg-slate-700 rounded-lg w-28" />
+            </div>
+            <table className="w-full">
+              <thead><tr className="bg-gray-50">
+                {Array.from({ length: colCount }).map((_, i) => <th key={i} className="p-4"><div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-16" /></th>)}
+              </tr></thead>
+              <tbody>
+                {[1, 2, 3, 4].map((i) => <SkeletonRow key={i} cols={colCount} />)}
+              </tbody>
+            </table>
+          </div>
+        );
+    }
+  }
+
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900">
       {/* Header */}
@@ -370,23 +494,27 @@ export default function AdminDashboardPage() {
           <button onClick={() => setTab('settings')} className={tabClasses('settings')}>{t.admin.cmsSettings}</button>
         </div>
 
+        {/* Loading state with tab-specific skeleton */}
         {loading ? (
-          <div className="animate-pulse space-y-4">
-            {[1,2,3].map((i) => (                <div key={i} className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
-                <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/2 mb-2" /><div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-3/4" />
-              </div>
-            ))}
+          <div className="flex flex-col items-center gap-6">
+            <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+              <Spinner className="w-4 h-4" />
+              <span>Loading {tab}...</span>
+            </div>
+            <div className="w-full">
+              <TabLoadingSkeleton />
+            </div>
           </div>
-        ) : tab === 'messages' ? <MessagesTab /> :
-          tab === 'news' ? <NewsTab /> :
-          tab === 'announcements' ? <AnnouncementsTab /> :
-          tab === 'projects' ? <ProjectsTab /> :
-          tab === 'departments' ? <DepartmentsTab /> :
-          tab === 'documents' ? <DocumentsTab /> :
-          tab === 'investments' ? <InvestmentsTab /> :
-          tab === 'hero-slides' ? <HeroSlidesTab /> :
-          tab === 'settings' ? <SettingsTab /> :
-          <AdminsTab />}
+        ) : tab === 'messages' ? MessagesTab() :
+          tab === 'news' ? NewsTab() :
+          tab === 'announcements' ? AnnouncementsTab() :
+          tab === 'projects' ? ProjectsTab() :
+          tab === 'departments' ? DepartmentsTab() :
+          tab === 'documents' ? DocumentsTab() :
+          tab === 'investments' ? InvestmentsTab() :
+          tab === 'hero-slides' ? HeroSlidesTab() :
+          tab === 'settings' ? SettingsTab() :
+          AdminsTab()}
       </div>
 
       {/* Admin Create Modal */}
@@ -415,7 +543,8 @@ export default function AdminDashboardPage() {
                 <button type="button" onClick={() => setShowAdminModal(false)}
                   className="flex-1 px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition">{t.admin.cancel}</button>
                 <button type="submit" disabled={submitting}
-                  className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-slate-800 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
+                  className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-slate-800 rounded-lg hover:bg-slate-700 transition disabled:opacity-50 flex items-center justify-center gap-2">
+                  {submitting && <Spinner className="w-4 h-4" />}
                   {submitting ? t.admin.creating : t.admin.createAdmin}
                 </button>
               </div>
@@ -430,34 +559,34 @@ export default function AdminDashboardPage() {
   function MessagesTab() {
     return (
       <>
-        <div className="flex gap-2 mb-4">
+        <div className="flex gap-2 mb-4 flex-wrap">
           {(['all', 'unread', 'read'] as const).map((f) => (
             <button key={f} onClick={() => setMsgFilter(f)}
-              className={`text-xs px-3 py-1.5 rounded-full transition font-medium ${msgFilter === f ? 'bg-gray-800 text-white' : 'bg-white text-gray-500 hover:bg-gray-100 border border-gray-200'}`}>
+              className={`text-xs px-3 py-1.5 rounded-full transition font-medium ${msgFilter === f ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700'}`}>
               {f === 'all' ? t.admin.allMessages : f === 'unread' ? `${t.admin.unread} (${unreadCount})` : t.admin.read}
             </button>
           ))}
         </div>
         {filteredMessages.length === 0 ? (
-          <p className="text-center text-gray-500 py-12">{t.admin.noMessages}</p>
+          <p className="text-center text-slate-500 dark:text-slate-400 py-12">{t.admin.noMessages}</p>
         ) : (
           <div className="space-y-3">
             {filteredMessages.map((msg) => (
-              <div key={msg.id} className={`bg-white rounded-xl shadow-sm border transition ${msg.isRead ? 'border-gray-100' : 'border-l-4 border-l-green-500 border-gray-200'}`}>
+              <div key={msg.id} className={`bg-white dark:bg-slate-800 rounded-xl shadow-sm border transition ${msg.isRead ? 'border-slate-200 dark:border-slate-700' : 'border-l-4 border-l-slate-500 border-slate-200 dark:border-slate-700'}`}>
                 <button onClick={() => setExpandedMsg(expandedMsg === msg.id ? null : msg.id)} className="w-full text-left p-5">
                   <div className="flex justify-between items-start">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        {!msg.isRead && <span className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />}
-                        <h3 className="font-semibold text-gray-900 truncate">{msg.subject}</h3>
+                        {!msg.isRead && <span className="w-2 h-2 bg-slate-500 rounded-full shrink-0" />}
+                        <h3 className="font-semibold text-slate-800 dark:text-white truncate">{msg.subject}</h3>
                       </div>
-                      <p className="text-xs text-gray-500 mt-0.5">{msg.name} &lt;{msg.email}&gt;</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{msg.name} &lt;{msg.email}&gt;</p>
                     </div>
-                    <span className="text-xs text-gray-400 whitespace-nowrap ml-4">{new Date(msg.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                    <span className="text-xs text-slate-400 dark:text-slate-500 whitespace-nowrap ml-4">{new Date(msg.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                   </div>
                   {expandedMsg === msg.id && (
-                    <div className="mt-4 pt-4 border-t border-gray-100">
-                      <p className="text-sm text-gray-600 whitespace-pre-wrap">{msg.message}</p>
+                    <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                      <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-wrap">{msg.message}</p>
                       <div className="flex gap-2 mt-4">
                         {!msg.isRead && <button onClick={(e) => { e.stopPropagation(); handleMarkRead(msg.id); }}
                           className="text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition font-medium">{t.admin.markRead}</button>}
@@ -466,7 +595,7 @@ export default function AdminDashboardPage() {
                       </div>
                     </div>
                   )}
-                  {expandedMsg !== msg.id && <p className="text-sm text-gray-400 mt-1 truncate">{msg.message}</p>}
+                  {expandedMsg !== msg.id && <p className="text-sm text-slate-400 dark:text-slate-500 mt-1 truncate">{msg.message}</p>}
                 </button>
               </div>
             ))}
@@ -478,45 +607,45 @@ export default function AdminDashboardPage() {
 
   // ====== News Tab ======
   function NewsTab() {
-    if (newsForm.editing) return <NewsForm />;
+    if (newsForm.editing) return NewsForm();
     return (
       <>
         <div className="flex justify-between items-center mb-4">
-          <p className="text-sm text-gray-500">{news.length} article{news.length !== 1 ? 's' : ''}</p>
+          <p className="text-sm text-slate-500">{news.length} article{news.length !== 1 ? 's' : ''}</p>
           <button onClick={() => setNewsForm({ editing: true, editingId: null, data: { ...emptyNewsForm } })}
             className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
         </div>
-        {news.length === 0 ? <p className="text-center text-gray-500 py-12">{t.admin.noItems}</p> : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead><tr className="bg-gray-50 border-b border-gray-100">
-                <th className="text-left p-4 font-semibold text-gray-600">{t.admin.titleField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600">{t.admin.statusField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600 hidden md:table-cell">{t.admin.authorField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600 hidden md:table-cell">{t.admin.dateField}</th>
-                <th className="text-right p-4 font-semibold text-gray-600">{t.admin.editItem}</th>
-              </tr></thead>
-              <tbody>
-                {news.map((item) => (
-                  <tr key={item.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition">
-                    <td className="p-4 font-medium text-gray-900 max-w-xs truncate">{item.title}</td>
-                    <td className="p-4">
-                      <button onClick={() => handleToggleNews(item)} className="hover:opacity-80">{badge(item.published)}</button>
-                    </td>
-                    <td className="p-4 text-gray-500 text-xs hidden md:table-cell">{item.createdBy?.fullName}</td>
-                    <td className="p-4 text-gray-400 text-xs hidden md:table-cell">{new Date(item.createdAt).toLocaleDateString()}</td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button onClick={() => setNewsForm({ editing: true, editingId: item.id, data: { title: item.title, slug: item.slug, summary: item.summary, content: item.content, coverImage: item.coverImage || '', published: item.published } })}
-                          className="text-xs text-blue-600 hover:text-blue-800 transition font-medium">{t.admin.editItem}</button>
-                        <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteNews(item.id); }}
-                          className="text-xs text-red-500 hover:text-red-700 transition font-medium">{t.admin.deleteItem}</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {news.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead><tr className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.titleField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.statusField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.authorField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.dateField}</th>
+                  <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
+                </tr></thead>
+                <tbody>
+                  {news.map((item) => (
+                    <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                      <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.title}</td>
+                      <td className="p-4"><button onClick={() => handleToggleNews(item)} className="hover:opacity-80">{badge(item.published)}</button></td>
+                      <td className="p-4 text-slate-500 text-xs hidden md:table-cell dark:text-slate-400">{item.createdBy?.fullName}</td>
+                      <td className="p-4 text-slate-400 text-xs hidden md:table-cell dark:text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</td>
+                      <td className="p-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button onClick={() => setNewsForm({ editing: true, editingId: item.id, data: { title: item.title, titleAm: item.titleAm || '', titleOm: item.titleOm || '', slug: item.slug, summary: item.summary, summaryAm: item.summaryAm || '', summaryOm: item.summaryOm || '', content: item.content, contentAm: item.contentAm || '', contentOm: item.contentOm || '', coverImage: item.coverImage || '', published: item.published } })}
+                            className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium">{t.admin.editItem}</button>
+                          <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteNews(item.id); }}
+                            className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition font-medium">{t.admin.deleteItem}</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </>
@@ -525,37 +654,43 @@ export default function AdminDashboardPage() {
   function NewsForm() {
     const d = newsForm.data;
     return (
-      <form onSubmit={handleSaveNews} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4 max-w-2xl">
+      <form onSubmit={handleSaveNews} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-4 max-w-2xl">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-bold text-gray-900">{newsForm.editingId ? t.admin.editItem : t.admin.createItem} {t.admin.cmsNews}</h2>
+          <h2 className="text-lg font-bold text-slate-800 dark:text-white">{newsForm.editingId ? t.admin.editItem : t.admin.createItem} {t.admin.cmsNews}</h2>
           <button type="button" onClick={() => setNewsForm({ editing: false, editingId: null, data: { ...emptyNewsForm } })}
-            className="text-sm text-gray-500 hover:text-gray-700 transition">{t.admin.cancelEdit}</button>
+            className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition">{t.admin.cancelEdit}</button>
         </div>
+        <LangBar />
         <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.titleField} *</label>
-            <input type="text" required value={d.title} onChange={(e) => setNewsForm((p) => ({ ...p, data: { ...p.data, title: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.titleField}{formLang === 'en' ? ' *' : ''} <span className="text-slate-400 font-normal">({formLang === 'en' ? 'EN' : formLang === 'am' ? 'አማ' : 'OM'})</span></label>
+            <input type="text" required={formLang === 'en'} value={formLang === 'en' ? d.title : formLang === 'am' ? (d.titleAm || '') : (d.titleOm || '')}
+              onChange={(e) => { const v = e.target.value; setNewsForm((p) => ({ ...p, data: { ...p.data, ...(formLang === 'en' ? {title: v} : formLang === 'am' ? {titleAm: v} : {titleOm: v}) } })); }}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder={formLang === 'en' ? '' : 'Optional'} />
           </div>
-          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.slugField}</label>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.slugField}</label>
             <input type="text" value={d.slug} onChange={(e) => setNewsForm((p) => ({ ...p, data: { ...p.data, slug: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder="Auto-generated from title if empty" />
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder="Auto-generated if empty" />
           </div>
-          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.summaryField} *</label>
-            <textarea required value={d.summary} onChange={(e) => setNewsForm((p) => ({ ...p, data: { ...p.data, summary: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={2} />
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.summaryField}{formLang === 'en' ? ' *' : ''} <span className="text-slate-400 font-normal">({formLang === 'en' ? 'EN' : formLang === 'am' ? 'አማ' : 'OM'})</span></label>
+            <textarea required={formLang === 'en'} value={formLang === 'en' ? d.summary : formLang === 'am' ? (d.summaryAm || '') : (d.summaryOm || '')}
+              onChange={(e) => { const v = e.target.value; setNewsForm((p) => ({ ...p, data: { ...p.data, ...(formLang === 'en' ? {summary: v} : formLang === 'am' ? {summaryAm: v} : {summaryOm: v}) } })); }}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={2} placeholder={formLang === 'en' ? '' : 'Optional'} />
           </div>
-          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.contentField} *</label>
-            <textarea required value={d.content} onChange={(e) => setNewsForm((p) => ({ ...p, data: { ...p.data, content: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none font-mono bg-white dark:bg-slate-800" rows={8} />
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.contentField}{formLang === 'en' ? ' *' : ''} <span className="text-slate-400 font-normal">({formLang === 'en' ? 'EN' : formLang === 'am' ? 'አማ' : 'OM'})</span></label>
+            <textarea required={formLang === 'en'} value={formLang === 'en' ? d.content : formLang === 'am' ? (d.contentAm || '') : (d.contentOm || '')}
+              onChange={(e) => { const v = e.target.value; setNewsForm((p) => ({ ...p, data: { ...p.data, ...(formLang === 'en' ? {content: v} : formLang === 'am' ? {contentAm: v} : {contentOm: v}) } })); }}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none font-mono bg-white dark:bg-slate-800" rows={8} placeholder={formLang === 'en' ? '' : 'Optional'} />
           </div>
-          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.coverImageField}</label>
-            <FileUpload
-              existingUrl={d.coverImage}
-              onUpload={(url) => setNewsForm((p) => ({ ...p, data: { ...p.data, coverImage: url } }))}
-              label="Upload Cover Image"
-            />
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.coverImageField}</label>
+            <FileUpload existingUrl={d.coverImage} onUpload={(url) => setNewsForm((p) => ({ ...p, data: { ...p.data, coverImage: url } }))} label="Upload Cover Image" />
           </div>
-          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.statusField}</label>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.statusField}</label>
             <select value={d.published ? 'true' : 'false'} onChange={(e) => setNewsForm((p) => ({ ...p, data: { ...p.data, published: e.target.value === 'true' } }))}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800">
               <option value="true">{t.admin.publishedBadge}</option>
@@ -565,7 +700,8 @@ export default function AdminDashboardPage() {
         </div>
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={newsSubmitting}
-            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
+            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50 flex items-center gap-2">
+            {newsSubmitting && <Spinner className="w-4 h-4" />}
             {newsSubmitting ? t.admin.saving : t.admin.saveItem}
           </button>
         </div>
@@ -575,45 +711,45 @@ export default function AdminDashboardPage() {
 
   // ====== Announcements Tab ======
   function AnnouncementsTab() {
-    if (annForm.editing) return <AnnouncementsForm />;
+    if (annForm.editing) return AnnouncementsForm();
     return (
       <>
         <div className="flex justify-between items-center mb-4">
-          <p className="text-sm text-gray-500">{announcements.length} announcement{announcements.length !== 1 ? 's' : ''}</p>
+          <p className="text-sm text-slate-500">{announcements.length} announcement{announcements.length !== 1 ? 's' : ''}</p>
           <button onClick={() => setAnnForm({ editing: true, editingId: null, data: { ...emptyAnnouncementForm } })}
             className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
         </div>
-        {announcements.length === 0 ? <p className="text-center text-gray-500 py-12">{t.admin.noItems}</p> : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead><tr className="bg-gray-50 border-b border-gray-100">
-                <th className="text-left p-4 font-semibold text-gray-600">{t.admin.titleField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600">{t.admin.statusField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600 hidden md:table-cell">{t.admin.authorField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600 hidden md:table-cell">{t.admin.dateField}</th>
-                <th className="text-right p-4 font-semibold text-gray-600">{t.admin.editItem}</th>
-              </tr></thead>
-              <tbody>
-                {announcements.map((item) => (
-                  <tr key={item.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition">
-                    <td className="p-4 font-medium text-gray-900 max-w-xs truncate">{item.title}</td>
-                    <td className="p-4">
-                      <button onClick={() => handleToggleAnn(item)} className="hover:opacity-80">{badge(item.published)}</button>
-                    </td>
-                    <td className="p-4 text-gray-500 text-xs hidden md:table-cell">{item.createdBy?.fullName}</td>
-                    <td className="p-4 text-gray-400 text-xs hidden md:table-cell">{new Date(item.createdAt).toLocaleDateString()}</td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button onClick={() => setAnnForm({ editing: true, editingId: item.id, data: { title: item.title, description: item.description, content: item.content, published: item.published } })}
-                          className="text-xs text-blue-600 hover:text-blue-800 transition font-medium">{t.admin.editItem}</button>
-                        <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteAnn(item.id); }}
-                          className="text-xs text-red-500 hover:text-red-700 transition font-medium">{t.admin.deleteItem}</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {announcements.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead><tr className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.titleField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.statusField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.authorField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.dateField}</th>
+                  <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
+                </tr></thead>
+                <tbody>
+                  {announcements.map((item) => (
+                    <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                      <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.title}</td>
+                      <td className="p-4"><button onClick={() => handleToggleAnn(item)} className="hover:opacity-80">{badge(item.published)}</button></td>
+                      <td className="p-4 text-slate-500 text-xs hidden md:table-cell dark:text-slate-400">{item.createdBy?.fullName}</td>
+                      <td className="p-4 text-slate-400 text-xs hidden md:table-cell dark:text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</td>
+                      <td className="p-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button onClick={() => setAnnForm({ editing: true, editingId: item.id, data: { title: item.title, titleAm: item.titleAm || '', titleOm: item.titleOm || '', description: item.description, descriptionAm: item.descriptionAm || '', descriptionOm: item.descriptionOm || '', content: item.content, contentAm: item.contentAm || '', contentOm: item.contentOm || '', published: item.published } })}
+                            className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium">{t.admin.editItem}</button>
+                          <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteAnn(item.id); }}
+                            className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition font-medium">{t.admin.deleteItem}</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </>
@@ -622,29 +758,33 @@ export default function AdminDashboardPage() {
   function AnnouncementsForm() {
     const d = annForm.data;
     return (
-      <form onSubmit={handleSaveAnn} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4 max-w-2xl">
+      <form onSubmit={handleSaveAnn} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-4 max-w-2xl">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-bold text-gray-900">{annForm.editingId ? t.admin.editItem : t.admin.createItem} {t.admin.cmsAnnouncements}</h2>
+          <h2 className="text-lg font-bold text-slate-800 dark:text-white">{annForm.editingId ? t.admin.editItem : t.admin.createItem} {t.admin.cmsAnnouncements}</h2>
           <button type="button" onClick={() => setAnnForm({ editing: false, editingId: null, data: { ...emptyAnnouncementForm } })}
-            className="text-sm text-gray-500 hover:text-gray-700 transition">{t.admin.cancelEdit}</button>
+            className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition">{t.admin.cancelEdit}</button>
+        </div>
+        <LangBar />
+        <div>
+          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.titleField}{formLang === 'en' ? ' *' : ''} <span className="text-slate-400 font-normal">({formLang === 'en' ? 'EN' : formLang === 'am' ? 'አማ' : 'OM'})</span></label>
+          <input type="text" required={formLang === 'en'} value={formLang === 'en' ? d.title : formLang === 'am' ? (d.titleAm || '') : (d.titleOm || '')}
+            onChange={(e) => { const v = e.target.value; setAnnForm((p) => ({ ...p, data: { ...p.data, ...(formLang === 'en' ? {title: v} : formLang === 'am' ? {titleAm: v} : {titleOm: v}) } })); }}
+            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder={formLang === 'en' ? '' : 'Optional'} />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.titleField} *</label>
-          <input type="text" required value={d.title} onChange={(e) => setAnnForm((p) => ({ ...p, data: { ...p.data, title: e.target.value } }))}
-            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
+          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.summaryField}{formLang === 'en' ? ' *' : ''} <span className="text-slate-400 font-normal">({formLang === 'en' ? 'EN' : formLang === 'am' ? 'አማ' : 'OM'})</span></label>
+          <textarea required={formLang === 'en'} value={formLang === 'en' ? d.description : formLang === 'am' ? (d.descriptionAm || '') : (d.descriptionOm || '')}
+            onChange={(e) => { const v = e.target.value; setAnnForm((p) => ({ ...p, data: { ...p.data, ...(formLang === 'en' ? {description: v} : formLang === 'am' ? {descriptionAm: v} : {descriptionOm: v}) } })); }}
+            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={2} placeholder={formLang === 'en' ? '' : 'Optional'} />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.summaryField} *</label>
-          <textarea required value={d.description} onChange={(e) => setAnnForm((p) => ({ ...p, data: { ...p.data, description: e.target.value } }))}
-            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={2} />
+          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.contentField}{formLang === 'en' ? ' *' : ''} <span className="text-slate-400 font-normal">({formLang === 'en' ? 'EN' : formLang === 'am' ? 'አማ' : 'OM'})</span></label>
+          <textarea required={formLang === 'en'} value={formLang === 'en' ? d.content : formLang === 'am' ? (d.contentAm || '') : (d.contentOm || '')}
+            onChange={(e) => { const v = e.target.value; setAnnForm((p) => ({ ...p, data: { ...p.data, ...(formLang === 'en' ? {content: v} : formLang === 'am' ? {contentAm: v} : {contentOm: v}) } })); }}
+            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none font-mono bg-white dark:bg-slate-800" rows={8} placeholder={formLang === 'en' ? '' : 'Optional'} />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.contentField} *</label>
-          <textarea required value={d.content} onChange={(e) => setAnnForm((p) => ({ ...p, data: { ...p.data, content: e.target.value } }))}
-            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none font-mono bg-white dark:bg-slate-800" rows={8} />
-        </div>
-        <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">{t.admin.statusField}</label>
+          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.statusField}</label>
           <select value={d.published ? 'true' : 'false'} onChange={(e) => setAnnForm((p) => ({ ...p, data: { ...p.data, published: e.target.value === 'true' } }))}
             className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800">
             <option value="true">{t.admin.publishedBadge}</option>
@@ -653,7 +793,8 @@ export default function AdminDashboardPage() {
         </div>
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={annSubmitting}
-            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
+            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50 flex items-center gap-2">
+            {annSubmitting && <Spinner className="w-4 h-4" />}
             {annSubmitting ? t.admin.saving : t.admin.saveItem}
           </button>
         </div>
@@ -663,120 +804,133 @@ export default function AdminDashboardPage() {
 
   // ====== Projects Tab ======
   function ProjectsTab() {
-    if (projForm.editing) return <ProjectsForm />;
+    if (projForm.editing) return ProjectsForm();
     return (
       <>
         <div className="flex justify-between items-center mb-4">
-          <p className="text-sm text-gray-500">{projects.length} project{projects.length !== 1 ? 's' : ''}</p>
+          <p className="text-sm text-slate-500">{projects.length} project{projects.length !== 1 ? 's' : ''}</p>
           <button onClick={() => setProjForm({ editing: true, editingId: null, data: { ...emptyProjectForm } })}
             className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
         </div>
-        {projects.length === 0 ? <p className="text-center text-gray-500 py-12">{t.admin.noItems}</p> : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead><tr className="bg-gray-50 border-b border-gray-100">
-                <th className="text-left p-4 font-semibold text-gray-600">{t.admin.nameField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600">{t.admin.statusField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600 hidden md:table-cell">{t.admin.budgetField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600 hidden md:table-cell">Date</th>
-                <th className="text-right p-4 font-semibold text-gray-600">{t.admin.editItem}</th>
-              </tr></thead>
-              <tbody>
-                {projects.map((item) => (
-                  <tr key={item.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition">
-                    <td className="p-4 font-medium text-gray-900 max-w-xs truncate">{item.name}</td>
-                    <td className="p-4">
-                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                        item.status === 'completed' ? 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200' :
-                        item.status === 'ongoing' ? 'bg-blue-100 text-blue-700' :
-                        'bg-amber-100 text-amber-700'
-                      }`}>{item.status}</span>
-                    </td>
-                    <td className="p-4 text-gray-500 text-xs hidden md:table-cell">{item.budget ? `$${Number(item.budget).toLocaleString()}` : '-'}</td>
-                    <td className="p-4 text-gray-400 text-xs hidden md:table-cell">{new Date(item.createdAt).toLocaleDateString()}</td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button onClick={() => setProjForm({ editing: true, editingId: item.id, data: { name: item.name, description: item.description, budget: Number(item.budget) || 0, status: item.status, startDate: item.startDate || '', endDate: item.endDate || '', location: item.location || '', coverImage: item.coverImage || '', fundingSource: item.fundingSource || '', contractor: item.contractor || '', category: item.category || '' } })}
-                          className="text-xs text-blue-600 hover:text-blue-800 transition font-medium">{t.admin.editItem}</button>
-                        <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteProject(item.id); }}
-                          className="text-xs text-red-500 hover:text-red-700 transition font-medium">{t.admin.deleteItem}</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {projects.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead><tr className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.nameField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.statusField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.budgetField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">Date</th>
+                  <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
+                </tr></thead>
+                <tbody>
+                  {projects.map((item) => (
+                    <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                      <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.name}</td>
+                      <td className="p-4">
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                          item.status === 'completed' ? 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200' :
+                          item.status === 'ongoing' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' :
+                          'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
+                        }`}>{item.status}</span>
+                      </td>
+                      <td className="p-4 text-slate-500 text-xs hidden md:table-cell dark:text-slate-400">{item.budget ? `ETB ${Number(item.budget).toLocaleString()}` : '-'}</td>
+                      <td className="p-4 text-slate-400 text-xs hidden md:table-cell dark:text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</td>
+                      <td className="p-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button onClick={() => setProjForm({ editing: true, editingId: item.id, data: { name: item.name, nameAm: item.nameAm || '', nameOm: item.nameOm || '', description: item.description, descriptionAm: item.descriptionAm || '', descriptionOm: item.descriptionOm || '', budget: Number(item.budget) || 0, status: item.status, startDate: item.startDate || '', endDate: item.endDate || '', location: item.location || '', coverImage: item.coverImage || '', fundingSource: item.fundingSource || '', contractor: item.contractor || '', category: item.category || '' } })}
+                            className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium">{t.admin.editItem}</button>
+                          <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteProject(item.id); }}
+                            className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition font-medium">{t.admin.deleteItem}</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </>
     );
   }
+  // ====== Projects Form ======
   function ProjectsForm() {
     const d = projForm.data;
     return (
-      <form onSubmit={handleSaveProject} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4 max-w-2xl">
+      <form onSubmit={handleSaveProject} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-4 max-w-2xl">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-bold text-gray-900">{projForm.editingId ? t.admin.editItem : t.admin.createItem} {t.admin.cmsProjects}</h2>
+          <h2 className="text-lg font-bold text-slate-800 dark:text-white">{projForm.editingId ? t.admin.editItem : t.admin.createItem} {t.admin.cmsProjects}</h2>
           <button type="button" onClick={() => setProjForm({ editing: false, editingId: null, data: { ...emptyProjectForm } })}
-            className="text-sm text-gray-500 hover:text-gray-700 transition">{t.admin.cancelEdit}</button>
+            className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition">{t.admin.cancelEdit}</button>
         </div>
+        <LangBar />
         <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.nameField} *</label>
-            <input type="text" required value={d.name} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, name: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.nameField}{formLang === 'en' ? ' *' : ''} <span className="text-slate-400 font-normal">({formLang === 'en' ? 'EN' : formLang === 'am' ? 'አማ' : 'OM'})</span></label>
+            <input type="text" required={formLang === 'en'} value={formLang === 'en' ? d.name : formLang === 'am' ? (d.nameAm || '') : (d.nameOm || '')}
+              onChange={(e) => { const v = e.target.value; setProjForm((p) => ({ ...p, data: { ...p.data, ...(formLang === 'en' ? {name: v} : formLang === 'am' ? {nameAm: v} : {nameOm: v}) } })); }}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder={formLang === 'en' ? '' : 'Optional'} />
           </div>
-          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.statusField}</label>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.statusField}</label>
             <select value={d.status} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, status: e.target.value } }))}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800">
               <option value="planned">Planned</option>
               <option value="ongoing">Ongoing</option>
               <option value="completed">Completed</option>
-              <option value="on-hold">On Hold</option>
             </select>
           </div>
-          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.descriptionField} *</label>
-            <textarea required value={d.description} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, description: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={3} />
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.descriptionField} <span className="text-slate-400 font-normal">({formLang === 'en' ? 'EN' : formLang === 'am' ? 'አማ' : 'OM'})</span></label>
+            <textarea value={formLang === 'en' ? d.description : formLang === 'am' ? (d.descriptionAm || '') : (d.descriptionOm || '')}
+              onChange={(e) => { const v = e.target.value; setProjForm((p) => ({ ...p, data: { ...p.data, ...(formLang === 'en' ? {description: v} : formLang === 'am' ? {descriptionAm: v} : {descriptionOm: v}) } })); }}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={3} placeholder={formLang === 'en' ? '' : 'Optional'} />
           </div>
-          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.budgetField}</label>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.budgetField}</label>
             <input type="number" value={d.budget} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, budget: Number(e.target.value) } }))}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.categoryField}</label>
-            <input type="text" value={d.category} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, category: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
-          </div>
-          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.locationField}</label>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Location</label>
             <input type="text" value={d.location} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, location: e.target.value } }))}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.fundingSourceField}</label>
-            <input type="text" value={d.fundingSource} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, fundingSource: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
-          </div>
-          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.contractorField}</label>
-            <input type="text" value={d.contractor} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, contractor: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
-          </div>
-          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.startDateField}</label>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Start Date</label>
             <input type="date" value={d.startDate} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, startDate: e.target.value } }))}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.endDateField}</label>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">End Date</label>
             <input type="date" value={d.endDate} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, endDate: e.target.value } }))}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.coverImageField}</label>
-            <FileUpload
-              existingUrl={d.coverImage}
-              onUpload={(url) => setProjForm((p) => ({ ...p, data: { ...p.data, coverImage: url } }))}
-              label="Upload Project Image"
-            />
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Funding Source</label>
+            <input type="text" value={d.fundingSource} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, fundingSource: e.target.value } }))}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
+          </div>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Contractor</label>
+            <input type="text" value={d.contractor} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, contractor: e.target.value } }))}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
+          </div>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Category</label>
+            <input type="text" value={d.category} onChange={(e) => setProjForm((p) => ({ ...p, data: { ...p.data, category: e.target.value } }))}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
+          </div>
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Cover Image</label>
+            <FileUpload existingUrl={d.coverImage} onUpload={(url) => setProjForm((p) => ({ ...p, data: { ...p.data, coverImage: url } }))} label="Upload Cover Image" />
           </div>
         </div>
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={projSubmitting}
-            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
+            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50 flex items-center gap-2">
+            {projSubmitting && <Spinner className="w-4 h-4" />}
             {projSubmitting ? t.admin.saving : t.admin.saveItem}
           </button>
         </div>
@@ -786,43 +940,45 @@ export default function AdminDashboardPage() {
 
   // ====== Departments Tab ======
   function DepartmentsTab() {
-    if (deptForm.editing) return <DepartmentsForm />;
+    if (deptForm.editing) return DepartmentsForm();
     return (
       <>
         <div className="flex justify-between items-center mb-4">
-          <p className="text-sm text-gray-500">{departments.length} department{departments.length !== 1 ? 's' : ''}</p>
+          <p className="text-sm text-slate-500">{departments.length} department{departments.length !== 1 ? 's' : ''}</p>
           <button onClick={() => setDeptForm({ editing: true, editingId: null, data: { ...emptyDeptForm } })}
             className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
         </div>
-        {departments.length === 0 ? <p className="text-center text-gray-500 py-12">{t.admin.noItems}</p> : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead><tr className="bg-gray-50 border-b border-gray-100">
-                <th className="text-left p-4 font-semibold text-gray-600">{t.admin.nameField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600">{t.admin.headField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600 hidden md:table-cell">{t.admin.phoneField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600 hidden md:table-cell">{t.admin.email}</th>
-                <th className="text-right p-4 font-semibold text-gray-600">{t.admin.editItem}</th>
-              </tr></thead>
-              <tbody>
-                {departments.map((item) => (
-                  <tr key={item.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition">
-                    <td className="p-4 font-medium text-gray-900 max-w-xs truncate">{item.name}</td>
-                    <td className="p-4 text-gray-700">{item.head}</td>
-                    <td className="p-4 text-gray-500 text-xs hidden md:table-cell">{item.phone}</td>
-                    <td className="p-4 text-gray-500 text-xs hidden md:table-cell">{item.email}</td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button onClick={() => setDeptForm({ editing: true, editingId: item.id, data: { name: item.name, description: item.description, head: item.head, phone: item.phone, email: item.email, office: item.office, image: item.image || '' } })}
-                          className="text-xs text-blue-600 hover:text-blue-800 transition font-medium">{t.admin.editItem}</button>
-                        <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteDept(item.id); }}
-                          className="text-xs text-red-500 hover:text-red-700 transition font-medium">{t.admin.deleteItem}</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {departments.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead><tr className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.nameField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">Head</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">Contact</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.dateField}</th>
+                  <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
+                </tr></thead>
+                <tbody>
+                  {departments.map((item) => (
+                    <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                      <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.name}</td>
+                      <td className="p-4 text-sm text-slate-600 dark:text-slate-400">{item.head || '-'}</td>
+                      <td className="p-4 text-xs text-slate-500 hidden md:table-cell dark:text-slate-400">{item.email || item.phone || '-'}</td>
+                      <td className="p-4 text-slate-400 text-xs hidden md:table-cell dark:text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</td>
+                      <td className="p-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button onClick={() => setDeptForm({ editing: true, editingId: item.id, data: { name: item.name, nameAm: item.nameAm || '', nameOm: item.nameOm || '', description: item.description, descriptionAm: item.descriptionAm || '', descriptionOm: item.descriptionOm || '', head: item.head || '', phone: item.phone || '', email: item.email || '', office: item.office || '', image: item.image || '' } })}
+                            className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium">{t.admin.editItem}</button>
+                          <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteDept(item.id); }}
+                            className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition font-medium">{t.admin.deleteItem}</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </>
@@ -831,48 +987,55 @@ export default function AdminDashboardPage() {
   function DepartmentsForm() {
     const d = deptForm.data;
     return (
-      <form onSubmit={handleSaveDept} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4 max-w-2xl">
+      <form onSubmit={handleSaveDept} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-4 max-w-2xl">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-bold text-gray-900">{deptForm.editingId ? t.admin.editItem : t.admin.createItem} {t.admin.cmsDepartments}</h2>
+          <h2 className="text-lg font-bold text-slate-800 dark:text-white">{deptForm.editingId ? t.admin.editItem : t.admin.createItem} {t.admin.cmsDepartments}</h2>
           <button type="button" onClick={() => setDeptForm({ editing: false, editingId: null, data: { ...emptyDeptForm } })}
-            className="text-sm text-gray-500 hover:text-gray-700 transition">{t.admin.cancelEdit}</button>
+            className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition">{t.admin.cancelEdit}</button>
         </div>
+        <LangBar />
         <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.nameField} *</label>
-            <input type="text" required value={d.name} onChange={(e) => setDeptForm((p) => ({ ...p, data: { ...p.data, name: e.target.value } }))}
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.nameField}{formLang === 'en' ? ' *' : ''} <span className="text-slate-400 font-normal">({formLang === 'en' ? 'EN' : formLang === 'am' ? 'አማ' : 'OM'})</span></label>
+            <input type="text" required={formLang === 'en'} value={formLang === 'en' ? d.name : formLang === 'am' ? (d.nameAm || '') : (d.nameOm || '')}
+              onChange={(e) => { const v = e.target.value; setDeptForm((p) => ({ ...p, data: { ...p.data, ...(formLang === 'en' ? {name: v} : formLang === 'am' ? {nameAm: v} : {nameOm: v}) } })); }}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder={formLang === 'en' ? '' : 'Optional'} />
+          </div>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Head</label>
+            <input type="text" value={d.head} onChange={(e) => setDeptForm((p) => ({ ...p, data: { ...p.data, head: e.target.value } }))}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.headField} *</label>
-            <input type="text" required value={d.head} onChange={(e) => setDeptForm((p) => ({ ...p, data: { ...p.data, head: e.target.value } }))}
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.descriptionField} <span className="text-slate-400 font-normal">({formLang === 'en' ? 'EN' : formLang === 'am' ? 'አማ' : 'OM'})</span></label>
+            <textarea value={formLang === 'en' ? d.description : formLang === 'am' ? (d.descriptionAm || '') : (d.descriptionOm || '')}
+              onChange={(e) => { const v = e.target.value; setDeptForm((p) => ({ ...p, data: { ...p.data, ...(formLang === 'en' ? {description: v} : formLang === 'am' ? {descriptionAm: v} : {descriptionOm: v}) } })); }}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={3} placeholder={formLang === 'en' ? '' : 'Optional'} />
+          </div>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Phone</label>
+            <input type="text" value={d.phone} onChange={(e) => setDeptForm((p) => ({ ...p, data: { ...p.data, phone: e.target.value } }))}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.descriptionField} *</label>
-            <textarea required value={d.description} onChange={(e) => setDeptForm((p) => ({ ...p, data: { ...p.data, description: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={3} />
-          </div>
-          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.phoneField} *</label>
-            <input type="text" required value={d.phone} onChange={(e) => setDeptForm((p) => ({ ...p, data: { ...p.data, phone: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder="+251 47 XXX XXXX" />
-          </div>
-          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.email} *</label>
-            <input type="email" required value={d.email} onChange={(e) => setDeptForm((p) => ({ ...p, data: { ...p.data, email: e.target.value } }))}
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Email</label>
+            <input type="email" value={d.email} onChange={(e) => setDeptForm((p) => ({ ...p, data: { ...p.data, email: e.target.value } }))}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.officeField} *</label>
-            <input type="text" required value={d.office} onChange={(e) => setDeptForm((p) => ({ ...p, data: { ...p.data, office: e.target.value } }))}
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Office</label>
+            <input type="text" value={d.office} onChange={(e) => setDeptForm((p) => ({ ...p, data: { ...p.data, office: e.target.value } }))}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.imageField}</label>
-            <FileUpload
-              existingUrl={d.image}
-              onUpload={(url) => setDeptForm((p) => ({ ...p, data: { ...p.data, image: url } }))}
-              label="Upload Department Image"
-            />
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Image</label>
+            <FileUpload existingUrl={d.image} onUpload={(url) => setDeptForm((p) => ({ ...p, data: { ...p.data, image: url } }))} label="Upload Image" />
           </div>
         </div>
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={deptSubmitting}
-            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
+            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50 flex items-center gap-2">
+            {deptSubmitting && <Spinner className="w-4 h-4" />}
             {deptSubmitting ? t.admin.saving : t.admin.saveItem}
           </button>
         </div>
@@ -882,49 +1045,45 @@ export default function AdminDashboardPage() {
 
   // ====== Documents Tab ======
   function DocumentsTab() {
-    if (docForm.editing) return <DocumentsForm />;
+    if (docForm.editing) return DocumentsForm();
     return (
       <>
         <div className="flex justify-between items-center mb-4">
-          <p className="text-sm text-gray-500">{documents.length} document{documents.length !== 1 ? 's' : ''}</p>
+          <p className="text-sm text-slate-500">{documents.length} document{documents.length !== 1 ? 's' : ''}</p>
           <button onClick={() => setDocForm({ editing: true, editingId: null, data: { ...emptyDocForm } })}
             className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
         </div>
-        {documents.length === 0 ? <p className="text-center text-gray-500 py-12">{t.admin.noItems}</p> : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead><tr className="bg-gray-50 border-b border-gray-100">
-                <th className="text-left p-4 font-semibold text-gray-600">{t.admin.titleField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600 hidden md:table-cell">{t.admin.documentCategoryField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600 hidden md:table-cell">{t.admin.descriptionField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600 hidden md:table-cell">{t.admin.dateField}</th>
-                <th className="text-right p-4 font-semibold text-gray-600">{t.admin.editItem}</th>
-              </tr></thead>
-              <tbody>
-                {documents.map((item) => (
-                  <tr key={item.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition">
-                    <td className="p-4 font-medium text-gray-900 max-w-xs truncate">{item.title}</td>
-                    <td className="p-4 text-gray-500 text-xs hidden md:table-cell">
-                      <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-xs font-medium">{item.category}</span>
-                    </td>
-                    <td className="p-4 text-gray-400 text-xs truncate max-w-[200px] hidden md:table-cell">{item.description}</td>
-                    <td className="p-4 text-gray-400 text-xs hidden md:table-cell">{new Date(item.createdAt).toLocaleDateString()}</td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        {item.fileUrl && (
-                          <a href={item.fileUrl} target="_blank" rel="noopener noreferrer"
-                            className="text-xs text-green-600 hover:text-green-800 transition font-medium">View</a>
-                        )}
-                        <button onClick={() => setDocForm({ editing: true, editingId: item.id, data: { title: item.title, description: item.description, fileUrl: item.fileUrl, category: item.category } })}
-                          className="text-xs text-blue-600 hover:text-blue-800 transition font-medium">{t.admin.editItem}</button>
-                        <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteDoc(item.id); }}
-                          className="text-xs text-red-500 hover:text-red-700 transition font-medium">{t.admin.deleteItem}</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {documents.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead><tr className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.titleField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">Category</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">File</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.dateField}</th>
+                  <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
+                </tr></thead>
+                <tbody>
+                  {documents.map((item) => (
+                    <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                      <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.title}</td>
+                      <td className="p-4 text-xs text-slate-500 dark:text-slate-400">{item.category || '-'}</td>
+                      <td className="p-4 text-xs text-blue-600 truncate max-w-[120px] hidden md:table-cell dark:text-blue-400">{item.fileUrl ? item.fileUrl.split('/').pop() : '-'}</td>
+                      <td className="p-4 text-slate-400 text-xs hidden md:table-cell dark:text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</td>
+                      <td className="p-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button onClick={() => setDocForm({ editing: true, editingId: item.id, data: { title: item.title, titleAm: item.titleAm || '', titleOm: item.titleOm || '', description: item.description, descriptionAm: item.descriptionAm || '', descriptionOm: item.descriptionOm || '', fileUrl: item.fileUrl || '', category: item.category || '' } })}
+                            className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium">{t.admin.editItem}</button>
+                          <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteDoc(item.id); }}
+                            className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition font-medium">{t.admin.deleteItem}</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </>
@@ -933,47 +1092,41 @@ export default function AdminDashboardPage() {
   function DocumentsForm() {
     const d = docForm.data;
     return (
-      <form onSubmit={handleSaveDoc} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4 max-w-2xl">
+      <form onSubmit={handleSaveDoc} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-4 max-w-2xl">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-bold text-gray-900">{docForm.editingId ? t.admin.editItem : t.admin.createItem} {t.admin.cmsDocuments}</h2>
+          <h2 className="text-lg font-bold text-slate-800 dark:text-white">{docForm.editingId ? t.admin.editItem : t.admin.createItem} {t.admin.cmsDocuments}</h2>
           <button type="button" onClick={() => setDocForm({ editing: false, editingId: null, data: { ...emptyDocForm } })}
-            className="text-sm text-gray-500 hover:text-gray-700 transition">{t.admin.cancelEdit}</button>
+            className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition">{t.admin.cancelEdit}</button>
         </div>
+        <LangBar />
         <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.titleField} *</label>
-            <input type="text" required value={d.title} onChange={(e) => setDocForm((p) => ({ ...p, data: { ...p.data, title: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.titleField}{formLang === 'en' ? ' *' : ''} <span className="text-slate-400 font-normal">({formLang === 'en' ? 'EN' : formLang === 'am' ? 'አማ' : 'OM'})</span></label>
+            <input type="text" required={formLang === 'en'} value={formLang === 'en' ? d.title : formLang === 'am' ? (d.titleAm || '') : (d.titleOm || '')}
+              onChange={(e) => { const v = e.target.value; setDocForm((p) => ({ ...p, data: { ...p.data, ...(formLang === 'en' ? {title: v} : formLang === 'am' ? {titleAm: v} : {titleOm: v}) } })); }}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder={formLang === 'en' ? '' : 'Optional'} />
           </div>
-          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.documentCategoryField} *</label>
-            <select required value={d.category} onChange={(e) => setDocForm((p) => ({ ...p, data: { ...p.data, category: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800">
-              <option value="" disabled className="text-gray-400">Select a category</option>
-              <option value="policy">Policy</option>
-              <option value="report">Report</option>
-              <option value="form">Form</option>
-              <option value="regulation">Regulation</option>
-              <option value="minutes">Minutes</option>
-              <option value="budget">Budget</option>
-              <option value="plan">Plan</option>
-              <option value="notice">Notice</option>
-            </select>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Category</label>
+            <input type="text" value={d.category} onChange={(e) => setDocForm((p) => ({ ...p, data: { ...p.data, category: e.target.value } }))}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder="e.g. policy, report, form" />
           </div>
-          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.descriptionField} *</label>
-            <textarea required value={d.description} onChange={(e) => setDocForm((p) => ({ ...p, data: { ...p.data, description: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={3} />
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.descriptionField} <span className="text-slate-400 font-normal">({formLang === 'en' ? 'EN' : formLang === 'am' ? 'አማ' : 'OM'})</span></label>
+            <textarea value={formLang === 'en' ? d.description : formLang === 'am' ? (d.descriptionAm || '') : (d.descriptionOm || '')}
+              onChange={(e) => { const v = e.target.value; setDocForm((p) => ({ ...p, data: { ...p.data, ...(formLang === 'en' ? {description: v} : formLang === 'am' ? {descriptionAm: v} : {descriptionOm: v}) } })); }}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={2} placeholder={formLang === 'en' ? '' : 'Optional'} />
           </div>
-          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.documentFileUrlField} *</label>
-            <FileUpload
-              existingUrl={d.fileUrl}
-              onUpload={(url) => setDocForm((p) => ({ ...p, data: { ...p.data, fileUrl: url } }))}
-              label="Upload Document"
-              accept=".pdf,.doc,.docx,.xls,.xlsx"
-            />
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">File URL</label>
+            <input type="url" value={d.fileUrl} onChange={(e) => setDocForm((p) => ({ ...p, data: { ...p.data, fileUrl: e.target.value } }))}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder="https://..." />
           </div>
         </div>
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={docSubmitting}
-            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
+            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50 flex items-center gap-2">
+            {docSubmitting && <Spinner className="w-4 h-4" />}
             {docSubmitting ? t.admin.saving : t.admin.saveItem}
           </button>
         </div>
@@ -983,47 +1136,45 @@ export default function AdminDashboardPage() {
 
   // ====== Investments Tab ======
   function InvestmentsTab() {
-    if (invForm.editing) return <InvestmentsForm />;
+    if (invForm.editing) return InvestmentsForm();
     return (
       <>
         <div className="flex justify-between items-center mb-4">
-          <p className="text-sm text-gray-500">{investments.length} investment{investments.length !== 1 ? 's' : ''}</p>
+          <p className="text-sm text-slate-500">{investments.length} investment{investments.length !== 1 ? 's' : ''}</p>
           <button onClick={() => setInvForm({ editing: true, editingId: null, data: { ...emptyInvestmentForm } })}
             className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
         </div>
-        {investments.length === 0 ? <p className="text-center text-gray-500 py-12">{t.admin.noItems}</p> : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead><tr className="bg-gray-50 border-b border-gray-100">
-                <th className="text-left p-4 font-semibold text-gray-600">{t.admin.titleField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600">{t.admin.categoryField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600">{t.admin.statusField}</th>
-                <th className="text-left p-4 font-semibold text-gray-600 hidden md:table-cell">{t.admin.locationField}</th>
-                <th className="text-right p-4 font-semibold text-gray-600">{t.admin.editItem}</th>
-              </tr></thead>
-              <tbody>
-                {investments.map((item) => (
-                  <tr key={item.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition">
-                    <td className="p-4 font-medium text-gray-900 max-w-xs truncate">{item.title}</td>
-                    <td className="p-4">
-                      <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-indigo-100 text-indigo-700">{item.category}</span>
-                    </td>
-                    <td className="p-4">
-                      <button onClick={() => handleToggleInvestment(item)} className="hover:opacity-80">{badge(item.published)}</button>
-                    </td>
-                    <td className="p-4 text-gray-500 text-xs hidden md:table-cell">{item.location || '-'}</td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button onClick={() => setInvForm({ editing: true, editingId: item.id, data: { title: item.title, description: item.description, content: item.content, category: item.category, coverImage: item.coverImage || '', location: item.location || '', contactPhone: item.contactPhone || '', contactEmail: item.contactEmail || '', published: item.published } })}
-                          className="text-xs text-blue-600 hover:text-blue-800 transition font-medium">{t.admin.editItem}</button>
-                        <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteInvestment(item.id); }}
-                          className="text-xs text-red-500 hover:text-red-700 transition font-medium">{t.admin.deleteItem}</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {investments.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead><tr className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.titleField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.statusField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">Category</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.dateField}</th>
+                  <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
+                </tr></thead>
+                <tbody>
+                  {investments.map((item) => (
+                    <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                      <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.title}</td>
+                      <td className="p-4"><button onClick={() => handleToggleInvestment(item)} className="hover:opacity-80">{badge(item.published)}</button></td>
+                      <td className="p-4 text-xs text-slate-500 hidden md:table-cell dark:text-slate-400">{item.category}</td>
+                      <td className="p-4 text-slate-400 text-xs hidden md:table-cell dark:text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</td>
+                      <td className="p-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button onClick={() => setInvForm({ editing: true, editingId: item.id, data: { title: item.title, titleAm: item.titleAm || '', titleOm: item.titleOm || '', description: item.description, descriptionAm: item.descriptionAm || '', descriptionOm: item.descriptionOm || '', content: item.content, contentAm: item.contentAm || '', contentOm: item.contentOm || '', category: item.category, coverImage: item.coverImage || '', location: item.location || '', contactPhone: item.contactPhone || '', contactEmail: item.contactEmail || '', published: item.published } })}
+                            className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium">{t.admin.editItem}</button>
+                          <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteInvestment(item.id); }}
+                            className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition font-medium">{t.admin.deleteItem}</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </>
@@ -1032,66 +1183,74 @@ export default function AdminDashboardPage() {
   function InvestmentsForm() {
     const d = invForm.data;
     return (
-      <form onSubmit={handleSaveInvestment} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4 max-w-2xl">
+      <form onSubmit={handleSaveInvestment} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-4 max-w-2xl">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-bold text-gray-900">{invForm.editingId ? t.admin.editItem : t.admin.createItem} Investment</h2>
+          <h2 className="text-lg font-bold text-slate-800 dark:text-white">{invForm.editingId ? t.admin.editItem : t.admin.createItem} {t.admin.cmsInvestments}</h2>
           <button type="button" onClick={() => setInvForm({ editing: false, editingId: null, data: { ...emptyInvestmentForm } })}
-            className="text-sm text-gray-500 hover:text-gray-700 transition">{t.admin.cancelEdit}</button>
+            className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition">{t.admin.cancelEdit}</button>
         </div>
+        <LangBar />
         <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.titleField} *</label>
-            <input type="text" required value={d.title} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, title: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.titleField}{formLang === 'en' ? ' *' : ''} <span className="text-slate-400 font-normal">({formLang === 'en' ? 'EN' : formLang === 'am' ? 'አማ' : 'OM'})</span></label>
+            <input type="text" required={formLang === 'en'} value={formLang === 'en' ? d.title : formLang === 'am' ? (d.titleAm || '') : (d.titleOm || '')}
+              onChange={(e) => { const v = e.target.value; setInvForm((p) => ({ ...p, data: { ...p.data, ...(formLang === 'en' ? {title: v} : formLang === 'am' ? {titleAm: v} : {titleOm: v}) } })); }}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder={formLang === 'en' ? '' : 'Optional'} />
           </div>
-          <div className="col-span-2 sm:col-span-1">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Category *</label>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Category</label>
             <select value={d.category} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, category: e.target.value } }))}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800">
               <option value="opportunity">Opportunity</option>
-              <option value="incentive">Incentive</option>
               <option value="attraction">Attraction</option>
+              <option value="incentive">Incentive</option>
               <option value="accommodation">Accommodation</option>
-              <option value="culture">Culture</option>
-              <option value="local-product">Local Product</option>
             </select>
           </div>
-          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.descriptionField} *</label>
-            <textarea required value={d.description} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, description: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={3} />
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.summaryField} <span className="text-slate-400 font-normal">({formLang === 'en' ? 'EN' : formLang === 'am' ? 'አማ' : 'OM'})</span></label>
+            <textarea value={formLang === 'en' ? d.description : formLang === 'am' ? (d.descriptionAm || '') : (d.descriptionOm || '')}
+              onChange={(e) => { const v = e.target.value; setInvForm((p) => ({ ...p, data: { ...p.data, ...(formLang === 'en' ? {description: v} : formLang === 'am' ? {descriptionAm: v} : {descriptionOm: v}) } })); }}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={2} placeholder={formLang === 'en' ? '' : 'Optional'} />
           </div>
-          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.contentField} *</label>
-            <textarea required value={d.content} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, content: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none font-mono bg-white dark:bg-slate-800" rows={8} />
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.contentField} <span className="text-slate-400 font-normal">({formLang === 'en' ? 'EN' : formLang === 'am' ? 'አማ' : 'OM'})</span></label>
+            <textarea value={formLang === 'en' ? d.content : formLang === 'am' ? (d.contentAm || '') : (d.contentOm || '')}
+              onChange={(e) => { const v = e.target.value; setInvForm((p) => ({ ...p, data: { ...p.data, ...(formLang === 'en' ? {content: v} : formLang === 'am' ? {contentAm: v} : {contentOm: v}) } })); }}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none font-mono bg-white dark:bg-slate-800" rows={6} placeholder={formLang === 'en' ? '' : 'Optional'} />
           </div>
-          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.locationField}</label>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Location</label>
             <input type="text" value={d.location} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, location: e.target.value } }))}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.statusField}</label>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Cover Image</label>
+            <FileUpload existingUrl={d.coverImage} onUpload={(url) => setInvForm((p) => ({ ...p, data: { ...p.data, coverImage: url } }))} label="Upload Image" />
+          </div>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Contact Phone</label>
+            <input type="text" value={d.contactPhone} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, contactPhone: e.target.value } }))}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
+          </div>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Contact Email</label>
+            <input type="email" value={d.contactEmail} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, contactEmail: e.target.value } }))}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
+          </div>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.statusField}</label>
             <select value={d.published ? 'true' : 'false'} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, published: e.target.value === 'true' } }))}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800">
               <option value="true">{t.admin.publishedBadge}</option>
               <option value="false">{t.admin.draftBadge}</option>
             </select>
           </div>
-          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Contact Phone</label>
-            <input type="text" value={d.contactPhone} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, contactPhone: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
-          </div>
-          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Contact Email</label>
-            <input type="email" value={d.contactEmail} onChange={(e) => setInvForm((p) => ({ ...p, data: { ...p.data, contactEmail: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
-          </div>
-          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.coverImageField}</label>
-            <FileUpload
-              existingUrl={d.coverImage}
-              onUpload={(url) => setInvForm((p) => ({ ...p, data: { ...p.data, coverImage: url } }))}
-              label="Upload Cover Image"
-            />
-          </div>
         </div>
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={invSubmitting}
-            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
+            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50 flex items-center gap-2">
+            {invSubmitting && <Spinner className="w-4 h-4" />}
             {invSubmitting ? t.admin.saving : t.admin.saveItem}
           </button>
         </div>
@@ -1099,52 +1258,53 @@ export default function AdminDashboardPage() {
     );
   }
 
-  // ====== Admins Tab ======
   // ====== Hero Slides Tab ======
   function HeroSlidesTab() {
-    if (slideForm.editing) return <HeroSlidesForm />;
+    if (slideForm.editing) return HeroSlidesForm();
     return (
       <>
         <div className="flex justify-between items-center mb-4">
-          <p className="text-sm text-gray-500">{heroSlides.length} slide{heroSlides.length !== 1 ? 's' : ''}</p>
+          <p className="text-sm text-slate-500">{heroSlides.length} slide{heroSlides.length !== 1 ? 's' : ''}</p>
           <button onClick={() => setSlideForm({ editing: true, editingId: null, data: { imageUrl: '', description: '', sortOrder: heroSlides.length, isActive: true } })}
             className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
         </div>
-        {heroSlides.length === 0 ? <p className="text-center text-gray-500 py-12">{t.admin.noItems}</p> : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead><tr className="bg-gray-50 border-b border-gray-100">
-                <th className="text-left p-4 font-semibold text-gray-600">Image</th>
-                <th className="text-left p-4 font-semibold text-gray-600">Description</th>
-                <th className="text-left p-4 font-semibold text-gray-600">Order</th>
-                <th className="text-left p-4 font-semibold text-gray-600">Active</th>
-                <th className="text-right p-4 font-semibold text-gray-600">{t.admin.editItem}</th>
-              </tr></thead>
-              <tbody>
-                {heroSlides.map((slide) => (
-                  <tr key={slide.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition">
-                    <td className="p-4">
-                      <img src={slide.imageUrl} alt="" className="w-16 h-10 object-cover rounded" />
-                    </td>
-                    <td className="p-4 text-gray-700 text-xs max-w-xs truncate">{slide.description}</td>
-                    <td className="p-4 text-gray-500 text-xs">{slide.sortOrder}</td>
-                    <td className="p-4">
-                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${slide.isActive ? 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200' : 'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400'}`}>
-                        {slide.isActive ? t.admin.publishedBadge : t.admin.draftBadge}
-                      </span>
-                    </td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button onClick={() => setSlideForm({ editing: true, editingId: slide.id, data: { imageUrl: slide.imageUrl, description: slide.description, sortOrder: slide.sortOrder, isActive: slide.isActive } })}
-                          className="text-xs text-blue-600 hover:text-blue-800 transition font-medium">{t.admin.editItem}</button>
-                        <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteSlide(slide.id); }}
-                          className="text-xs text-red-500 hover:text-red-700 transition font-medium">{t.admin.deleteItem}</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {heroSlides.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead><tr className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">Image</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">Description</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">Order</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">Active</th>
+                  <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
+                </tr></thead>
+                <tbody>
+                  {heroSlides.map((item) => (
+                    <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                      <td className="p-4">
+                        {item.imageUrl ? (
+                          <img src={item.imageUrl} alt="" className="w-16 h-10 object-cover rounded border border-slate-200 dark:border-slate-600" />
+                        ) : (
+                          <span className="text-xs text-slate-400">No image</span>
+                        )}
+                      </td>
+                      <td className="p-4 text-sm text-slate-700 dark:text-slate-300 max-w-xs truncate">{item.description || '-'}</td>
+                      <td className="p-4 text-xs text-slate-500 dark:text-slate-400">{item.sortOrder}</td>
+                      <td className="p-4">{badge(item.isActive)}</td>
+                      <td className="p-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button onClick={() => setSlideForm({ editing: true, editingId: item.id, data: { imageUrl: item.imageUrl || '', description: item.description || '', sortOrder: item.sortOrder, isActive: item.isActive } })}
+                            className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium">{t.admin.editItem}</button>
+                          <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteSlide(item.id); }}
+                            className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition font-medium">{t.admin.deleteItem}</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </>
@@ -1153,26 +1313,29 @@ export default function AdminDashboardPage() {
   function HeroSlidesForm() {
     const d = slideForm.data;
     return (
-      <form onSubmit={handleSaveSlide} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4 max-w-2xl">
+      <form onSubmit={handleSaveSlide} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-4 max-w-2xl">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-bold text-gray-900">{slideForm.editingId ? t.admin.editItem : t.admin.createItem} Hero Slide</h2>
+          <h2 className="text-lg font-bold text-slate-800 dark:text-white">{slideForm.editingId ? t.admin.editItem : t.admin.createItem} {t.admin.cmsHeroSlides}</h2>
           <button type="button" onClick={() => setSlideForm({ editing: false, editingId: null, data: { imageUrl: '', description: '', sortOrder: 0, isActive: true } })}
-            className="text-sm text-gray-500 hover:text-gray-700 transition">{t.admin.cancelEdit}</button>
+            className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition">{t.admin.cancelEdit}</button>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Image URL *</label>
-            <input type="text" required value={d.imageUrl} onChange={(e) => setSlideForm((p) => ({ ...p, data: { ...p.data, imageUrl: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder="https://example.com/image.jpg" />
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Image URL</label>
+            <FileUpload existingUrl={d.imageUrl} onUpload={(url) => setSlideForm((p) => ({ ...p, data: { ...p.data, imageUrl: url } }))} label="Upload Slide Image" />
           </div>
-          <div className="col-span-2">                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Description *</label>
-            <textarea required value={d.description} onChange={(e) => setSlideForm((p) => ({ ...p, data: { ...p.data, description: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={3} placeholder="Slide caption text" />
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Description</label>
+            <textarea value={d.description} onChange={(e) => setSlideForm((p) => ({ ...p, data: { ...p.data, description: e.target.value } }))}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={2} />
           </div>
-          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Sort Order</label>
-            <input type="number" value={d.sortOrder} onChange={(e) => setSlideForm((p) => ({ ...p, data: { ...p.data, sortOrder: parseInt(e.target.value) || 0 } }))}
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Sort Order</label>
+            <input type="number" value={d.sortOrder} onChange={(e) => setSlideForm((p) => ({ ...p, data: { ...p.data, sortOrder: Number(e.target.value) } }))}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
-          <div>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Active</label>
+          <div className="col-span-2 sm:col-span-1">
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Active</label>
             <select value={d.isActive ? 'true' : 'false'} onChange={(e) => setSlideForm((p) => ({ ...p, data: { ...p.data, isActive: e.target.value === 'true' } }))}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800">
               <option value="true">Active</option>
@@ -1182,7 +1345,8 @@ export default function AdminDashboardPage() {
         </div>
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={slideSubmitting}
-            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
+            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50 flex items-center gap-2">
+            {slideSubmitting && <Spinner className="w-4 h-4" />}
             {slideSubmitting ? t.admin.saving : t.admin.saveItem}
           </button>
         </div>
@@ -1190,76 +1354,25 @@ export default function AdminDashboardPage() {
     );
   }
 
-  // ====== Site Settings Tab ======
+  // ====== Settings Tab ======
   function SettingsTab() {
-    const settingFields = [
-      { key: 'contact_phone_main', label: 'Main Office Phone', placeholder: '+251 47 XXX XXXX' },
-      { key: 'contact_phone_pr', label: 'Public Relations Phone', placeholder: '+251 47 XXX XXXX' },
-      { key: 'contact_email_main', label: 'Main Email', placeholder: 'info@goreworeda.gov.et' },
-      { key: 'contact_email_support', label: 'Support Email', placeholder: 'support@goreworeda.gov.et' },
-      { key: 'contact_hours_weekday', label: 'Weekday Hours', placeholder: 'Mon–Fri: 8:00 AM – 5:00 PM' },
-      { key: 'contact_hours_saturday', label: 'Saturday Hours', placeholder: 'Sat: 8:00 AM – 12:00 PM' },
-      { key: 'contact_address', label: 'Address', placeholder: 'Main Municipal Building...' },
-      { key: 'footer_tagline1', label: 'Footer Tagline 1', placeholder: 'Gore Woreda' },
-      { key: 'footer_tagline2', label: 'Footer Tagline 2', placeholder: 'Illubabor Zone' },
-      { key: 'footer_tagline3', label: 'Footer Tagline 3', placeholder: 'Oromia' },
-      // --- About Page Content ---
-      { key: 'about_mayor_name', label: 'Mayor Name', placeholder: 'Ato Tessema Abebe' },
-      { key: 'about_mayor_bio', label: 'Mayor Biography', placeholder: 'Mayor biography text...', textarea: true },
-      { key: 'about_vice_mayor_name', label: 'Vice Mayor Name', placeholder: 'W/ro Genet Mekonnen' },
-      { key: 'about_vice_mayor_bio', label: 'Vice Mayor Biography', placeholder: 'Vice mayor biography text...', textarea: true },
-      { key: 'about_council_members', label: 'Council Members (JSON)', placeholder: '[{"name":"...","role":"...","desc":"..."},...]', textarea: true },
-      { key: 'about_history_desc', label: 'History Description', placeholder: 'History text...', textarea: true },
-      { key: 'about_geography_desc', label: 'Geography Description', placeholder: 'Geography text...', textarea: true },
-      { key: 'about_vision_text', label: 'Vision Text', placeholder: 'Vision statement...', textarea: true },
-      { key: 'about_mission_text', label: 'Mission Text', placeholder: 'Mission statement...', textarea: true },
-      // --- News Quick Facts ---
-      { key: 'news_quickfacts_title', label: 'Quick Facts Section Title', placeholder: 'Gore Quick Facts' },
-      { key: 'news_quickfact_1_value', label: 'Quick Fact 1 — Value', placeholder: 'Gore Town (Capital of Gore Woreda...)' },
-      { key: 'news_quickfact_2_value', label: 'Quick Fact 2 — Value', placeholder: 'Founded in the late 19th Century...' },
-      { key: 'news_quickfact_3_value', label: 'Quick Fact 3 — Value', placeholder: 'Renowned for coffee trade legacy...' },
-      // --- Stats Grid ---
-      { key: 'stats_label_1', label: 'Stat 1 — Label', placeholder: 'Total Population' },
-      { key: 'stats_detail_1', label: 'Stat 1 — Detail', placeholder: 'Urban & rural settlements combined' },
-      { key: 'stats_label_2', label: 'Stat 2 — Label', placeholder: 'Total Area Coverage' },
-      { key: 'stats_detail_2', label: 'Stat 2 — Detail', placeholder: 'Rich highland forest geography' },
-      { key: 'stats_label_3', label: 'Stat 3 — Label', placeholder: 'Administrative Division' },
-      { key: 'stats_detail_3', label: 'Stat 3 — Detail', placeholder: 'Governed municipal sectors' },
-      { key: 'stats_label_4', label: 'Stat 4 — Label', placeholder: 'Primary Economic Engine' },
-      { key: 'stats_detail_4', label: 'Stat 4 — Detail', placeholder: 'Premium Tea, Coffee, & Apiculture' },
-    ];
     return (
-      <form onSubmit={handleSaveSettings} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-5 max-w-2xl">
-        <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-bold text-gray-900">{t.admin.cmsSettings}</h2>
+      <form onSubmit={handleSaveSettings} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-5 max-w-2xl">
+        <div>
+          <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-1">{t.admin.cmsSettings}</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Manage site-wide labels and text</p>
         </div>
-        <p className="text-xs text-gray-500 -mt-3">
-          {t.admin.settingsDescription}
-        </p>
-        {settingFields.map((field) => (
-          <div key={field.key}>                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{field.label}</label>
-            {'textarea' in field && field.textarea ? (
-              <textarea
-                rows={field.key === 'about_council_members' ? 6 : 4}
-                value={settingsForm[field.key] || ''}
-                onChange={(e) => setSettingsForm((p) => ({ ...p, [field.key]: e.target.value }))}
-                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none font-mono bg-white dark:bg-slate-800"
-                placeholder={field.placeholder}
-              />
-            ) : (
-              <input
-                type="text"
-                value={settingsForm[field.key] || ''}
-                onChange={(e) => setSettingsForm((p) => ({ ...p, [field.key]: e.target.value }))}
-                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800"
-                placeholder={field.placeholder}
-              />
-            )}
+        {Object.entries(settingsForm).map(([key, value]) => (
+          <div key={key}>
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5 uppercase tracking-wider">{key.replace(/_/g, ' ')}</label>
+            <input type="text" value={value} onChange={(e) => setSettingsForm((p) => ({ ...p, [key]: e.target.value }))}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" />
           </div>
         ))}
-        <div className="flex gap-3 pt-2">
+        <div className="pt-2">
           <button type="submit" disabled={settingsSaving}
-            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50">
+            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50 flex items-center gap-2">
+            {settingsSaving && <Spinner className="w-4 h-4" />}
             {settingsSaving ? t.admin.saving : t.admin.saveAllSettings}
           </button>
         </div>
@@ -1272,50 +1385,49 @@ export default function AdminDashboardPage() {
     return (
       <>
         <div className="flex justify-between items-center mb-4">
-          <p className="text-sm text-gray-500">{admins.length} {t.admin.registered}</p>
+          <p className="text-sm text-slate-500">{admins.length} admin{admins.length !== 1 ? 's' : ''}</p>
           <button onClick={() => setShowAdminModal(true)}
-            className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">+ {t.admin.addAdmin}</button>
+            className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.addAdmin}</button>
         </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <table className="w-full text-sm">
-            <thead><tr className="bg-gray-50 border-b border-gray-100">
-              <th className="text-left p-4 font-semibold text-gray-600">{t.admin.fullNameLabel}</th>
-              <th className="text-left p-4 font-semibold text-gray-600">{t.admin.email}</th>
-              <th className="text-left p-4 font-semibold text-gray-600">{t.admin.statusField}</th>
-              <th className="text-left p-4 font-semibold text-gray-600">Created</th>
-              <th className="text-right p-4 font-semibold text-gray-600">{t.admin.editItem}</th>
-            </tr></thead>
-            <tbody>
-              {admins.map((admin) => (
-                <tr key={admin.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition">
-                  <td className="p-4 font-medium text-gray-900">{admin.fullName}</td>
-                  <td className="p-4 text-gray-500">{admin.email}</td>
-                  <td className="p-4">
-                    <button onClick={() => handleToggleActive(admin)} disabled={togglingId === admin.id}
-                      className={`text-xs px-2.5 py-1 rounded-full font-medium transition ${togglingId === admin.id ? 'opacity-50 cursor-not-allowed' : admin.isActive ? 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600' : 'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600'}`}>
-                      {admin.isActive ? t.admin.activeBadge : t.admin.disabledBadge}
-                    </button>
-                  </td>
-                  <td className="p-4 text-gray-400 text-xs">{new Date(admin.createdAt).toLocaleDateString()}</td>
-                  <td className="p-4 text-right">
-                    {confirmDelete === admin.id ? (
-                      <div className="flex items-center justify-end gap-2">
-                        <span className="text-xs text-gray-500">{t.admin.deleteConfirm}</span>
-                        <button onClick={() => handleDeleteAdmin(admin.id)}
-                          className="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition">{t.admin.yes}</button>
-                        <button onClick={() => setConfirmDelete(null)}
-                          className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300 transition">{t.admin.no}</button>
-                      </div>
-                    ) : (
-                      <button onClick={() => setConfirmDelete(admin.id)}
-                        className="text-xs text-red-500 hover:text-red-700 transition font-medium">{t.admin.deleteItem}</button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {admins.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead><tr className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.fullNameLabel}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.email}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">Status</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.dateField}</th>
+                  <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
+                </tr></thead>
+                <tbody>
+                  {admins.map((item) => (
+                    <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                      <td className="p-4 font-medium text-slate-800 dark:text-white">{item.fullName}</td>
+                      <td className="p-4 text-sm text-slate-600 dark:text-slate-400">{item.email}</td>
+                      <td className="p-4 hidden md:table-cell">
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${item.isActive ? 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200' : 'bg-slate-100 text-slate-400 dark:bg-slate-700 dark:text-slate-500'}`}>
+                          {item.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                      </td>
+                      <td className="p-4 text-slate-400 text-xs hidden md:table-cell dark:text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</td>
+                      <td className="p-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button onClick={() => handleToggleActive(item)} disabled={togglingId === item.id}
+                            className="text-xs text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 transition font-medium disabled:opacity-50">
+                            {togglingId === item.id ? '...' : item.isActive ? 'Deactivate' : 'Activate'}
+                          </button>
+                          <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle || 'Delete this admin?')) handleDeleteAdmin(item.id); }}
+                            className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition font-medium">{t.admin.deleteItem}</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </>
     );
   }
