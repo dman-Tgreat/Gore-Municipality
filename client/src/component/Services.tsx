@@ -135,7 +135,7 @@ export default function Services() {
               <>
                 <div className="flex items-baseline gap-2 mb-4">
                   <span className="text-3xl font-black text-emerald-600">{deptCount}</span>
-                  <span className="text-sm text-gray-500">departments</span>
+                  <span className="text-sm text-gray-500">{t.services.departmentsLabel}</span>
                 </div>
                 <ul className="space-y-2 mb-6">
                   {departments.slice(0, 5).map((dept) => (
@@ -192,19 +192,19 @@ export default function Services() {
                 <div className="grid grid-cols-2 gap-3 mb-6">
                   <div className="bg-amber-50 rounded-xl p-3 text-center">
                     <p className="text-xl font-black text-amber-700">{publishedNewsCount + deptCount}</p>
-                    <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wider">Updates</p>
+                    <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wider">{t.services.updatesLabel}</p>
                   </div>
                   <div className="bg-amber-50 rounded-xl p-3 text-center">
                     <p className="text-xl font-black text-amber-700">{deptCount}</p>
-                    <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wider">Departments</p>
+                    <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wider">{t.services.departmentsLabel}</p>
                   </div>
                   <div className="bg-amber-50 rounded-xl p-3 text-center">
                     <p className="text-xl font-black text-amber-700">{projectCount}</p>
-                    <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wider">Active Projects</p>
+                    <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wider">{t.services.activeProjectsLabel}</p>
                   </div>
                   <div className="bg-amber-50 rounded-xl p-3 text-center">
                     <p className="text-xl font-black text-amber-700">{projects.length}</p>
-                    <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wider">Total Projects</p>
+                    <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wider">{t.services.totalProjectsLabel}</p>
                   </div>
                 </div>
                 <p className="text-gray-500 text-sm leading-relaxed mb-6">
@@ -228,7 +228,7 @@ export default function Services() {
         {/* Bottom decorative element */}
         <div className="flex items-center justify-center gap-3 mt-12 text-gray-300">
           <div className="h-px w-12 bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
-          <span className="text-[10px] uppercase tracking-[0.2em] font-semibold">የጎሬ ወረዳ · Gore Woreda · Woreda Gore</span>
+          <span className="text-[10px] uppercase tracking-[0.2em] font-semibold">{t.services.goreWoredaTagline}</span>
           <div className="h-px w-12 bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
         </div>
       </div>

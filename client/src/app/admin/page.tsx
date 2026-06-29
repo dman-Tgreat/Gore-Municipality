@@ -6,10 +6,12 @@ import { useLocale } from '@/context/LocaleContext';
 import FileUpload from '@/component/FileUpload';
 import {
   contactAdminApi, adminApi, newsApi, announcementsApi, projectsApi, departmentsApi, documentsApi, investmentsApi,
+  heroSlidesApi, settingsApi,
   type ContactMessage, type AdminUser, type NewsArticle, type Announcement, type Project, type Department, type Document, type Investment,
+  type HeroSlide, type SiteSetting,
 } from '@/lib/api';
 
-type Tab = 'messages' | 'news' | 'announcements' | 'projects' | 'departments' | 'documents' | 'investments' | 'admins';
+type Tab = 'messages' | 'news' | 'announcements' | 'projects' | 'departments' | 'documents' | 'investments' | 'admins' | 'hero-slides' | 'settings';
 
 interface CmsFormState<T> {
   editing: boolean;
@@ -39,6 +41,8 @@ export default function AdminDashboardPage() {
   const [departments, setDepartments] = useState<Department[]>([]);
   const [documents, setDocuments] = useState<Document[]>([]);
   const [investments, setInvestments] = useState<Investment[]>([]);
+  const [heroSlides, setHeroSlides] = useState<HeroSlide[]>([]);
+  const [siteSettings, setSiteSettings] = useState<SiteSetting[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<Tab>('messages');
 
@@ -70,6 +74,17 @@ export default function AdminDashboardPage() {
   const [invForm, setInvForm] = useState<CmsFormState<typeof emptyInvestmentForm>>({ editing: false, editingId: null, data: { ...emptyInvestmentForm } });
   const [invSubmitting, setInvSubmitting] = useState(false);
 
+  // Hero Slides states
+  const [slideForm, setSlideForm] = useState<CmsFormState<{ imageUrl: string; description: string; sortOrder: number; isActive: boolean }>>({
+    editing: false, editingId: null,
+    data: { imageUrl: '', description: '', sortOrder: 0, isActive: true },
+  });
+  const [slideSubmitting, setSlideSubmitting] = useState(false);
+
+  // Settings states
+  const [settingsForm, setSettingsForm] = useState<Record<string, string>>({});
+  const [settingsSaving, setSettingsSaving] = useState(false);
+
   // Admin states
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [adminForm, setAdminForm] = useState({ fullName: '', email: '', password: '' });
@@ -89,9 +104,16 @@ export default function AdminDashboardPage() {
       departmentsApi.getAll(),
       documentsApi.getAll(),
       investmentsApi.getAll(),
+      heroSlidesApi.getAll(),
+      settingsApi.getAll(),
     ])
-      .then(([msgs, adms, n, a, p, d, docs, i]) => {
+      .then(([msgs, adms, n, a, p, d, docs, i, slides, sets]) => {
         setMessages(msgs); setAdmins(adms); setNews(n); setAnnouncements(a); setProjects(p); setDepartments(d); setDocuments(docs); setInvestments(i);
+        setHeroSlides(slides); setSiteSettings(sets);
+        // Build settings form from fetched data
+        const formMap: Record<string, string> = {};
+        (sets as SiteSetting[]).forEach((s) => { formMap[s.settingKey] = s.settingValue; });
+        setSettingsForm(formMap);
       })
       .catch(() => { localStorage.removeItem('admin_token'); router.push('/admin/login'); })
       .finally(() => setLoading(false));
@@ -250,6 +272,38 @@ export default function AdminDashboardPage() {
     try { const u = await investmentsApi.update(token, item.id, { published: !item.published }); setInvestments((p) => p.map((inv) => (inv.id === item.id ? u : inv))); } catch {}
   };
 
+  // Hero Slides CRUD
+  const handleSaveSlide = async (e: React.FormEvent) => {
+    e.preventDefault(); if (!token) return;
+    setSlideSubmitting(true);
+    try {
+      if (slideForm.editingId) {
+        const updated = await heroSlidesApi.update(token, slideForm.editingId, slideForm.data);
+        setHeroSlides((p) => p.map((s) => (s.id === slideForm.editingId ? updated : s)));
+      } else {
+        const created = await heroSlidesApi.create(token, slideForm.data);
+        setHeroSlides((p) => [...p, created]);
+      }
+      setSlideForm({ editing: false, editingId: null, data: { imageUrl: '', description: '', sortOrder: 0, isActive: true } });
+    } catch {} finally { setSlideSubmitting(false); }
+  };
+  const handleDeleteSlide = async (id: number) => {
+    if (!token) return;
+    try { await heroSlidesApi.remove(token, id); setHeroSlides((p) => p.filter((s) => s.id !== id)); } catch {}
+  };
+
+  // Settings CRUD
+  const handleSaveSettings = async (e: React.FormEvent) => {
+    e.preventDefault(); if (!token) return;
+    setSettingsSaving(true);
+    try {
+      const entries = Object.entries(settingsForm).map(([settingKey, settingValue]) => ({ settingKey, settingValue }));
+      await settingsApi.upsertMany(token, entries);
+      const fresh = await settingsApi.getAll();
+      setSiteSettings(fresh);
+    } catch {} finally { setSettingsSaving(false); }
+  };
+
   // Admin CRUD
   const handleCreateAdmin = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
@@ -312,6 +366,8 @@ export default function AdminDashboardPage() {
           <button onClick={() => setTab('documents')} className={tabClasses('documents')}>{t.admin.cmsDocuments} ({documents.length})</button>
           <button onClick={() => setTab('investments')} className={tabClasses('investments')}>{t.admin.cmsInvestments} ({investments.length})</button>
           <button onClick={() => setTab('admins')} className={tabClasses('admins')}>{t.admin.admins} ({admins.length})</button>
+          <button onClick={() => setTab('hero-slides')} className={tabClasses('hero-slides')}>Hero Slides ({heroSlides.length})</button>
+          <button onClick={() => setTab('settings')} className={tabClasses('settings')}>Site Settings</button>
         </div>
 
         {loading ? (
@@ -329,6 +385,8 @@ export default function AdminDashboardPage() {
           tab === 'departments' ? <DepartmentsTab /> :
           tab === 'documents' ? <DocumentsTab /> :
           tab === 'investments' ? <InvestmentsTab /> :
+          tab === 'hero-slides' ? <HeroSlidesTab /> :
+          tab === 'settings' ? <SettingsTab /> :
           <AdminsTab />}
       </div>
 
@@ -1064,6 +1122,145 @@ export default function AdminDashboardPage() {
           <button type="submit" disabled={invSubmitting}
             className="bg-green-700 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50">
             {invSubmitting ? t.admin.saving : t.admin.saveItem}
+          </button>
+        </div>
+      </form>
+    );
+  }
+
+  // ====== Admins Tab ======
+  // ====== Hero Slides Tab ======
+  function HeroSlidesTab() {
+    if (slideForm.editing) return <HeroSlidesForm />;
+    return (
+      <>
+        <div className="flex justify-between items-center mb-4">
+          <p className="text-sm text-gray-500">{heroSlides.length} slide{heroSlides.length !== 1 ? 's' : ''}</p>
+          <button onClick={() => setSlideForm({ editing: true, editingId: null, data: { imageUrl: '', description: '', sortOrder: heroSlides.length, isActive: true } })}
+            className="bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-green-600 transition">{t.admin.createItem}</button>
+        </div>
+        {heroSlides.length === 0 ? <p className="text-center text-gray-500 py-12">{t.admin.noItems}</p> : (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead><tr className="bg-gray-50 border-b border-gray-100">
+                <th className="text-left p-4 font-semibold text-gray-600">Image</th>
+                <th className="text-left p-4 font-semibold text-gray-600">Description</th>
+                <th className="text-left p-4 font-semibold text-gray-600">Order</th>
+                <th className="text-left p-4 font-semibold text-gray-600">Active</th>
+                <th className="text-right p-4 font-semibold text-gray-600">{t.admin.editItem}</th>
+              </tr></thead>
+              <tbody>
+                {heroSlides.map((slide) => (
+                  <tr key={slide.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition">
+                    <td className="p-4">
+                      <img src={slide.imageUrl} alt="" className="w-16 h-10 object-cover rounded" />
+                    </td>
+                    <td className="p-4 text-gray-700 text-xs max-w-xs truncate">{slide.description}</td>
+                    <td className="p-4 text-gray-500 text-xs">{slide.sortOrder}</td>
+                    <td className="p-4">
+                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${slide.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                        {slide.isActive ? t.admin.publishedBadge : t.admin.draftBadge}
+                      </span>
+                    </td>
+                    <td className="p-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button onClick={() => setSlideForm({ editing: true, editingId: slide.id, data: { imageUrl: slide.imageUrl, description: slide.description, sortOrder: slide.sortOrder, isActive: slide.isActive } })}
+                          className="text-xs text-blue-600 hover:text-blue-800 transition font-medium">{t.admin.editItem}</button>
+                        <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteSlide(slide.id); }}
+                          className="text-xs text-red-500 hover:text-red-700 transition font-medium">{t.admin.deleteItem}</button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </>
+    );
+  }
+  function HeroSlidesForm() {
+    const d = slideForm.data;
+    return (
+      <form onSubmit={handleSaveSlide} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4 max-w-2xl">
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-lg font-bold text-gray-900">{slideForm.editingId ? t.admin.editItem : t.admin.createItem} Hero Slide</h2>
+          <button type="button" onClick={() => setSlideForm({ editing: false, editingId: null, data: { imageUrl: '', description: '', sortOrder: 0, isActive: true } })}
+            className="text-sm text-gray-500 hover:text-gray-700 transition">{t.admin.cancelEdit}</button>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-gray-600 mb-1">Image URL *</label>
+            <input type="text" required value={d.imageUrl} onChange={(e) => setSlideForm((p) => ({ ...p, data: { ...p.data, imageUrl: e.target.value } }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" placeholder="https://example.com/image.jpg" />
+          </div>
+          <div className="col-span-2">
+            <label className="block text-xs font-semibold text-gray-600 mb-1">Description *</label>
+            <textarea required value={d.description} onChange={(e) => setSlideForm((p) => ({ ...p, data: { ...p.data, description: e.target.value } }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" rows={3} placeholder="Slide caption text" />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">Sort Order</label>
+            <input type="number" value={d.sortOrder} onChange={(e) => setSlideForm((p) => ({ ...p, data: { ...p.data, sortOrder: parseInt(e.target.value) || 0 } }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none" />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">Active</label>
+            <select value={d.isActive ? 'true' : 'false'} onChange={(e) => setSlideForm((p) => ({ ...p, data: { ...p.data, isActive: e.target.value === 'true' } }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none">
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div className="flex gap-3 pt-2">
+          <button type="submit" disabled={slideSubmitting}
+            className="bg-green-700 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50">
+            {slideSubmitting ? t.admin.saving : t.admin.saveItem}
+          </button>
+        </div>
+      </form>
+    );
+  }
+
+  // ====== Site Settings Tab ======
+  function SettingsTab() {
+    const settingFields = [
+      { key: 'contact_phone_main', label: 'Main Office Phone', placeholder: '+251 47 XXX XXXX' },
+      { key: 'contact_phone_pr', label: 'Public Relations Phone', placeholder: '+251 47 XXX XXXX' },
+      { key: 'contact_email_main', label: 'Main Email', placeholder: 'info@goreworeda.gov.et' },
+      { key: 'contact_email_support', label: 'Support Email', placeholder: 'support@goreworeda.gov.et' },
+      { key: 'contact_hours_weekday', label: 'Weekday Hours', placeholder: 'Mon–Fri: 8:00 AM – 5:00 PM' },
+      { key: 'contact_hours_saturday', label: 'Saturday Hours', placeholder: 'Sat: 8:00 AM – 12:00 PM' },
+      { key: 'contact_address', label: 'Address', placeholder: 'Main Municipal Building...' },
+      { key: 'footer_tagline1', label: 'Footer Tagline 1', placeholder: 'Gore Woreda' },
+      { key: 'footer_tagline2', label: 'Footer Tagline 2', placeholder: 'Illubabor Zone' },
+      { key: 'footer_tagline3', label: 'Footer Tagline 3', placeholder: 'Oromia' },
+    ];
+    return (
+      <form onSubmit={handleSaveSettings} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-5 max-w-2xl">
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-lg font-bold text-gray-900">Site Settings</h2>
+        </div>
+        <p className="text-xs text-gray-500 -mt-3">
+          These settings control contact information, working hours, and footer content displayed on the public site.
+        </p>
+        {settingFields.map((field) => (
+          <div key={field.key}>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">{field.label}</label>
+            <input
+              type="text"
+              value={settingsForm[field.key] || ''}
+              onChange={(e) => setSettingsForm((p) => ({ ...p, [field.key]: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900 focus:ring-2 focus:ring-green-600 outline-none"
+              placeholder={field.placeholder}
+            />
+          </div>
+        ))}
+        <div className="flex gap-3 pt-2">
+          <button type="submit" disabled={settingsSaving}
+            className="bg-green-700 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50">
+            {settingsSaving ? t.admin.saving : 'Save All Settings'}
           </button>
         </div>
       </form>

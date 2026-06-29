@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '@/component/Header';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
-import { contactApi } from '@/lib/api';
+import { contactApi, settingsApi, type SiteSetting } from '@/lib/api';
 
 const contactChannels = [
   { key: 'address', icon: '📍', lines: ['officeAddress1', 'officeAddress2'], gradient: 'from-red-600 to-red-400' },
@@ -22,6 +22,24 @@ export default function ContactPage() {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [siteSettings, setSiteSettings] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    settingsApi.getAll()
+      .then((data) => {
+        const map: Record<string, string> = {};
+        data.forEach((s: SiteSetting) => { map[s.settingKey] = s.settingValue; });
+        setSiteSettings(map);
+      })
+      .catch(() => {});
+  }, []);
+
+  const settingsEmailMain = siteSettings.contact_email_main || 'info@goreworeda.gov.et';
+  const settingsEmailSupport = siteSettings.contact_email_support || 'support@goreworeda.gov.et';
+  const settingsPhoneMain = siteSettings.contact_phone_main || t.contact.mainOffice;
+  const settingsPhonePR = siteSettings.contact_phone_pr || t.contact.publicRelations;
+  const settingsHoursWeekday = siteSettings.contact_hours_weekday || 'Mon–Fri: 8:00 AM – 5:00 PM';
+  const settingsHoursSaturday = siteSettings.contact_hours_saturday || 'Sat: 8:00 AM – 12:00 PM';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,17 +94,17 @@ export default function ContactPage() {
                   else if (line === 'officeAddress2') display = t.contact.officeAddress2;
                   else if (line === 'mainOffice') display = t.contact.mainOffice;
                   else if (line === 'publicRelations') display = t.contact.publicRelations;
-                  else if (line === 'emailLine1') display = 'info@goreworeda.gov.et';
-                  else if (line === 'emailLine2') display = 'support@goreworeda.gov.et';
-                  else if (line === 'hoursLine1') display = t.footer.workingHours;
-                  else if (line === 'hoursLine2') display = 'Sat: 8:00 AM – 12:00 PM';
+                  else if (line === 'emailLine1') display = settingsEmailMain;
+                  else if (line === 'emailLine2') display = settingsEmailSupport;
+                  else if (line === 'hoursLine1') display = settingsHoursWeekday;
+                  else if (line === 'hoursLine2') display = settingsHoursSaturday;
                   return (
                     <p key={i} className="text-gray-500 text-xs leading-relaxed">{display}</p>                  );
                     })}
                     {channel.key === 'hours' && (
                   <div className="flex items-center gap-1.5 mt-3 text-[10px] text-green-600 font-semibold">
                     <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                    Open Now
+                    {t.contact.openNow}
                   </div>
                 )}
               </div>
@@ -138,22 +156,22 @@ export default function ContactPage() {
                     <span className="text-base shrink-0 mt-0.5">✉️</span>
                     <div>
                       <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Email</p>
-                      <p className="text-sm font-medium text-gray-800">info@goreworeda.gov.et</p>
-                      <p className="text-sm text-gray-600">support@goreworeda.gov.et</p>
+                      <p className="text-sm font-medium text-gray-800">{settingsEmailMain}</p>
+                      <p className="text-sm text-gray-600">{settingsEmailSupport}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <span className="text-base shrink-0 mt-0.5">🕐</span>
                     <div>
                       <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Working Hours</p>
-                      <p className="text-sm font-medium text-gray-800">Mon–Fri: 8:00 AM – 5:00 PM</p>
-                      <p className="text-sm text-gray-600">Sat: 8:00 AM – 12:00 PM</p>
+                      <p className="text-sm font-medium text-gray-800">{settingsHoursWeekday}</p>
+                      <p className="text-sm text-gray-600">{settingsHoursSaturday}</p>
                     </div>
                   </div>
                   <div className="pt-2 border-t border-gray-100">
                     <div className="flex items-center gap-2 text-xs">
                       <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                      <span className="font-semibold text-green-700">Open Now — We're here to help</span>
+                      <span className="font-semibold text-green-700">{t.contact.openNow} — {t.contact.weAreHereToHelp}</span>
                     </div>
                   </div>
                 </div>
@@ -171,7 +189,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h2 className="text-xl font-bold text-gray-900">{t.contact.sendMessage}</h2>
-                    <p className="text-xs text-gray-500 mt-0.5">We typically respond within 24 hours</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{t.contact.respondWithinHours}</p>
                   </div>
                 </div>
 
@@ -258,7 +276,7 @@ export default function ContactPage() {
                         </svg>
                         {t.contact.submit}
                       </button>
-                      <p className="text-[11px] text-gray-400">We respect your privacy</p>
+                      <p className="text-[11px] text-gray-400">{t.contact.privacyLabel}</p>
                     </div>
                   </form>
                 )}

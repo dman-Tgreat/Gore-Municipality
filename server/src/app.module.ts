@@ -11,6 +11,8 @@ import { DocumentsModule } from './documents/documents.module';
 import { ContactModule } from './contact/contact.module';
 import { UploadModule } from './upload/upload.module';
 import { InvestmentsModule } from './investments/investments.module';
+import { HeroSlidesModule } from './hero-slides/hero-slides.module';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -50,6 +52,10 @@ import { InvestmentsModule } from './investments/investments.module';
     UploadModule,
 
     InvestmentsModule,
+
+    HeroSlidesModule,
+
+    SettingsModule,
   ],
 })
 export class AppModule {}

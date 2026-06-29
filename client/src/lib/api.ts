@@ -243,6 +243,50 @@ export const investmentsApi = {
     request<{ message: string }>(`/investments/${id}`, { method: 'DELETE', headers: authHeaders(token) }),
 };
 
+export interface HeroSlide {
+  id: number;
+  imageUrl: string;
+  description: string;
+  sortOrder: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const heroSlidesApi = {
+  getAll: () => request<HeroSlide[]>('/hero-slides'),
+  getActive: () => request<HeroSlide[]>('/hero-slides/active'),
+  getOne: (id: number) => request<HeroSlide>(`/hero-slides/${id}`),
+  create: (token: string, data: { imageUrl: string; description: string; sortOrder?: number; isActive?: boolean }) =>
+    request<HeroSlide>('/hero-slides', { method: 'POST', headers: authHeaders(token), body: JSON.stringify(data) }),
+  update: (token: string, id: number, data: { imageUrl?: string; description?: string; sortOrder?: number; isActive?: boolean }) =>
+    request<HeroSlide>(`/hero-slides/${id}`, { method: 'PATCH', headers: authHeaders(token), body: JSON.stringify(data) }),
+  remove: (token: string, id: number) =>
+    request<{ message: string }>(`/hero-slides/${id}`, { method: 'DELETE', headers: authHeaders(token) }),
+};
+
+export interface SiteSetting {
+  id: number;
+  settingKey: string;
+  settingValue: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const settingsApi = {
+  getAll: () => request<SiteSetting[]>('/settings'),
+  getByKey: (key: string) => request<string>(`/settings/key/${key}`),
+  getOne: (id: number) => request<SiteSetting>(`/settings/${id}`),
+  create: (token: string, data: { settingKey: string; settingValue: string }) =>
+    request<SiteSetting>('/settings', { method: 'POST', headers: authHeaders(token), body: JSON.stringify(data) }),
+  update: (token: string, id: number, data: { settingKey?: string; settingValue?: string }) =>
+    request<SiteSetting>(`/settings/${id}`, { method: 'PATCH', headers: authHeaders(token), body: JSON.stringify(data) }),
+  remove: (token: string, id: number) =>
+    request<{ message: string }>(`/settings/${id}`, { method: 'DELETE', headers: authHeaders(token) }),
+  upsertMany: (token: string, entries: { settingKey: string; settingValue: string }[]) =>
+    request<SiteSetting[]>('/settings/bulk', { method: 'POST', headers: authHeaders(token), body: JSON.stringify(entries) }),
+};
+
 export const contactAdminApi = {
   getAll: (token: string) =>
     request<ContactMessage[]>('/contact', { headers: authHeaders(token) }),

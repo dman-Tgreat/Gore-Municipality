@@ -85,28 +85,28 @@ export default function StatsGrid() {
       value: loading ? '—' : `${newsCount}`,
       icon: '📰',
       gradient: 'from-blue-600 to-blue-400',
-      detail: 'Published news articles & announcements',
+      detail: t.stats.stats[0].detail,
     },
     {
       label: t.stats.stats[1].label,
       value: loading ? '—' : `${deptCount}`,
       icon: '🏛️',
       gradient: 'from-emerald-600 to-emerald-400',
-      detail: 'Municipal departments & offices',
+      detail: t.stats.stats[1].detail,
     },
     {
-      label: 'Active Projects',
+      label: t.stats.stats[2].label,
       value: loading ? '—' : `${ongoingCount}`,
       icon: '🚧',
       gradient: 'from-amber-600 to-amber-400',
-      detail: 'Ongoing development initiatives',
+      detail: t.stats.stats[2].detail,
     },
     {
       label: t.stats.stats[3].label,
       value: loading ? '—' : `${projectCount}`,
       icon: '📊',
       gradient: 'from-green-600 to-green-400',
-      detail: 'Total projects completed & planned',
+      detail: t.stats.stats[3].detail,
     },
   ];
 
