@@ -147,7 +147,7 @@ export default function ContactPage() {
                   <div className="flex items-start gap-3">
                     <span className="text-base shrink-0 mt-0.5">📞</span>
                     <div>
-                      <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Phone</p>
+                      <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">{t.contact.phone}</p>
                       <p className="text-sm font-medium text-gray-800">{t.contact.mainOffice}</p>
                       <p className="text-sm text-gray-600">{t.contact.publicRelations}</p>
                     </div>
@@ -155,7 +155,7 @@ export default function ContactPage() {
                   <div className="flex items-start gap-3">
                     <span className="text-base shrink-0 mt-0.5">✉️</span>
                     <div>
-                      <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Email</p>
+                      <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">{t.contact.email}</p>
                       <p className="text-sm font-medium text-gray-800">{settingsEmailMain}</p>
                       <p className="text-sm text-gray-600">{settingsEmailSupport}</p>
                     </div>
@@ -163,7 +163,7 @@ export default function ContactPage() {
                   <div className="flex items-start gap-3">
                     <span className="text-base shrink-0 mt-0.5">🕐</span>
                     <div>
-                      <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Working Hours</p>
+                      <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">{t.footer.workingHours}</p>
                       <p className="text-sm font-medium text-gray-800">{settingsHoursWeekday}</p>
                       <p className="text-sm text-gray-600">{settingsHoursSaturday}</p>
                     </div>
@@ -216,7 +216,7 @@ export default function ContactPage() {
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                             className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400 bg-gray-50/50 transition"
-                            placeholder="Abebe Kebede"
+                            placeholder={t.contact.namePlaceholder}
                           />
                         </div>
                       </div>
@@ -230,7 +230,7 @@ export default function ContactPage() {
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                             className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400 bg-gray-50/50 transition"
-                            placeholder="abebe@example.com"
+                            placeholder={t.contact.emailPlaceholder}
                           />
                         </div>
                       </div>
@@ -245,8 +245,7 @@ export default function ContactPage() {
                           required
                           value={formData.subject}
                           onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400 bg-gray-50/50 transition"
-                          placeholder="Inquiry regarding business permits"
+                          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400 bg-gray-50/50 transition"                            placeholder={t.contact.subjectPlaceholder}
                         />
                       </div>
                     </div>
@@ -260,8 +259,7 @@ export default function ContactPage() {
                           required
                           value={formData.message}
                           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400 bg-gray-50/50 transition resize-none"
-                          placeholder="Write your message in detail here..."
+                          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:border-transparent outline-none text-sm text-gray-900 placeholder-gray-400 bg-gray-50/50 transition resize-none"                            placeholder={t.contact.messagePlaceholder}
                         />
                       </div>
                     </div>

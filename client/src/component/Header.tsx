@@ -314,12 +314,12 @@ export default function Header() {
 
             {/* News & Announcements */}
             <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-3 mb-1 mt-3">{t.header.news}</p>
-            <MobileNavLink href="/news" label="📰 Latest News" pathname={pathname} onClick={() => setMobileOpen(false)} />
-            <MobileNavLink href="/news?tab=announcements" label="📢 Announcements" pathname={pathname} onClick={() => setMobileOpen(false)} />
+            <MobileNavLink href="/news" label={`📰 ${t.header.news}`} pathname={pathname} onClick={() => setMobileOpen(false)} />
+            <MobileNavLink href="/news?tab=announcements" label={`📢 ${t.announcements.title}`} pathname={pathname} onClick={() => setMobileOpen(false)} />
 
             {/* Services with dynamic departments */}
             <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-3 mb-1 mt-3">{t.header.services}</p>
-            <MobileNavLink href="/service" label="🏛️ View All Services" pathname={pathname} onClick={() => setMobileOpen(false)} />
+            <MobileNavLink href="/service" label={`🏛️ ${t.header.services}`} pathname={pathname} onClick={() => setMobileOpen(false)} />
             {departments.slice(0, 8).map((dept) => (
               <MobileNavLink
                 key={dept.id}
@@ -338,7 +338,7 @@ export default function Header() {
 
             {/* Projects with dynamic projects */}
             <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 ml-3 mb-1 mt-3">{t.projects.title}</p>
-            <MobileNavLink href="/projects" label="📊 View All Projects" pathname={pathname} onClick={() => setMobileOpen(false)} />
+            <MobileNavLink href="/projects" label={`📊 ${t.projects.title}`} pathname={pathname} onClick={() => setMobileOpen(false)} />
             {projects.slice(0, 8).map((proj) => (
               <MobileNavLink
                 key={proj.id}

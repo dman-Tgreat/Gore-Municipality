@@ -101,8 +101,8 @@ export default function AboutPage() {
               <div className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-amber-100 to-amber-50 overflow-hidden border border-amber-200 flex items-center justify-center">
                 <div className="text-center p-6">
                   <span className="text-6xl block mb-4">📜</span>
-                  <p className="text-amber-800 font-semibold text-sm">Gore Woreda — Est. Late 19th Century</p>
-                  <p className="text-amber-600 text-xs mt-2">Ras Tessema Nadew Compound</p>
+                  <p className="text-amber-800 font-semibold text-sm">{t.about.historyIllustration}</p>
+                  <p className="text-amber-600 text-xs mt-2">{t.about.historyIllustrationSub}</p>
                 </div>
               </div>
               <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-amber-600/10 rounded-full blur-2xl" />
@@ -119,8 +119,8 @@ export default function AboutPage() {
               <div className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-emerald-100 to-emerald-50 overflow-hidden border border-emerald-200 flex items-center justify-center">
                 <div className="text-center p-6">
                   <span className="text-6xl block mb-4">🌍</span>
-                  <p className="text-emerald-800 font-semibold text-sm">650 km² · 90,000+ Residents · 22 Kebeles</p>
-                  <p className="text-emerald-600 text-xs mt-2">Illubabor Zone, Oromia, Ethiopia</p>
+                  <p className="text-emerald-800 font-semibold text-sm">{t.about.geographyIllustration}</p>
+                  <p className="text-emerald-600 text-xs mt-2">{t.about.geographyIllustrationSub}</p>
                 </div>
               </div>
               <div className="absolute -top-4 -left-4 w-24 h-24 bg-emerald-600/10 rounded-full blur-2xl" />
@@ -220,14 +220,14 @@ export default function AboutPage() {
               <div className="bg-gradient-to-br from-purple-50 to-white rounded-2xl border border-purple-100 p-8">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-2xl">🎯</span>
-                  <h3 className="text-lg font-bold text-purple-700">Vision</h3>
+                  <h3 className="text-lg font-bold text-purple-700">{t.about.visionLabel}</h3>
                 </div>
                 <p className="text-gray-600 text-sm leading-relaxed">{t.about.visionText}</p>
               </div>
               <div className="bg-gradient-to-br from-blue-50 to-white rounded-2xl border border-blue-100 p-8">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-2xl">⚡</span>
-                  <h3 className="text-lg font-bold text-blue-700">Mission</h3>
+                  <h3 className="text-lg font-bold text-blue-700">{t.about.missionLabel}</h3>
                 </div>
                 <p className="text-gray-600 text-sm leading-relaxed">{t.about.missionText}</p>
               </div>
@@ -239,9 +239,9 @@ export default function AboutPage() {
       {/* ── CTA ── */}
       <section className="py-16 bg-gradient-to-r from-red-600 to-red-700 text-white">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-2xl md:text-3xl font-black mb-3">Learn More About Our Woreda</h2>
+          <h2 className="text-2xl md:text-3xl font-black mb-3">{t.about.ctaTitle}</h2>
           <p className="text-red-100 text-sm max-w-xl mx-auto mb-8">
-            Explore our departments, services, and investment opportunities to see how Gore Woreda is growing.
+            {t.about.ctaDesc}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link

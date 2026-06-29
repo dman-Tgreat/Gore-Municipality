@@ -366,8 +366,8 @@ export default function AdminDashboardPage() {
           <button onClick={() => setTab('documents')} className={tabClasses('documents')}>{t.admin.cmsDocuments} ({documents.length})</button>
           <button onClick={() => setTab('investments')} className={tabClasses('investments')}>{t.admin.cmsInvestments} ({investments.length})</button>
           <button onClick={() => setTab('admins')} className={tabClasses('admins')}>{t.admin.admins} ({admins.length})</button>
-          <button onClick={() => setTab('hero-slides')} className={tabClasses('hero-slides')}>Hero Slides ({heroSlides.length})</button>
-          <button onClick={() => setTab('settings')} className={tabClasses('settings')}>Site Settings</button>
+          <button onClick={() => setTab('hero-slides')} className={tabClasses('hero-slides')}>{t.admin.cmsHeroSlides} ({heroSlides.length})</button>
+          <button onClick={() => setTab('settings')} className={tabClasses('settings')}>{t.admin.cmsSettings}</button>
         </div>
 
         {loading ? (
@@ -1240,10 +1240,10 @@ export default function AdminDashboardPage() {
     return (
       <form onSubmit={handleSaveSettings} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-5 max-w-2xl">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-bold text-gray-900">Site Settings</h2>
+          <h2 className="text-lg font-bold text-gray-900">{t.admin.cmsSettings}</h2>
         </div>
         <p className="text-xs text-gray-500 -mt-3">
-          These settings control contact information, working hours, and footer content displayed on the public site.
+          {t.admin.settingsDescription}
         </p>
         {settingFields.map((field) => (
           <div key={field.key}>
@@ -1260,7 +1260,7 @@ export default function AdminDashboardPage() {
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={settingsSaving}
             className="bg-green-700 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50">
-            {settingsSaving ? t.admin.saving : 'Save All Settings'}
+            {settingsSaving ? t.admin.saving : t.admin.saveAllSettings}
           </button>
         </div>
       </form>

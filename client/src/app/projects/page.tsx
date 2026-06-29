@@ -62,7 +62,7 @@ export default function ProjectsPage() {
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
-                {status === 'all' ? 'All' : status.charAt(0).toUpperCase() + status.slice(1)}
+                {status === 'all' ? t.projects.allStatuses : status.charAt(0).toUpperCase() + status.slice(1)}
               </button>
             ))}
           </div>
