@@ -49,7 +49,7 @@ export default function Services() {
   const projectCount = projects.filter((p) => p.status === 'ongoing').length;
 
   return (
-    <section id="services" className="py-20 bg-white dark:bg-slate-900">
+    <section id="services" className="py-12 bg-white dark:bg-slate-900">
       <div className="container mx-auto px-6">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14">

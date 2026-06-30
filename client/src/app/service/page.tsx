@@ -28,7 +28,7 @@ export default function ServicesPage() {
       <div>
         <Header />
         
-        <section className="bg-slate-800 text-white py-14 text-center">
+        <section className="bg-slate-800 text-white py-8 text-center">
           <div className="container mx-auto px-6">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
               <span className="w-1.5 h-1.5 bg-white/60 rounded-full animate-pulse" />

@@ -59,7 +59,7 @@ export default function ContactPage() {
         <Header />
 
         {/* ── Hero Banner ── */}
-        <section className="relative bg-slate-800 text-white py-16 md:py-20 text-center overflow-hidden">
+        <section className="relative bg-slate-800 text-white py-10 md:py-12 text-center overflow-hidden">
           <div className="absolute inset-0 opacity-10" style={{
             backgroundImage: `radial-gradient(circle at 15% 30%, rgba(255,255,255,0.25) 0%, transparent 45%),
                               radial-gradient(circle at 85% 70%, rgba(255,255,255,0.15) 0%, transparent 40%),
@@ -113,7 +113,7 @@ export default function ContactPage() {
         </section>
 
         {/* ── Main Content: Form + Info ── */}
-        <main className="container mx-auto px-6 py-14 max-w-6xl">
+        <main className="container mx-auto px-6 py-8 max-w-6xl">
           <div className="grid lg:grid-cols-5 gap-10">
             {/* Left — Get In Touch & Map */}
             <div className="lg:col-span-2 space-y-8">

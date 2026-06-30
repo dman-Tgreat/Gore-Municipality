@@ -61,7 +61,7 @@ export default function NewsPage() {
         <Header />
 
         {/* Header Banner */}
-        <section className="relative bg-slate-800 text-white py-14 text-center overflow-hidden">
+        <section className="relative bg-slate-800 text-white py-8 text-center overflow-hidden">
           <div className="absolute inset-0 opacity-10" style={{
             backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,255,255,0.2) 0%, transparent 50%),
                               radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)`,
@@ -113,7 +113,7 @@ export default function NewsPage() {
         </div>
 
         {/* Content */}
-        <main className="container mx-auto px-6 py-10 max-w-6xl">
+        <main className="container mx-auto px-6 py-8 max-w-6xl">
           {loading ? (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (

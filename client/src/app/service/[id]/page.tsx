@@ -75,7 +75,7 @@ export default function ServiceDetailPage() {
       <Header />
 
       {/* Hero Banner */}
-      <section className="relative bg-slate-800 dark:bg-slate-950 text-white py-16 overflow-hidden">
+      <section className="relative bg-slate-800 dark:bg-slate-950 text-white py-10 overflow-hidden">
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: `radial-gradient(circle at 20% 30%, rgba(255,255,255,0.2) 0%, transparent 50%),
                             radial-gradient(circle at 80% 70%, rgba(255,255,255,0.1) 0%, transparent 50%)`,

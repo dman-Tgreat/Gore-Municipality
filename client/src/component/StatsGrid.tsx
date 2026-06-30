@@ -115,13 +115,13 @@ export default function StatsGrid() {
   ];
 
   return (
-    <section className="relative py-20 bg-slate-50 dark:bg-slate-900 overflow-hidden">
+    <section className="relative py-12 bg-slate-50 dark:bg-slate-900 overflow-hidden">
       {/* Subtle top border */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-slate-300 dark:bg-slate-700 rounded-full" />
 
       <div className="relative container mx-auto px-6">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14">
+        <div className="text-center max-w-2xl mx-auto mb-10">
           <div className="section-badge mb-4">
             <span className="w-1.5 h-1.5 bg-slate-500 dark:bg-white/60 rounded-full" />
             {t.stats.title}

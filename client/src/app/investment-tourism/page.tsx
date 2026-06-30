@@ -134,7 +134,7 @@ export default function InvestmentTourismPage() {
         </section>
 
         {/* Investment Section */}
-        <section className="py-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+        <section className="py-10 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
           <div className="container mx-auto px-6">
             <div className="max-w-5xl mx-auto">
               <div className="flex items-center gap-4 mb-8">
@@ -231,7 +231,7 @@ export default function InvestmentTourismPage() {
         </section>
 
         {/* Tourism Section */}
-        <section className="py-16 bg-slate-50 dark:bg-slate-900">
+        <section className="py-10 bg-slate-50 dark:bg-slate-900">
           <div className="container mx-auto px-6">
             <div className="max-w-5xl mx-auto">
               <div className="flex items-center gap-4 mb-8">
@@ -328,7 +328,7 @@ export default function InvestmentTourismPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-16 bg-slate-800 dark:bg-slate-950 text-white">
+        <section className="py-10 bg-slate-800 dark:bg-slate-950 text-white">
           <div className="container mx-auto px-6 text-center">
             <h3 className="text-2xl md:text-3xl font-black mb-4">{t.investmentTourism.contactInvest}</h3>
             <p className="text-slate-300 max-w-xl mx-auto text-sm mb-8">

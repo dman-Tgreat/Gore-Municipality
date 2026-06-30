@@ -69,7 +69,7 @@ export default function AboutPage() {
       {/* ── Hero ── */}
       <section className="relative bg-slate-900 text-white overflow-hidden">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDE4YzEuNjU3IDAgMy0xLjM0MyAzLTNzLTEuMzQzLTMtMy0zLTMgMS4zNDMtMyAzIDEuMzQzIDMgMyAzem0tMTIgMGMxLjY1NyAwIDMtMS4zNDMgMy0zcy0xLjM0My0zLTMtMy0zIDEuMzQzLTMgMyAxLjM0MyAzIDMgM3oiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40" />
-        <div className="container mx-auto px-6 py-20 md:py-28 relative z-10">
+        <div className="container mx-auto px-6 py-12 md:py-16 relative z-10">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 bg-white/10 text-white/70 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4 backdrop-blur-sm border border-white/10">
               <span className="w-1.5 h-1.5 bg-white/60 rounded-full" />
@@ -101,9 +101,9 @@ export default function AboutPage() {
       </div>
 
       {/* ── History ── */}
-      <section className="py-20">
+      <section className="py-12">
         <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-10 items-center max-w-5xl mx-auto">
             <div>
               <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
                 <span className="w-1.5 h-1.5 bg-slate-600 dark:bg-slate-400 rounded-full" />
@@ -125,9 +125,9 @@ export default function AboutPage() {
       </section>
 
       {/* ── Geography ── */}
-      <section className="py-16 bg-white dark:bg-slate-800/50">
+      <section className="py-10 bg-white dark:bg-slate-800/50">
         <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-10 items-center max-w-5xl mx-auto">
             <div className="relative order-2 md:order-1">
               <div className="aspect-[4/3] rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200 dark:border-slate-700 flex items-center justify-center">
                 <div className="text-center p-6">
@@ -149,9 +149,9 @@ export default function AboutPage() {
       </section>
 
       {/* ── Leadership ── */}
-      <section className="py-20">
+      <section className="py-12">
         <div className="container mx-auto px-6">
-          <div className="text-center max-w-3xl mx-auto mb-14">
+          <div className="text-center max-w-3xl mx-auto mb-10">
             <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
               <span className="w-1.5 h-1.5 bg-slate-600 dark:bg-slate-400 rounded-full" />
               {t.about.leadershipTitle}
@@ -216,10 +216,10 @@ export default function AboutPage() {
       </section>
 
       {/* ── Vision & Mission ── */}
-      <section className="py-20 bg-white dark:bg-slate-800/50">
+      <section className="py-12 bg-white dark:bg-slate-800/50">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
+            <div className="text-center mb-10">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 mx-auto mb-4">
                 {visionIcon}
               </div>
@@ -247,7 +247,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="py-16 bg-slate-800 dark:bg-slate-950 text-white">
+      <section className="py-10 bg-slate-800 dark:bg-slate-950 text-white">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-2xl md:text-3xl font-black mb-3">{t.about.ctaTitle}</h2>
           <p className="text-slate-300 text-sm max-w-xl mx-auto mb-8">
