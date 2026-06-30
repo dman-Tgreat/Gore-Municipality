@@ -2,6 +2,19 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ── Ethiopian / Oromia Flag-Inspired Palette ── */
+@theme {
+  --color-primary: #1a7a3a;
+  --color-primary-dark: #0f5c2a;
+  --color-primary-light: #2a9d4e;
+  --color-gold: #d4a017;
+  --color-gold-light: #f0c850;
+  --color-ethiopian-red: #c0392b;
+  --color-ethiopian-red-light: #e74c3c;
+  --color-cream: #faf6ee;
+  --color-cream-dark: #f0e8d5;
+}
+
 body {
   background: #ffffff;
   color: #1e293b;
@@ -18,9 +31,16 @@ body.dark {
 
 html {
   scroll-behavior: smooth;
+  font-size: 16px;
 }
 
-/* Section badge */
+@media (min-width: 768px) {
+  html {
+    font-size: 17px;
+  }
+}
+
+/* ── Section badge ── */
 .section-badge {
   display: inline-flex;
   align-items: center;
@@ -31,20 +51,20 @@ html {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  background: #f1f5f9;
-  color: #475569;
+  background: #f0e8d5;
+  color: #8a6a00;
 }
 
 .dark .section-badge {
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.7);
+  background: rgba(212, 160, 23, 0.15);
+  color: #f0c850;
 }
 
-/* Section title */
+/* ── Section title ── */
 .section-title {
   font-size: 2rem;
   font-weight: 900;
-  color: #1e293b;
+  color: #1a7a3a;
   letter-spacing: -0.02em;
 }
 
@@ -58,22 +78,28 @@ html {
   }
 }
 
-html {
-  scroll-behavior: smooth;
-  font-size: 16px;
+/* ── Tri-color decorative divider ── */
+.tri-color-bar {
+  display: flex;
+  height: 4px;
+  width: 100%;
+  overflow: hidden;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 17px;
-  }
+.tri-color-bar span {
+  flex: 1;
 }
 
-/* Reduced section padding */
+.tri-color-bar .green { background: #1a7a3a; }
+.tri-color-bar .yellow { background: #d4a017; }
+.tri-color-bar .red { background: #c0392b; }
+
+/* ── Section scroll margin ── */
 section {
   scroll-margin-top: 5rem;
 }
 
+/* ── Section padding utilities ── */
 @layer utilities {
   .section-padding {
     padding-top: 2.5rem;
@@ -85,7 +111,7 @@ section {
   }
 }
 
-/* Tailwind v4 dark mode body */
+/* ── Dark mode body ── */
 .dark {
   --tw-bg-opacity: 1;
 }

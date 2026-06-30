@@ -117,21 +117,9 @@ export default function StatsGrid() {
   return (
     <section className="relative py-12 bg-slate-50 dark:bg-slate-900 overflow-hidden">
       {/* Subtle top border */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-slate-300 dark:bg-slate-700 rounded-full" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1 rounded-full bg-gradient-to-r from-primary via-gold to-ethiopian-red" />
 
       <div className="relative container mx-auto px-6">
-        {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <div className="section-badge mb-4">
-            <span className="w-1.5 h-1.5 bg-slate-500 dark:bg-white/60 rounded-full" />
-            {t.stats.title}
-          </div>
-          <h2 className="section-title mb-3">
-            {t.stats.subtitle}
-          </h2>
-          <div className="w-12 h-0.5 bg-slate-300 dark:bg-slate-600 rounded-full mx-auto" />
-        </div>
-
         {/* Stats Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
           {stats.map((stat, idx) => (
@@ -141,7 +129,7 @@ export default function StatsGrid() {
                          hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-md transition-all duration-300 hover:-translate-y-0.5"
             >
               {/* Icon */}
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light
                             text-2xl mb-5 group-hover:scale-110 transition-transform duration-300">
                 <span>{stat.icon}</span>
               </div>

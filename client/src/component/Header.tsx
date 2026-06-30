@@ -64,12 +64,12 @@ function NavDropdown({ items, label, href, isActive, isOpen, onMouseEnter, onMou
         href={href}
         className={`inline-flex items-center gap-1.5 transition font-medium text-sm whitespace-nowrap px-1.5 py-1 ${
           isActive
-            ? 'text-slate-800 dark:text-white'
-            : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
+            ? 'text-primary dark:text-gold-light'
+            : 'text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-gold-light'
         }`}
       >
         {label}
-        {isActive && <span className="w-1.5 h-1.5 rounded-full bg-slate-800 dark:bg-white" />}
+        {isActive && <span className="w-1.5 h-1.5 rounded-full bg-gold" />}
         <svg className={`w-3 h-3 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''} text-slate-400`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
         </svg>
@@ -83,8 +83,8 @@ function NavDropdown({ items, label, href, isActive, isOpen, onMouseEnter, onMou
               href={item.href}
               className={`flex items-center gap-3 px-4 py-2.5 text-sm transition ${
                 isActiveItem(item.href)
-                  ? 'text-slate-800 dark:text-white bg-slate-50 dark:bg-slate-700 font-semibold'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-800 dark:hover:text-white'
+                  ? 'text-primary dark:text-gold-light bg-cream dark:bg-primary-dark/30 font-semibold'
+                  : 'text-slate-600 dark:text-slate-400 hover:bg-cream dark:hover:bg-primary-dark/20 hover:text-primary dark:hover:text-gold-light'
               }`}
             >
               {item.icon}
@@ -179,15 +179,21 @@ export default function Header() {
   const isActive = (paths: string[]) => paths.some(p => pathname === p || pathname.startsWith(p + '/'));
 
   return (
-    <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
+    <header className="bg-white dark:bg-slate-900 sticky top-0 z-50">
+      {/* === Tri-color decorative bar === */}
+      <div className="tri-color-bar">
+        <span className="green" />
+        <span className="yellow" />
+        <span className="red" />
+      </div>
       {/* === Top Bar: Official Seal & Identity === */}
-      <div className="bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
+      <div className="bg-primary text-white border-b border-primary-dark">
         <div className="container mx-auto px-6 py-1.5 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-[10px] text-slate-500 dark:text-slate-500 uppercase tracking-wider">
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+          <div className="flex items-center gap-2 text-[10px] text-white/80 uppercase tracking-wider">
+            <span className="w-1.5 h-1.5 rounded-full bg-gold-light" />
             {t.footer.copyright}
           </div>
-          <div className="hidden sm:flex items-center gap-3 text-[10px] text-slate-500 dark:text-slate-500">
+          <div className="hidden sm:flex items-center gap-3 text-[10px] text-white/70">
             <span>{t.footer.workingHours}</span>
           </div>
         </div>
@@ -198,14 +204,14 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           {/* Brand Identity */}
           <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition shrink-0">
-            <div className="w-11 h-11 rounded-full bg-slate-800 dark:bg-slate-700 flex items-center justify-center shadow-sm">
+            <div className="w-11 h-11 rounded-full bg-gold flex items-center justify-center shadow-sm">
               <span className="text-white font-black text-sm">GW</span>
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-bold text-slate-800 dark:text-white leading-tight">
                 Gore Woreda
               </span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-500 uppercase tracking-wider leading-tight">
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider leading-tight">
                 Official Municipal Portal
               </span>
             </div>

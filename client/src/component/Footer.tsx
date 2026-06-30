@@ -39,9 +39,13 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-slate-900 dark:bg-slate-950 text-slate-400">
-      {/* Top decorative bar */}
-      <div className="h-0.5 bg-gradient-to-r from-slate-700 via-slate-500 to-slate-700 dark:from-slate-600 dark:via-slate-400 dark:to-slate-600" />
+    <footer className="bg-primary-dark dark:bg-slate-950 text-slate-300">
+      {/* Tri-color decorative bar */}
+      <div className="tri-color-bar">
+        <span className="green" />
+        <span className="yellow" />
+        <span className="red" />
+      </div>
 
       {/* Main Footer */}
       <div className="container mx-auto px-6 py-10 lg:py-12">
@@ -49,19 +53,19 @@ export default function Footer() {
           {/* Brand & About - spans 4 cols */}
           <div className="lg:col-span-4">
             <Link href="/" className="inline-flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-slate-700 dark:bg-slate-800 flex items-center justify-center shadow-sm">
+              <div className="w-10 h-10 rounded-full bg-gold flex items-center justify-center shadow-sm">
                 <span className="text-white font-black text-sm">GW</span>
               </div>
               <div>
                 <h3 className="text-white font-bold text-base leading-tight">Gore Woreda</h3>
-                <p className="text-slate-500 text-[10px] uppercase tracking-wider">Administration</p>
+                <p className="text-gold-light text-[10px] uppercase tracking-wider">Administration</p>
               </div>
             </Link>
-            <p className="text-slate-400 dark:text-slate-500 text-sm leading-relaxed mb-5 max-w-sm">
+            <p className="text-slate-300 dark:text-slate-500 text-sm leading-relaxed mb-5 max-w-sm">
               {t.footer.aboutDesc}
             </p>
-            <div className="inline-flex items-center gap-2 text-xs bg-slate-800 dark:bg-slate-800 rounded-lg px-3 py-2 text-slate-400 dark:text-slate-500">
-              <span className="w-2 h-2 bg-slate-500 dark:bg-slate-600 rounded-full" />
+            <div className="inline-flex items-center gap-2 text-xs bg-primary/50 dark:bg-slate-800 rounded-lg px-3 py-2 text-gold-light">
+              <span className="w-2 h-2 bg-gold rounded-full" />
               {hours}
             </div>
           </div>
@@ -76,9 +80,9 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-slate-400 dark:text-slate-500 hover:text-white text-sm transition-colors inline-flex items-center gap-2"
+                    className="text-slate-300 dark:text-slate-500 hover:text-gold-light text-sm transition-colors inline-flex items-center gap-2"
                   >
-                    <span className="w-1 h-1 rounded-full bg-slate-600 dark:bg-slate-600 shrink-0" />
+                    <span className="w-1 h-1 rounded-full bg-gold shrink-0" />
                     {link.label}
                   </Link>
                 </li>
@@ -93,23 +97,23 @@ export default function Footer() {
             </h4>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-slate-500 dark:text-slate-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <svg className="w-5 h-5 text-gold shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                 </svg>
-                <span className="text-slate-400 dark:text-slate-500 text-sm leading-relaxed">{address}</span>
+                <span className="text-slate-300 dark:text-slate-500 text-sm leading-relaxed">{address}</span>
               </li>
               <li className="flex items-center gap-3">
-                <svg className="w-5 h-5 text-slate-500 dark:text-slate-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <svg className="w-5 h-5 text-gold shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
                 </svg>
-                <span className="text-slate-400 dark:text-slate-500 text-sm">{phone}</span>
+                <span className="text-slate-300 dark:text-slate-500 text-sm">{phone}</span>
               </li>
               <li className="flex items-center gap-3">
-                <svg className="w-5 h-5 text-slate-500 dark:text-slate-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <svg className="w-5 h-5 text-gold shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                 </svg>
-                <a href={`mailto:${email}`} className="text-slate-400 dark:text-slate-500 hover:text-white text-sm transition-colors">{email}</a>
+                <a href={`mailto:${email}`} className="text-slate-300 dark:text-slate-500 hover:text-gold-light text-sm transition-colors">{email}</a>
               </li>
             </ul>
           </div>
@@ -119,10 +123,10 @@ export default function Footer() {
             <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-5">
               {t.footer.aboutTitle}
             </h4>
-            <p className="text-slate-400 dark:text-slate-500 text-sm leading-relaxed mb-6">
+            <p className="text-slate-300 dark:text-slate-500 text-sm leading-relaxed mb-6">
               {t.footer.aboutDesc}
             </p>
-            <div className="inline-flex items-center gap-2 text-xs bg-slate-800 dark:bg-slate-800 rounded-lg px-3 py-2 text-slate-400 dark:text-slate-500">
+            <div className="inline-flex items-center gap-2 text-xs bg-primary/50 dark:bg-slate-800 rounded-lg px-3 py-2 text-gold-light">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>

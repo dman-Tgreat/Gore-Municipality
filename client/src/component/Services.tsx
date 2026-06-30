@@ -69,7 +69,7 @@ export default function Services() {
         <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
           {/* ── Card 1: Latest News ── */}
           <div className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:-translate-y-0.5">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 mb-5 group-hover:scale-110 transition-transform duration-300">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light mb-5 group-hover:scale-110 transition-transform duration-300">
               {serviceIcons.news}
             </div>
             <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-4">{t.services.latestNews}</h3>
@@ -118,7 +118,7 @@ export default function Services() {
 
           {/* ── Card 2: Municipal Services ── */}
           <div className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:-translate-y-0.5">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 mb-5 group-hover:scale-110 transition-transform duration-300">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light mb-5 group-hover:scale-110 transition-transform duration-300">
               {serviceIcons.services}
             </div>
             <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-4">{t.services.municipalServices}</h3>
@@ -173,7 +173,7 @@ export default function Services() {
 
           {/* ── Card 3: About Gore ── */}
           <div className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:-translate-y-0.5">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 mb-5 group-hover:scale-110 transition-transform duration-300">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light mb-5 group-hover:scale-110 transition-transform duration-300">
               {serviceIcons.about}
             </div>
             <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-4">{t.services.aboutGore}</h3>

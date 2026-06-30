@@ -14,10 +14,10 @@ export default function IncentivesPage() {
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans flex flex-col justify-between">
       <div>
         <Header />
-        <section className="bg-slate-800 dark:bg-slate-950 text-white py-14 text-center">
+        <section className="bg-gradient-to-br from-green-900 via-green-800 to-green-950 text-white py-14 text-center">
           <div className="container mx-auto px-6">
             <h1 className="text-3xl md:text-4xl font-black">{t.investmentTourism.incentives}</h1>
-            <p className="mt-2 text-slate-300 max-w-xl mx-auto text-sm">{t.investmentTourism.incentivesDesc}</p>
+            <p className="mt-2 text-emerald-100/80 max-w-xl mx-auto text-sm">{t.investmentTourism.incentivesDesc}</p>
           </div>
         </section>
         <main className="container mx-auto px-6 py-12 max-w-4xl">

@@ -61,20 +61,20 @@ export default function NewsPage() {
         <Header />
 
         {/* Header Banner */}
-        <section className="relative bg-slate-800 text-white py-8 text-center overflow-hidden">
+        <section className="relative bg-gradient-to-br from-green-900 via-green-800 to-green-950 text-white py-8 text-center overflow-hidden">
           <div className="absolute inset-0 opacity-10" style={{
             backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,255,255,0.2) 0%, transparent 50%),
                               radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)`,
           }} />
           <div className="relative container mx-auto px-6">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-              <span className="w-1.5 h-1.5 bg-white/60 rounded-full animate-pulse" />
+              <span className="w-1.5 h-1.5 bg-emerald-300/80 rounded-full animate-pulse" />
               {t.header.home}
             </div>
             <h1 className="text-3xl md:text-4xl font-black tracking-tight">
               {activeTab === 'news' ? t.news.title : t.announcements.title}
             </h1>
-            <p className="mt-2 text-slate-300 max-w-2xl mx-auto text-sm">
+            <p className="mt-2 text-emerald-100/80 max-w-2xl mx-auto text-sm">
               {activeTab === 'news' ? t.news.subtitle : t.announcements.subtitle}
             </p>
           </div>
@@ -90,7 +90,7 @@ export default function NewsPage() {
                   onClick={() => { setActiveTab(tab.key); setExpandedId(null); }}
                   className={`flex items-center gap-2 px-5 py-3.5 text-sm font-semibold transition-all duration-200 border-b-2 ${
                     activeTab === tab.key
-                      ? 'border-slate-800 dark:border-white text-slate-800 dark:text-white bg-slate-50 dark:bg-slate-800/50'
+                      ? 'border-[#1a7a3a] dark:border-[#d4a017] text-slate-800 dark:text-white bg-slate-50 dark:bg-slate-800/50'
                       : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-600'
                   }`}
                 >
@@ -140,7 +140,7 @@ export default function NewsPage() {
 
                 {articles.length === 0 ? (
                   <div className="text-center py-16 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-                    <p className="text-4xl mb-3">📰</p>
+                    <Newspaper className="w-12 h-12 mx-auto mb-3 text-slate-400" />
                     <p className="text-slate-500 dark:text-slate-400">{t.services.noUpdates}</p>
                   </div>
                 ) : (
@@ -216,7 +216,7 @@ export default function NewsPage() {
 
               {announcements.length === 0 ? (
                 <div className="text-center py-16 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-                  <p className="text-4xl mb-3">📢</p>
+                  <Megaphone className="w-12 h-12 mx-auto mb-3 text-slate-400" />
                   <p className="text-slate-500 dark:text-slate-400 text-lg">{t.announcements.noAnnouncements}</p>
                 </div>
               ) : (

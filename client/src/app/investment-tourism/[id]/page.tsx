@@ -86,13 +86,13 @@ export default function InvestmentDetailPage() {
       <Header />
 
       {/* Hero Banner */}
-      <section className="relative h-64 lg:h-72 overflow-hidden bg-slate-800">
+      <section className="relative h-64 lg:h-72 overflow-hidden bg-green-900">
         {imgSrc ? (
           <img src={imgSrc} alt={investment.title} className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full bg-slate-800" />
+          <div className="w-full h-full bg-gradient-to-br from-green-900 via-green-800 to-green-950" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-slate-900/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-green-950/80 via-green-900/50 to-transparent" />
         <div className="absolute inset-0 flex flex-col justify-center">
           <div className="container mx-auto px-6">
             <Link href="/investment-tourism" className="inline-flex items-center gap-1 text-white/70 hover:text-white text-sm mb-4 transition-colors">

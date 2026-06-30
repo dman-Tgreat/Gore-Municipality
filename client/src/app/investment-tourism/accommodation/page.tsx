@@ -14,10 +14,10 @@ export default function AccommodationPage() {
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans flex flex-col justify-between">
       <div>
         <Header />
-        <section className="bg-slate-800 dark:bg-slate-950 text-white py-14 text-center">
+        <section className="bg-gradient-to-br from-green-900 via-green-800 to-green-950 text-white py-14 text-center">
           <div className="container mx-auto px-6">
             <h1 className="text-3xl md:text-4xl font-black">{t.investmentTourism.accommodation}</h1>
-            <p className="mt-2 text-slate-300 max-w-xl mx-auto text-sm">{t.investmentTourism.accommodationDesc}</p>
+            <p className="mt-2 text-emerald-100/80 max-w-xl mx-auto text-sm">{t.investmentTourism.accommodationDesc}</p>
           </div>
         </section>
         <main className="container mx-auto px-6 py-12 max-w-4xl">
@@ -25,7 +25,9 @@ export default function AccommodationPage() {
             <div className="grid md:grid-cols-2 gap-4">
               {items.map((item, i) => (
                 <div key={i} className="flex items-start gap-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                  <div className="shrink-0 w-10 h-10 rounded-xl bg-slate-700 dark:bg-slate-600 text-white flex items-center justify-center text-lg">🏨</div>
+                  <div className="shrink-0 w-10 h-10 rounded-xl bg-slate-700 dark:bg-slate-600 text-white flex items-center justify-center">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" /></svg>
+                  </div>
                   <span className="text-slate-700 dark:text-slate-300 text-sm pt-1.5">{item}</span>
                 </div>
               ))}

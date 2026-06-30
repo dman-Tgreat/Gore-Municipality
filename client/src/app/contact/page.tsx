@@ -59,7 +59,7 @@ export default function ContactPage() {
         <Header />
 
         {/* ── Hero Banner ── */}
-        <section className="relative bg-slate-800 text-white py-10 md:py-12 text-center overflow-hidden">
+        <section className="relative bg-gradient-to-br from-green-900 via-green-800 to-green-950 text-white py-10 md:py-12 text-center overflow-hidden">
           <div className="absolute inset-0 opacity-10" style={{
             backgroundImage: `radial-gradient(circle at 15% 30%, rgba(255,255,255,0.25) 0%, transparent 45%),
                               radial-gradient(circle at 85% 70%, rgba(255,255,255,0.15) 0%, transparent 40%),
@@ -264,7 +264,7 @@ export default function ContactPage() {
                     <div className="flex items-center gap-4 pt-2">
                       <button
                         type="submit"
-                        className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3.5 px-8 rounded-xl transition-all duration-200 hover:-translate-y-0.5 shadow-lg"
+                        className="inline-flex items-center gap-2 bg-[#1a7a3a] hover:bg-[#14632f] text-white font-semibold py-3.5 px-8 rounded-xl transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-green-900/20"
                       >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />

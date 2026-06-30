@@ -28,14 +28,14 @@ export default function ServicesPage() {
       <div>
         <Header />
         
-        <section className="bg-slate-800 text-white py-8 text-center">
+        <section className="bg-gradient-to-br from-green-900 via-green-800 to-green-950 text-white py-8 text-center">
           <div className="container mx-auto px-6">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-              <span className="w-1.5 h-1.5 bg-white/60 rounded-full animate-pulse" />
+              <span className="w-1.5 h-1.5 bg-emerald-300/80 rounded-full animate-pulse" />
               {t.header.services}
             </div>
             <h1 className="text-3xl md:text-4xl font-black">{t.servicesPage.title}</h1>
-            <p className="mt-2 text-slate-300 max-w-xl mx-auto text-sm">{t.servicesPage.subtitle}</p>
+            <p className="mt-2 text-emerald-100/80 max-w-xl mx-auto text-sm">{t.servicesPage.subtitle}</p>
           </div>
         </section>
 

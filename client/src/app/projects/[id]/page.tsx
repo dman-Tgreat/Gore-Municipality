@@ -111,13 +111,13 @@ export default function ProjectDetailPage() {
       <Header />
 
       {/* Hero Banner with Cover Image */}
-      <section className="relative h-64 lg:h-80 overflow-hidden bg-slate-800 dark:bg-slate-950">
+      <section className="relative h-64 lg:h-80 overflow-hidden bg-green-900 dark:bg-green-950">
         {imgSrc ? (
           <img src={imgSrc} alt={project.name} className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full bg-slate-800 dark:bg-slate-950" />
+          <div className="w-full h-full bg-gradient-to-br from-green-900 via-green-800 to-green-950" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-slate-900/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-green-950/90 via-green-900/60 to-transparent" />
         <div className="absolute inset-0 flex flex-col justify-center">
           <div className="container mx-auto px-6">
             <Link href="/projects" className="inline-flex items-center gap-1 text-slate-300 hover:text-white text-sm mb-4 transition-colors">

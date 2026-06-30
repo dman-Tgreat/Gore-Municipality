@@ -43,7 +43,7 @@ export default function Hero() {
   if (!loading && slides.length === 0) {
     return (
       <section className="relative min-h-[500px] lg:min-h-[580px] w-full overflow-hidden bg-slate-800 flex items-center justify-center">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-dark via-primary to-primary-dark" />
         <div className="relative text-center text-white px-6 max-w-3xl mx-auto">
           {/* Seal */}
           <div className="mx-auto mb-8 w-20 h-20 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center">
@@ -108,9 +108,9 @@ export default function Hero() {
           />
 
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-800/60 to-slate-900/30" />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-slate-900/20" />
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-900 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary-dark/90 via-primary/60 to-primary-dark/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/60 via-transparent to-primary/20" />
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-primary-dark to-transparent" />
 
           {/* Content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-6">

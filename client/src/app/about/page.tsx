@@ -247,16 +247,16 @@ export default function AboutPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="py-10 bg-slate-800 dark:bg-slate-950 text-white">
+      <section className="py-10 bg-gradient-to-r from-green-900 via-green-800 to-green-950 text-white">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-2xl md:text-3xl font-black mb-3">{t.about.ctaTitle}</h2>
-          <p className="text-slate-300 text-sm max-w-xl mx-auto mb-8">
+          <p className="text-emerald-100/80 text-sm max-w-xl mx-auto mb-8">
             {t.about.ctaDesc}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/service"
-              className="inline-flex items-center gap-2 bg-white text-slate-800 font-bold px-6 py-3 rounded-xl hover:bg-slate-100 transition-colors shadow-lg"
+              className="inline-flex items-center gap-2 bg-white text-[#1a7a3a] font-bold px-6 py-3 rounded-xl hover:bg-slate-100 transition-colors shadow-lg"
             >
               <Landmark className="w-5 h-5" /> {t.header.services}
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -265,7 +265,7 @@ export default function AboutPage() {
             </Link>
             <Link
               href="/investment-tourism"
-              className="inline-flex items-center gap-2 bg-slate-700 text-white font-bold px-6 py-3 rounded-xl hover:bg-slate-600 transition-colors border border-slate-600"
+              className="inline-flex items-center gap-2 bg-[#d4a017] text-white font-bold px-6 py-3 rounded-xl hover:bg-[#b8850f] transition-colors shadow-lg"
             >
               <Briefcase className="w-5 h-5" /> {t.investmentTourism.title}
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
