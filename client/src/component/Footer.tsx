@@ -33,7 +33,6 @@ export default function Footer() {
     { label: t.header.about, href: '/about' },
     { label: t.footer.news, href: '/news' },
     { label: t.footer.announcements, href: '/announcements' },
-    { label: t.admin.cmsDocuments, href: '/documents' },
     { label: t.footer.services, href: '/service' },
     { label: t.footer.projects, href: '/projects' },
     { label: t.footer.contact, href: '/contact' },
@@ -115,24 +114,19 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Admin & Quick Access - spans 3 cols */}
+          {/* Mission Statement - spans 3 cols */}
           <div className="lg:col-span-3">
             <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-5">
-              {t.footer.adminPanel}
+              {t.footer.aboutTitle}
             </h4>
-            <Link
-              href="/admin/login"
-              className="inline-flex items-center justify-center gap-2 bg-slate-800 dark:bg-slate-800 hover:bg-slate-700 dark:hover:bg-slate-700 text-slate-300 dark:text-slate-400 hover:text-white text-sm font-medium rounded-lg px-5 py-3 transition-all w-full border border-slate-700 dark:border-slate-700"
-            >
+            <p className="text-slate-400 dark:text-slate-500 text-sm leading-relaxed mb-6">
+              {t.footer.aboutDesc}
+            </p>
+            <div className="inline-flex items-center gap-2 text-xs bg-slate-800 dark:bg-slate-800 rounded-lg px-3 py-2 text-slate-400 dark:text-slate-500">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              {t.admin.login}
-            </Link>
-            <div className="mt-6 pt-6 border-t border-slate-800 dark:border-slate-800">
-              <p className="text-slate-500 dark:text-slate-600 text-xs leading-relaxed">
-                {t.footer.workingHours}
-              </p>
+              {t.footer.workingHours}
             </div>
           </div>
         </div>

@@ -8,14 +8,15 @@ import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
 import { tField } from '@/lib/locale';
 import { investmentsApi, type Investment } from '@/lib/api';
+import { Briefcase, Star, Leaf, Hotel, MapPin, Phone, Mail, Calendar, Search, Package } from 'lucide-react';
 
-const categoryConfig: Record<string, { label: string; icon: string }> = {
-  opportunity: { label: 'Investment Opportunity', icon: '💼' },
-  incentive: { label: 'Incentive & Policy', icon: '⭐' },
-  attraction: { label: 'Tourist Attraction', icon: '🌿' },
-  accommodation: { label: 'Hotel & Accommodation', icon: '🏨' },
-  culture: { label: 'Cultural Heritage', icon: '🎭' },
-  'local-product': { label: 'Local Product', icon: '🏺' },
+const categoryConfig: Record<string, { label: string; icon: React.ReactNode }> = {
+  opportunity: { label: 'Investment Opportunity', icon: <Briefcase className="w-8 h-8" /> },
+  incentive: { label: 'Incentive & Policy', icon: <Star className="w-8 h-8" /> },
+  attraction: { label: 'Tourist Attraction', icon: <Leaf className="w-8 h-8" /> },
+  accommodation: { label: 'Hotel & Accommodation', icon: <Hotel className="w-8 h-8" /> },
+  culture: { label: 'Cultural Heritage', icon: <Star className="w-8 h-8" /> },
+  'local-product': { label: 'Local Product', icon: <Package className="w-8 h-8" /> },
 };
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
@@ -59,7 +60,7 @@ export default function InvestmentDetailPage() {
         <Header />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-5xl mb-4">🔍</p>
+            <Search className="w-16 h-16 mx-auto mb-4 text-slate-400" />
             <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Not Found</h2>
             <p className="text-slate-500 dark:text-slate-400 mb-6">The item you are looking for does not exist.</p>
             <Link href="/investment-tourism" className="text-slate-700 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white font-semibold inline-flex items-center gap-1">
@@ -146,7 +147,7 @@ export default function InvestmentDetailPage() {
               {investment.location && (
                 <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5 text-center hover:shadow-md transition">
                   <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-700 text-white text-lg mb-3">
-                    📍
+                    <MapPin className="w-5 h-5" />
                   </div>
                   <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Location</p>
                   <p className="text-sm font-semibold text-slate-800 dark:text-white">{investment.location}</p>
@@ -154,7 +155,7 @@ export default function InvestmentDetailPage() {
               )}
               <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5 text-center hover:shadow-md transition">
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-700 text-white text-lg mb-3">
-                  📅
+                  <Calendar className="w-5 h-5" />
                 </div>
                 <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Posted</p>
                 <p className="text-sm font-semibold text-slate-800 dark:text-white">{new Date(investment.createdAt).toLocaleDateString()}</p>
@@ -180,7 +181,7 @@ export default function InvestmentDetailPage() {
               <div className="space-y-4">
                 {investment.contactPhone && (
                   <div className="flex items-start gap-3">
-                    <span className="text-lg shrink-0">📞</span>
+                    <Phone className="w-5 h-5 shrink-0 text-slate-400" />
                     <div>
                       <p className="text-xs text-slate-400 dark:text-slate-500">Phone</p>
                       <p className="text-sm font-medium text-slate-800 dark:text-white">{investment.contactPhone}</p>
@@ -189,7 +190,7 @@ export default function InvestmentDetailPage() {
                 )}
                 {investment.contactEmail && (
                   <div className="flex items-start gap-3">
-                    <span className="text-lg shrink-0">✉️</span>
+                    <Mail className="w-5 h-5 shrink-0 text-slate-400" />
                     <div>
                       <p className="text-xs text-slate-400 dark:text-slate-500">Email</p>
                       <p className="text-sm font-medium text-slate-800 dark:text-white">{investment.contactEmail}</p>
@@ -198,7 +199,7 @@ export default function InvestmentDetailPage() {
                 )}
                 {investment.location && (
                   <div className="flex items-start gap-3">
-                    <span className="text-lg shrink-0">📍</span>
+                    <MapPin className="w-5 h-5 shrink-0 text-slate-400" />
                     <div>
                       <p className="text-xs text-slate-400 dark:text-slate-500">Location</p>
                       <p className="text-sm font-medium text-slate-800 dark:text-white">{investment.location}</p>

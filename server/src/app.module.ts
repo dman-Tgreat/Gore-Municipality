@@ -7,7 +7,6 @@ import { NewsModule } from './news/news.module';
 import { AnnouncementsModule } from './announcements/announcements.module';
 import { DepartmentsModule } from './departments/departments.module';
 import { ProjectsModule } from './projects/projects.module';
-import { DocumentsModule } from './documents/documents.module';
 import { ContactModule } from './contact/contact.module';
 import { UploadModule } from './upload/upload.module';
 import { InvestmentsModule } from './investments/investments.module';
@@ -44,8 +43,6 @@ import { SettingsModule } from './settings/settings.module';
     DepartmentsModule,
 
     ProjectsModule,
-
-    DocumentsModule,
 
     ContactModule,
 

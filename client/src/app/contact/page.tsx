@@ -5,12 +5,13 @@ import Header from '@/component/Header';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
 import { contactApi, settingsApi, type SiteSetting } from '@/lib/api';
+import { MapPin, Phone, Mail, Clock, User, ClipboardList, MessageSquare } from 'lucide-react';
 
 const contactChannels = [
-  { key: 'address', icon: '📍', lines: ['officeAddress1', 'officeAddress2'], gradient: 'from-red-600 to-red-400' },
-  { key: 'phone', icon: '📞', lines: ['mainOffice', 'publicRelations'], gradient: 'from-green-600 to-emerald-400' },
-  { key: 'email', icon: '✉️', lines: ['emailLine1', 'emailLine2'], gradient: 'from-blue-600 to-blue-400' },
-  { key: 'hours', icon: '🕐', lines: ['hoursLine1', 'hoursLine2'], gradient: 'from-amber-500 to-yellow-400' },
+  { key: 'address', icon: <MapPin className="w-5 h-5" />, lines: ['officeAddress1', 'officeAddress2'], gradient: 'from-red-600 to-red-400' },
+  { key: 'phone', icon: <Phone className="w-5 h-5" />, lines: ['mainOffice', 'publicRelations'], gradient: 'from-green-600 to-emerald-400' },
+  { key: 'email', icon: <Mail className="w-5 h-5" />, lines: ['emailLine1', 'emailLine2'], gradient: 'from-blue-600 to-blue-400' },
+  { key: 'hours', icon: <Clock className="w-5 h-5" />, lines: ['hoursLine1', 'hoursLine2'], gradient: 'from-amber-500 to-yellow-400' },
 ];
 
 export default function ContactPage() {
@@ -133,7 +134,7 @@ export default function ContactPage() {
                   }} />
                   <div className="relative flex items-center gap-4">
                     <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-3xl shadow-lg shrink-0">
-                      📍
+                      <MapPin className="w-6 h-6" />
                     </div>
                     <div>
                       <h3 className="font-bold text-base">{t.contact.officeLocation}</h3>
@@ -144,7 +145,7 @@ export default function ContactPage() {
                 </div>
                 <div className="p-5 space-y-4">
                   <div className="flex items-start gap-3">
-                    <span className="text-base shrink-0 mt-0.5">📞</span>
+                    <Phone className="w-5 h-5 shrink-0 mt-0.5 text-slate-500" />
                     <div>
                       <p className="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">{t.contact.phone}</p>
                       <p className="text-sm font-medium text-slate-800 dark:text-white">{t.contact.mainOffice}</p>
@@ -152,7 +153,7 @@ export default function ContactPage() {
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <span className="text-base shrink-0 mt-0.5">✉️</span>
+                    <Mail className="w-5 h-5 shrink-0 mt-0.5 text-slate-500" />
                     <div>
                       <p className="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">{t.contact.email}</p>
                       <p className="text-sm font-medium text-slate-800 dark:text-white">{settingsEmailMain}</p>
@@ -160,7 +161,7 @@ export default function ContactPage() {
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <span className="text-base shrink-0 mt-0.5">🕐</span>
+                    <Clock className="w-5 h-5 shrink-0 mt-0.5 text-slate-500" />
                     <div>
                       <p className="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">{t.footer.workingHours}</p>
                       <p className="text-sm font-medium text-slate-800 dark:text-white">{settingsHoursWeekday}</p>
@@ -207,7 +208,7 @@ export default function ContactPage() {
                       <div>
                         <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">{t.contact.fullName}</label>
                         <div className="relative">
-                          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">👤</span>
+                          <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                           <input
                             type="text"
                             required
@@ -221,7 +222,7 @@ export default function ContactPage() {
                       <div>
                         <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">{t.contact.emailAddress}</label>
                         <div className="relative">
-                          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">✉️</span>
+                          <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                           <input
                             type="email"
                             required
@@ -236,7 +237,7 @@ export default function ContactPage() {
 
                     <div>                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">{t.contact.subject}</label>
                       <div className="relative">
-                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">📋</span>
+                        <ClipboardList className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <input
                           type="text"
                           required
@@ -249,7 +250,7 @@ export default function ContactPage() {
 
                     <div>                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">{t.contact.messageContent}</label>
                       <div className="relative">
-                        <span className="absolute left-3.5 top-4 text-gray-400 text-sm">💬</span>
+                        <MessageSquare className="absolute left-3.5 top-4 w-4 h-4 text-gray-400" />
                         <textarea
                           rows={5}
                           required

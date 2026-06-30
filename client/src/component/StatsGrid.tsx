@@ -3,11 +3,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocale } from '@/context/LocaleContext';
 import { newsApi, departmentsApi, projectsApi, settingsApi, type SiteSetting } from '@/lib/api';
+import { Newspaper, Landmark, Construction, BarChart3 } from 'lucide-react';
 
 interface StatsItem {
   label: string;
   value: string;
-  icon: string;
+  icon: React.ReactNode;
   detail: string;
 }
 
@@ -90,25 +91,25 @@ export default function StatsGrid() {
     {
       label: getSetting('stats_label_1', t.stats.stats[0].label),
       value: loading ? '—' : `${newsCount}`,
-      icon: '📰',
+      icon: <Newspaper className="w-5 h-5" />,
       detail: getSetting('stats_detail_1', t.stats.stats[0].detail),
     },
     {
       label: getSetting('stats_label_2', t.stats.stats[1].label),
       value: loading ? '—' : `${deptCount}`,
-      icon: '🏛️',
+      icon: <Landmark className="w-5 h-5" />,
       detail: getSetting('stats_detail_2', t.stats.stats[1].detail),
     },
     {
       label: getSetting('stats_label_3', t.stats.stats[2].label),
       value: loading ? '—' : `${ongoingCount}`,
-      icon: '🚧',
+      icon: <Construction className="w-5 h-5" />,
       detail: getSetting('stats_detail_3', t.stats.stats[2].detail),
     },
     {
       label: getSetting('stats_label_4', t.stats.stats[3].label),
       value: loading ? '—' : `${projectCount}`,
-      icon: '📊',
+      icon: <BarChart3 className="w-5 h-5" />,
       detail: getSetting('stats_detail_4', t.stats.stats[3].detail),
     },
   ];

@@ -8,8 +8,9 @@ import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
 import { tField } from '@/lib/locale';
 import { departmentsApi, type Department } from '@/lib/api';
+import { ClipboardList, Sprout, Building, HeartPulse, Wrench, BookOpen, Landmark, Scale, Search, User, Phone, Mail, MapPin } from 'lucide-react';
 
-const iconList = ['📋', '🌱', '🏢', '⚕️', '🔧', '📚', '🏛️', '⚖️'];
+const deptIconList = [ClipboardList, Sprout, Building, HeartPulse, Wrench, BookOpen, Landmark, Scale];
 
 export default function ServiceDetailPage() {
   const { locale, t } = useLocale();
@@ -50,7 +51,7 @@ export default function ServiceDetailPage() {
         <Header />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-5xl mb-4">🔍</p>
+            <Search className="w-16 h-16 mx-auto mb-4 text-slate-400" />
             <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2">{t.servicesPage.notFound}</h2>
             <p className="text-slate-500 dark:text-slate-400 mb-6">{t.servicesPage.notFoundDesc}</p>
             <Link href="/service" className="text-slate-700 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white font-semibold inline-flex items-center gap-1">
@@ -66,8 +67,8 @@ export default function ServiceDetailPage() {
     );
   }
 
-  const iconIdx = (dept.id % iconList.length + iconList.length) % iconList.length;
-  const deptIcon = iconList[iconIdx];
+  const iconIdx = (dept.id % deptIconList.length + deptIconList.length) % deptIconList.length;
+  const DeptIcon = deptIconList[iconIdx];
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans flex flex-col">
@@ -88,7 +89,7 @@ export default function ServiceDetailPage() {
           </Link>
           <div className="flex items-center gap-5">
             <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-4xl shadow-lg">
-              {deptIcon}
+              <DeptIcon className="w-8 h-8" />
             </div>
             <div>
               <h1 className="text-3xl md:text-4xl font-black">{tField(dept, 'name', locale)}</h1>
@@ -114,9 +115,9 @@ export default function ServiceDetailPage() {
             {/* Department Stats — derived from API data */}
             <div className="grid sm:grid-cols-3 gap-4">
               {[
-                { label: t.servicesPage.deptHead, value: dept.head || '—', icon: '👤' },
-                { label: t.servicesPage.contact, value: dept.phone || dept.email || '—', icon: '📞' },
-                { label: t.servicesPage.office, value: dept.office || '—', icon: '📍' },
+                { label: t.servicesPage.deptHead, value: dept.head || '—', icon: <User className="w-5 h-5" /> },
+                { label: t.servicesPage.contact, value: dept.phone || dept.email || '—', icon: <Phone className="w-5 h-5" /> },
+                { label: t.servicesPage.office, value: dept.office || '—', icon: <MapPin className="w-5 h-5" /> },
               ].map((stat, i) => (
                 <div key={i} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5 text-center hover:shadow-md transition">
                   <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-lg mb-3">
@@ -140,7 +141,7 @@ export default function ServiceDetailPage() {
               <div className="space-y-4">
                 {dept.head && (
                   <div className="flex items-start gap-3">
-                    <span className="text-lg shrink-0">👤</span>
+                    <User className="w-5 h-5 shrink-0 text-slate-400" />
                     <div>
                       <p className="text-xs text-slate-400 dark:text-slate-500">{t.admin.headField}</p>
                       <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{dept.head}</p>
@@ -149,7 +150,7 @@ export default function ServiceDetailPage() {
                 )}
                 {dept.phone && (
                   <div className="flex items-start gap-3">
-                    <span className="text-lg shrink-0">📞</span>
+                    <Phone className="w-5 h-5 shrink-0 text-slate-400" />
                     <div>
                       <p className="text-xs text-slate-400 dark:text-slate-500">{t.admin.phoneField}</p>
                       <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{dept.phone}</p>
@@ -158,7 +159,7 @@ export default function ServiceDetailPage() {
                 )}
                 {dept.email && (
                   <div className="flex items-start gap-3">
-                    <span className="text-lg shrink-0">✉️</span>
+                    <Mail className="w-5 h-5 shrink-0 text-slate-400" />
                     <div>
                       <p className="text-xs text-slate-400 dark:text-slate-500">{t.contact.email}</p>
                       <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{dept.email}</p>
@@ -167,7 +168,7 @@ export default function ServiceDetailPage() {
                 )}
                 {dept.office && (
                   <div className="flex items-start gap-3">
-                    <span className="text-lg shrink-0">📍</span>
+                    <MapPin className="w-5 h-5 shrink-0 text-slate-400" />
                     <div>
                       <p className="text-xs text-slate-400 dark:text-slate-500">{t.admin.officeField}</p>
                       <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{dept.office}</p>

@@ -7,20 +7,21 @@ import { useLocale, type LocaleCode } from '@/context/LocaleContext';
 import { useTheme } from '@/context/ThemeContext';
 import { locales } from '@/i18n/messages';
 import { departmentsApi, projectsApi, type Department, type Project } from '@/lib/api';
+import { Newspaper, Megaphone, Landmark, ClipboardList, Briefcase, Star, Leaf, Hotel, BarChart3, ChevronRight } from 'lucide-react';
 
 // ── Types ──
 
 interface DropdownItem {
   key: string;
   href: string;
-  icon: string;
+  icon: React.ReactNode;
   section: 'invest' | 'news' | 'services' | 'projects';
 }
 
 interface DynamicDropdownItem {
   href: string;
   label: string;
-  icon: string;
+  icon: React.ReactNode;
 }
 
 interface NavDropdownProps {
@@ -40,15 +41,15 @@ interface NavDropdownProps {
 // ── Static items ──
 
 const dropdownItems: DropdownItem[] = [
-  { key: 'title', href: '/news', icon: '📰', section: 'news' },
-  { key: 'announcements', href: '/news?tab=announcements', icon: '📢', section: 'news' },
-  { key: 'municipalServices', href: '/service', icon: '🏛️', section: 'services' },
-  { key: 'overview', href: '/investment-tourism', icon: '📋', section: 'invest' },
-  { key: 'opportunities', href: '/investment-tourism/opportunities', icon: '💼', section: 'invest' },
-  { key: 'incentives', href: '/investment-tourism/incentives', icon: '⭐', section: 'invest' },
-  { key: 'attractions', href: '/investment-tourism/attractions', icon: '🌿', section: 'invest' },
-  { key: 'accommodation', href: '/investment-tourism/accommodation', icon: '🏨', section: 'invest' },
-  { key: 'title', href: '/projects', icon: '📊', section: 'projects' },
+  { key: 'title', href: '/news', icon: <Newspaper className="w-4 h-4" />, section: 'news' },
+  { key: 'announcements', href: '/news?tab=announcements', icon: <Megaphone className="w-4 h-4" />, section: 'news' },
+  { key: 'municipalServices', href: '/service', icon: <Landmark className="w-4 h-4" />, section: 'services' },
+  { key: 'overview', href: '/investment-tourism', icon: <ClipboardList className="w-4 h-4" />, section: 'invest' },
+  { key: 'opportunities', href: '/investment-tourism/opportunities', icon: <Briefcase className="w-4 h-4" />, section: 'invest' },
+  { key: 'incentives', href: '/investment-tourism/incentives', icon: <Star className="w-4 h-4" />, section: 'invest' },
+  { key: 'attractions', href: '/investment-tourism/attractions', icon: <Leaf className="w-4 h-4" />, section: 'invest' },
+  { key: 'accommodation', href: '/investment-tourism/accommodation', icon: <Hotel className="w-4 h-4" />, section: 'invest' },
+  { key: 'title', href: '/projects', icon: <BarChart3 className="w-4 h-4" />, section: 'projects' },
 ];
 
 // ── NavDropdown Component ──
@@ -86,7 +87,7 @@ function NavDropdown({ items, label, href, isActive, isOpen, onMouseEnter, onMou
                   : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-800 dark:hover:text-white'
               }`}
             >
-              <span className="text-base">{item.icon}</span>
+              {item.icon}
               {item.key === 'title' ? label : item.key === 'announcements' ? t.announcements.title : item.key === 'municipalServices' ? t.services.municipalServices : t.investmentTourism[item.key as keyof typeof t.investmentTourism]}
             </Link>
           ))}
@@ -149,7 +150,7 @@ export default function Header() {
     const active = pathname === path;
     return `transition font-medium text-sm whitespace-nowrap px-1.5 py-1 ${
       active
-        ? 'text-slate-800 dark:text-white'
+        ? 'text-slate-800 dark:text-white size 18'
         : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
     }`;
   };
@@ -166,13 +167,13 @@ export default function Header() {
   const serviceDropdownItems: DynamicDropdownItem[] = departments.map((d) => ({
     href: `/service/${d.id}`,
     label: d.name,
-    icon: '🔹',
+    icon: <ChevronRight className="w-3 h-3 text-slate-400" />,
   }));
 
   const projectDropdownItems: DynamicDropdownItem[] = projects.map((p) => ({
     href: `/projects/${p.id}`,
     label: p.name,
-    icon: '🔸',
+    icon: <ChevronRight className="w-3 h-3 text-slate-400" />,
   }));
 
   const isActive = (paths: string[]) => paths.some(p => pathname === p || pathname.startsWith(p + '/'));
@@ -211,7 +212,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-7">
             <Link href="/" className={linkStyle('/')}>{t.header.home}</Link>
             <Link href="/about" className={linkStyle('/about')}>{t.header.about}</Link>
 
@@ -226,8 +227,6 @@ export default function Header() {
               pathname={pathname}
               t={t}
             />
-
-            <Link href="/documents" className={linkStyle('/documents')}>{t.admin.cmsDocuments}</Link>
 
             <NavDropdown
               items={servicesItems}
@@ -390,15 +389,15 @@ export default function Header() {
             
             <div className="border-t border-slate-100 dark:border-slate-800 pt-3 mt-3">
               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 px-4">{t.header.news}</p>
-              <MobileNavLink href="/news" label={`📰 ${t.header.news}`} pathname={pathname} onClick={() => setMobileOpen(false)} />
-              <MobileNavLink href="/news?tab=announcements" label={`📢 ${t.announcements.title}`} pathname={pathname} onClick={() => setMobileOpen(false)} />
+              <MobileNavLink href="/news" label={t.header.news} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<Newspaper className="w-4 h-4" />} />
+              <MobileNavLink href="/news?tab=announcements" label={t.announcements.title} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<Megaphone className="w-4 h-4" />} />
             </div>
 
             <div className="border-t border-slate-100 dark:border-slate-800 pt-3 mt-3">
               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 px-4">{t.header.services}</p>
-              <MobileNavLink href="/service" label={`🏛️ ${t.header.services}`} pathname={pathname} onClick={() => setMobileOpen(false)} />
+              <MobileNavLink href="/service" label={t.header.services} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<Landmark className="w-4 h-4" />} />
               {departments.slice(0, 8).map((dept) => (
-                <MobileNavLink key={dept.id} href={`/service/${dept.id}`} label={`  🔹 ${dept.name}`} pathname={pathname} onClick={() => setMobileOpen(false)} />
+                <MobileNavLink key={dept.id} href={`/service/${dept.id}`} label={dept.name} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<ChevronRight className="w-3 h-3 text-slate-400" />} />
               ))}
             </div>
 
@@ -411,15 +410,10 @@ export default function Header() {
 
             <div className="border-t border-slate-100 dark:border-slate-800 pt-3 mt-3">
               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 px-4">{t.projects.title}</p>
-              <MobileNavLink href="/projects" label={`📊 ${t.projects.title}`} pathname={pathname} onClick={() => setMobileOpen(false)} />
+              <MobileNavLink href="/projects" label={t.projects.title} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<BarChart3 className="w-4 h-4" />} />
               {projects.slice(0, 8).map((proj) => (
-                <MobileNavLink key={proj.id} href={`/projects/${proj.id}`} label={`  🔸 ${proj.name}`} pathname={pathname} onClick={() => setMobileOpen(false)} />
+                <MobileNavLink key={proj.id} href={`/projects/${proj.id}`} label={proj.name} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<ChevronRight className="w-3 h-3 text-slate-400" />} />
               ))}
-            </div>
-
-            <div className="border-t border-slate-100 dark:border-slate-800 pt-3 mt-3">
-              <MobileNavLink href="/documents" label={t.admin.cmsDocuments} pathname={pathname} onClick={() => setMobileOpen(false)} />
-              <MobileNavLink href="/contact" label={t.header.contact} pathname={pathname} onClick={() => setMobileOpen(false)} />
             </div>
           </div>
         </div>
@@ -428,20 +422,21 @@ export default function Header() {
   );
 }
 
-function MobileNavLink({ href, label, pathname, onClick }: { href: string; label: string; pathname: string; onClick: () => void }) {
+function MobileNavLink({ href, label, pathname, onClick, icon }: { href: string; label: string; pathname: string; onClick: () => void; icon?: React.ReactNode }) {
   const hrefPath = href.split('?')[0];
   const active = pathname === href || (hrefPath !== '/' && pathname.startsWith(hrefPath));
   return (
     <Link
       href={href}
       onClick={onClick}
-      className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition ${
+      className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition ${
         active
           ? 'text-slate-800 dark:text-white bg-slate-50 dark:bg-slate-800 font-semibold'
           : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
       }`}
     >
-      {label}
+      {icon && <span className="shrink-0">{icon}</span>}
+      <span>{label}</span>
     </Link>
   );
 }

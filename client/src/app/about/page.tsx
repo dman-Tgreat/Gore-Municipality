@@ -6,6 +6,7 @@ import Header from '@/component/Header';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
 import { newsApi, departmentsApi, projectsApi, settingsApi, type NewsArticle, type Department, type Project, type SiteSetting } from '@/lib/api';
+import { Newspaper, Landmark, Construction, MapPin, ScrollText, Globe, User, Crosshair, Zap, Briefcase } from 'lucide-react';
 
 const councilIcon = (
   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -85,13 +86,13 @@ export default function AboutPage() {
       <div className="container mx-auto px-6 -mt-8 relative z-20">
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
-            { label: t.about.statUpdates, value: loading ? '—' : news.length, icon: '📰' },
-            { label: t.about.statDepartments, value: loading ? '—' : departments.length, icon: '🏛️' },
-            { label: t.about.statActiveProjects, value: loading ? '—' : projects.filter((p) => p.status === 'ongoing').length, icon: '🚧' },
-            { label: t.about.statKebeles, value: '22', icon: '📍' },
+            { label: t.about.statUpdates, value: loading ? '—' : news.length, icon: <Newspaper className="w-6 h-6" /> },
+            { label: t.about.statDepartments, value: loading ? '—' : departments.length, icon: <Landmark className="w-6 h-6" /> },
+            { label: t.about.statActiveProjects, value: loading ? '—' : projects.filter((p) => p.status === 'ongoing').length, icon: <Construction className="w-6 h-6" /> },
+            { label: t.about.statKebeles, value: '22', icon: <MapPin className="w-6 h-6" /> },
           ].map((stat, i) => (
             <div key={i} className="text-center">
-              <span className="text-2xl mb-1 block">{stat.icon}</span>
+              <span className="inline-flex items-center justify-center mb-1 text-slate-500 dark:text-slate-400">{stat.icon}</span>
               <p className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white">{stat.value}</p>
               <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">{stat.label}</p>
             </div>
@@ -113,7 +114,7 @@ export default function AboutPage() {
             <div className="relative">
               <div className="aspect-[4/3] rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200 dark:border-slate-700 flex items-center justify-center">
                 <div className="text-center p-6">
-                  <span className="text-6xl block mb-4">📜</span>
+                  <ScrollText className="w-16 h-16 mx-auto mb-4 text-slate-400" />
                   <p className="text-slate-700 dark:text-slate-300 font-semibold text-sm">{t.about.historyIllustration}</p>
                   <p className="text-slate-500 dark:text-slate-400 text-xs mt-2">{t.about.historyIllustrationSub}</p>
                 </div>
@@ -130,7 +131,7 @@ export default function AboutPage() {
             <div className="relative order-2 md:order-1">
               <div className="aspect-[4/3] rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200 dark:border-slate-700 flex items-center justify-center">
                 <div className="text-center p-6">
-                  <span className="text-6xl block mb-4">🌍</span>
+                  <Globe className="w-16 h-16 mx-auto mb-4 text-slate-400" />
                   <p className="text-slate-700 dark:text-slate-300 font-semibold text-sm">{t.about.geographyIllustration}</p>
                   <p className="text-slate-500 dark:text-slate-400 text-xs mt-2">{t.about.geographyIllustrationSub}</p>
                 </div>
@@ -165,7 +166,7 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
             {/* Mayor Card */}
             <div className="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg text-center">
-              <div className="w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-700 mx-auto mb-5 flex items-center justify-center border-2 border-slate-200 dark:border-slate-600 group-hover:border-slate-400 dark:group-hover:border-slate-500 transition-colors">                  <span className="text-4xl text-slate-700 dark:text-slate-300">👤</span>
+              <div className="w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-700 mx-auto mb-5 flex items-center justify-center border-2 border-slate-200 dark:border-slate-600 group-hover:border-slate-400 dark:group-hover:border-slate-500 transition-colors">                  <User className="w-10 h-10 text-slate-500 dark:text-slate-400" />
               </div>
               <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-1">{t.about.mayorTitle}</h3>
               <p className="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-3">{getSetting('about_mayor_name', t.about.mayorName)}</p>
@@ -174,7 +175,7 @@ export default function AboutPage() {
 
             {/* Vice Mayor Card */}
             <div className="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg text-center">
-              <div className="w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-700 mx-auto mb-5 flex items-center justify-center border-2 border-slate-200 dark:border-slate-600 group-hover:border-slate-400 dark:group-hover:border-slate-500 transition-colors">                  <span className="text-4xl text-slate-700 dark:text-slate-300">👤</span>
+              <div className="w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-700 mx-auto mb-5 flex items-center justify-center border-2 border-slate-200 dark:border-slate-600 group-hover:border-slate-400 dark:group-hover:border-slate-500 transition-colors">                  <User className="w-10 h-10 text-slate-500 dark:text-slate-400" />
               </div>
               <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-1">{t.about.viceMayorTitle}</h3>
               <p className="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-3">{getSetting('about_vice_mayor_name', t.about.viceMayorName)}</p>
@@ -228,14 +229,14 @@ export default function AboutPage() {
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8">
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="text-2xl">🎯</span>
+                  <Crosshair className="w-6 h-6 text-slate-500 dark:text-slate-400" />
                   <h3 className="text-lg font-bold text-slate-700 dark:text-slate-300">{t.about.visionLabel}</h3>
                 </div>
                 <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{getSetting('about_vision_text', t.about.visionText)}</p>
               </div>
               <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8">
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="text-2xl">⚡</span>
+                  <Zap className="w-6 h-6 text-slate-500 dark:text-slate-400" />
                   <h3 className="text-lg font-bold text-slate-700 dark:text-slate-300">{t.about.missionLabel}</h3>
                 </div>
                 <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{getSetting('about_mission_text', t.about.missionText)}</p>
@@ -257,7 +258,7 @@ export default function AboutPage() {
               href="/service"
               className="inline-flex items-center gap-2 bg-white text-slate-800 font-bold px-6 py-3 rounded-xl hover:bg-slate-100 transition-colors shadow-lg"
             >
-              🏛️ {t.header.services}
+              <Landmark className="w-5 h-5" /> {t.header.services}
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
               </svg>
@@ -266,7 +267,7 @@ export default function AboutPage() {
               href="/investment-tourism"
               className="inline-flex items-center gap-2 bg-slate-700 text-white font-bold px-6 py-3 rounded-xl hover:bg-slate-600 transition-colors border border-slate-600"
             >
-              💼 {t.investmentTourism.title}
+              <Briefcase className="w-5 h-5" /> {t.investmentTourism.title}
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
               </svg>

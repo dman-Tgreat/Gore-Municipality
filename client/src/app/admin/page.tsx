@@ -5,13 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useLocale } from '@/context/LocaleContext';
 import FileUpload from '@/component/FileUpload';
 import {
-  contactAdminApi, adminApi, newsApi, announcementsApi, projectsApi, departmentsApi, documentsApi, investmentsApi,
+  contactAdminApi, adminApi, newsApi, announcementsApi, projectsApi, departmentsApi, investmentsApi,
   heroSlidesApi, settingsApi,
-  type ContactMessage, type AdminUser, type NewsArticle, type Announcement, type Project, type Department, type Document, type Investment,
+  type ContactMessage, type AdminUser, type NewsArticle, type Announcement, type Project, type Department, type Investment,
   type HeroSlide, type SiteSetting,
 } from '@/lib/api';
 
-type Tab = 'messages' | 'news' | 'announcements' | 'projects' | 'departments' | 'documents' | 'investments' | 'admins' | 'hero-slides' | 'settings';
+type Tab = 'messages' | 'news' | 'announcements' | 'projects' | 'departments' | 'investments' | 'admins' | 'hero-slides' | 'settings';
 
 interface CmsFormState<T> {
   editing: boolean;
@@ -23,7 +23,6 @@ const emptyNewsForm = { title: '', titleAm: '', titleOm: '', slug: '', summary: 
 const emptyAnnouncementForm = { title: '', titleAm: '', titleOm: '', description: '', descriptionAm: '', descriptionOm: '', content: '', contentAm: '', contentOm: '', published: true };
 const emptyProjectForm = { name: '', nameAm: '', nameOm: '', description: '', descriptionAm: '', descriptionOm: '', budget: 0, status: 'planned', startDate: '', endDate: '', location: '', coverImage: '', fundingSource: '', contractor: '', category: '' };
 const emptyDeptForm = { name: '', nameAm: '', nameOm: '', description: '', descriptionAm: '', descriptionOm: '', head: '', phone: '', email: '', office: '', image: '' };
-const emptyDocForm = { title: '', titleAm: '', titleOm: '', description: '', descriptionAm: '', descriptionOm: '', fileUrl: '', category: '' };
 const emptyInvestmentForm = { title: '', titleAm: '', titleOm: '', description: '', descriptionAm: '', descriptionOm: '', content: '', contentAm: '', contentOm: '', category: 'opportunity', coverImage: '', location: '', contactPhone: '', contactEmail: '', published: true };
 
 // ── Loading Spinner Component ──
@@ -73,7 +72,6 @@ export default function AdminDashboardPage() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
-  const [documents, setDocuments] = useState<Document[]>([]);
   const [investments, setInvestments] = useState<Investment[]>([]);
   const [heroSlides, setHeroSlides] = useState<HeroSlide[]>([]);
   const [siteSettings, setSiteSettings] = useState<SiteSetting[]>([]);
@@ -128,9 +126,7 @@ export default function AdminDashboardPage() {
   const [deptForm, setDeptForm] = useState<CmsFormState<typeof emptyDeptForm>>({ editing: false, editingId: null, data: { ...emptyDeptForm } });
   const [deptSubmitting, setDeptSubmitting] = useState(false);
 
-  // Documents CMS
-  const [docForm, setDocForm] = useState<CmsFormState<typeof emptyDocForm>>({ editing: false, editingId: null, data: { ...emptyDocForm } });
-  const [docSubmitting, setDocSubmitting] = useState(false);
+
 
   // Investment states
   const [invForm, setInvForm] = useState<CmsFormState<typeof emptyInvestmentForm>>({ editing: false, editingId: null, data: { ...emptyInvestmentForm } });
@@ -164,13 +160,12 @@ export default function AdminDashboardPage() {
       announcementsApi.getAll(),
       projectsApi.getAll(),
       departmentsApi.getAll(),
-      documentsApi.getAll(),
       investmentsApi.getAll(),
       heroSlidesApi.getAll(),
       settingsApi.getAll(),
     ])
-      .then(([msgs, adms, n, a, p, d, docs, i, slides, sets]) => {
-        setMessages(msgs); setAdmins(adms); setNews(n); setAnnouncements(a); setProjects(p); setDepartments(d); setDocuments(docs); setInvestments(i);
+      .then(([msgs, adms, n, a, p, d, i, slides, sets]) => {
+        setMessages(msgs); setAdmins(adms); setNews(n); setAnnouncements(a); setProjects(p); setDepartments(d); setInvestments(i);
         setHeroSlides(slides); setSiteSettings(sets);
         const formMap: Record<string, string> = {};
         (sets as SiteSetting[]).forEach((s) => { formMap[s.settingKey] = s.settingValue; });
@@ -284,25 +279,6 @@ export default function AdminDashboardPage() {
   const handleDeleteDept = async (id: number) => {
     if (!token) return;
     try { await departmentsApi.remove(token, id); setDepartments((p) => p.filter((d) => d.id !== id)); } catch {}
-  };
-
-  const handleSaveDoc = async (e: React.FormEvent) => {
-    e.preventDefault(); if (!token) return;
-    setDocSubmitting(true);
-    try {
-      if (docForm.editingId) {
-        const updated = await documentsApi.update(token, docForm.editingId, docForm.data);
-        setDocuments((p) => p.map((d) => (d.id === docForm.editingId ? updated : d)));
-      } else {
-        const created = await documentsApi.create(token, docForm.data);
-        setDocuments((p) => [created, ...p]);
-      }
-      setDocForm({ editing: false, editingId: null, data: { ...emptyDocForm } });
-    } catch {} finally { setDocSubmitting(false); }
-  };
-  const handleDeleteDoc = async (id: number) => {
-    if (!token) return;
-    try { await documentsApi.remove(token, id); setDocuments((p) => p.filter((d) => d.id !== id)); } catch {}
   };
 
   const handleSaveInvestment = async (e: React.FormEvent) => {
@@ -442,7 +418,6 @@ export default function AdminDashboardPage() {
         const colCount =
           tab === 'projects' ? 5 :
           tab === 'departments' ? 5 :
-          tab === 'documents' ? 5 :
           tab === 'investments' ? 5 :
           tab === 'admins' ? 5 : 5;
         return (
@@ -487,7 +462,6 @@ export default function AdminDashboardPage() {
           <button onClick={() => setTab('announcements')} className={tabClasses('announcements')}>{t.admin.cmsAnnouncements} ({announcements.length})</button>
           <button onClick={() => setTab('projects')} className={tabClasses('projects')}>{t.admin.cmsProjects} ({projects.length})</button>
           <button onClick={() => setTab('departments')} className={tabClasses('departments')}>{t.admin.cmsDepartments} ({departments.length})</button>
-          <button onClick={() => setTab('documents')} className={tabClasses('documents')}>{t.admin.cmsDocuments} ({documents.length})</button>
           <button onClick={() => setTab('investments')} className={tabClasses('investments')}>{t.admin.cmsInvestments} ({investments.length})</button>
           <button onClick={() => setTab('admins')} className={tabClasses('admins')}>{t.admin.admins} ({admins.length})</button>
           <button onClick={() => setTab('hero-slides')} className={tabClasses('hero-slides')}>{t.admin.cmsHeroSlides} ({heroSlides.length})</button>
@@ -510,7 +484,6 @@ export default function AdminDashboardPage() {
           tab === 'announcements' ? AnnouncementsTab() :
           tab === 'projects' ? ProjectsTab() :
           tab === 'departments' ? DepartmentsTab() :
-          tab === 'documents' ? DocumentsTab() :
           tab === 'investments' ? InvestmentsTab() :
           tab === 'hero-slides' ? HeroSlidesTab() :
           tab === 'settings' ? SettingsTab() :
@@ -1037,97 +1010,6 @@ export default function AdminDashboardPage() {
             className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50 flex items-center gap-2">
             {deptSubmitting && <Spinner className="w-4 h-4" />}
             {deptSubmitting ? t.admin.saving : t.admin.saveItem}
-          </button>
-        </div>
-      </form>
-    );
-  }
-
-  // ====== Documents Tab ======
-  function DocumentsTab() {
-    if (docForm.editing) return DocumentsForm();
-    return (
-      <>
-        <div className="flex justify-between items-center mb-4">
-          <p className="text-sm text-slate-500">{documents.length} document{documents.length !== 1 ? 's' : ''}</p>
-          <button onClick={() => setDocForm({ editing: true, editingId: null, data: { ...emptyDocForm } })}
-            className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
-        </div>
-        {documents.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
-          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead><tr className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
-                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.titleField}</th>
-                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">Category</th>
-                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">File</th>
-                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.dateField}</th>
-                  <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
-                </tr></thead>
-                <tbody>
-                  {documents.map((item) => (
-                    <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
-                      <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.title}</td>
-                      <td className="p-4 text-xs text-slate-500 dark:text-slate-400">{item.category || '-'}</td>
-                      <td className="p-4 text-xs text-blue-600 truncate max-w-[120px] hidden md:table-cell dark:text-blue-400">{item.fileUrl ? item.fileUrl.split('/').pop() : '-'}</td>
-                      <td className="p-4 text-slate-400 text-xs hidden md:table-cell dark:text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</td>
-                      <td className="p-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <button onClick={() => setDocForm({ editing: true, editingId: item.id, data: { title: item.title, titleAm: item.titleAm || '', titleOm: item.titleOm || '', description: item.description, descriptionAm: item.descriptionAm || '', descriptionOm: item.descriptionOm || '', fileUrl: item.fileUrl || '', category: item.category || '' } })}
-                            className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium">{t.admin.editItem}</button>
-                          <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteDoc(item.id); }}
-                            className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition font-medium">{t.admin.deleteItem}</button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-      </>
-    );
-  }
-  function DocumentsForm() {
-    const d = docForm.data;
-    return (
-      <form onSubmit={handleSaveDoc} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-4 max-w-2xl">
-        <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-bold text-slate-800 dark:text-white">{docForm.editingId ? t.admin.editItem : t.admin.createItem} {t.admin.cmsDocuments}</h2>
-          <button type="button" onClick={() => setDocForm({ editing: false, editingId: null, data: { ...emptyDocForm } })}
-            className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition">{t.admin.cancelEdit}</button>
-        </div>
-        <LangBar />
-        <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.titleField}{formLang === 'en' ? ' *' : ''} <span className="text-slate-400 font-normal">({formLang === 'en' ? 'EN' : formLang === 'am' ? 'አማ' : 'OM'})</span></label>
-            <input type="text" required={formLang === 'en'} value={formLang === 'en' ? d.title : formLang === 'am' ? (d.titleAm || '') : (d.titleOm || '')}
-              onChange={(e) => { const v = e.target.value; setDocForm((p) => ({ ...p, data: { ...p.data, ...(formLang === 'en' ? {title: v} : formLang === 'am' ? {titleAm: v} : {titleOm: v}) } })); }}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder={formLang === 'en' ? '' : 'Optional'} />
-          </div>
-          <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Category</label>
-            <input type="text" value={d.category} onChange={(e) => setDocForm((p) => ({ ...p, data: { ...p.data, category: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder="e.g. policy, report, form" />
-          </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">{t.admin.descriptionField} <span className="text-slate-400 font-normal">({formLang === 'en' ? 'EN' : formLang === 'am' ? 'አማ' : 'OM'})</span></label>
-            <textarea value={formLang === 'en' ? d.description : formLang === 'am' ? (d.descriptionAm || '') : (d.descriptionOm || '')}
-              onChange={(e) => { const v = e.target.value; setDocForm((p) => ({ ...p, data: { ...p.data, ...(formLang === 'en' ? {description: v} : formLang === 'am' ? {descriptionAm: v} : {descriptionOm: v}) } })); }}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" rows={2} placeholder={formLang === 'en' ? '' : 'Optional'} />
-          </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">File URL</label>
-            <input type="url" value={d.fileUrl} onChange={(e) => setDocForm((p) => ({ ...p, data: { ...p.data, fileUrl: e.target.value } }))}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none bg-white dark:bg-slate-800" placeholder="https://..." />
-          </div>
-        </div>
-        <div className="flex gap-3 pt-2">
-          <button type="submit" disabled={docSubmitting}
-            className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50 flex items-center gap-2">
-            {docSubmitting && <Spinner className="w-4 h-4" />}
-            {docSubmitting ? t.admin.saving : t.admin.saveItem}
           </button>
         </div>
       </form>

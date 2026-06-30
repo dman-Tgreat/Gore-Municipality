@@ -8,6 +8,7 @@ import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
 import { tField } from '@/lib/locale';
 import { projectsApi, type Project } from '@/lib/api';
+import { Search, Coins } from 'lucide-react';
 
 const statusConfig: Record<string, { label: string; color: string; bg: string; progress: string }> = {
   ongoing: { label: 'In Progress', color: 'text-slate-700 dark:text-slate-300', bg: 'bg-slate-100 dark:bg-slate-700', progress: 'bg-slate-500 w-3/5' },
@@ -84,7 +85,7 @@ export default function ProjectDetailPage() {
         <Header />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-5xl mb-4">🔍</p>
+            <Search className="w-16 h-16 mx-auto mb-4 text-slate-400" />
             <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Project Not Found</h2>
             <p className="text-slate-500 dark:text-slate-400 mb-6">The project you are looking for does not exist.</p>
             <Link href="/projects" className="text-slate-700 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white font-semibold inline-flex items-center gap-1">
@@ -211,7 +212,7 @@ export default function ProjectDetailPage() {
                 </div>
               ) : (
                 <div className="text-center py-8 text-slate-400 dark:text-slate-500">
-                  <p className="text-3xl mb-2">💰</p>
+                  <Coins className="w-10 h-10 mx-auto mb-2 text-slate-400" />
                   <p className="text-sm">Budget information not available</p>
                 </div>
               )}

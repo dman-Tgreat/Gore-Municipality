@@ -13,7 +13,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Gore Woreda — Official Municipal Portal",
   description:
-    "Official website of the Gore Woreda Administration, Illubabor Zone, Oromia, Ethiopia. Access municipal services, news, documents, and public information.",
+    "Official website of the Gore Woreda Administration, Illubabor Zone, Oromia, Ethiopia. Access municipal services, news, and public information.",
   keywords: [
     "Gore Woreda",
     "Gore Municipality",

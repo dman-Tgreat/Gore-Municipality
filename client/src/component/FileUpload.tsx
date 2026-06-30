@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useCallback } from 'react';
+import { FileText } from 'lucide-react';
 
 interface FileUploadProps {
   onUpload: (url: string) => void;
@@ -89,7 +90,7 @@ export default function FileUpload({
             />
           ) : (
             <div className="w-full h-12 flex items-center px-3 bg-gray-50 rounded-lg border border-gray-200 text-sm text-gray-600 truncate">
-              📄 {preview.split('/').pop()}
+              <FileText className="w-4 h-4 inline-block mr-1" /> {preview.split('/').pop()}
             </div>
           )}
           <button

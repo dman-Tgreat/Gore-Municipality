@@ -214,32 +214,6 @@ export const adminApi = {
     }),
 };
 
-export interface Document {
-  id: number;
-  title: string;
-  titleAm?: string;
-  titleOm?: string;
-  description: string;
-  descriptionAm?: string;
-  descriptionOm?: string;
-  fileUrl: string;
-  category: string;
-  createdBy: { id: number; fullName: string; email: string };
-  createdAt: string;
-  updatedAt: string;
-}
-
-export const documentsApi = {
-  getAll: () => request<Document[]>('/documents'),
-  getOne: (id: number) => request<Document>(`/documents/${id}`),
-  create: (token: string, data: { title: string; description: string; fileUrl: string; category: string }) =>
-    request<Document>('/documents', { method: 'POST', headers: authHeaders(token), body: JSON.stringify(data) }),
-  update: (token: string, id: number, data: { title?: string; description?: string; fileUrl?: string; category?: string }) =>
-    request<Document>(`/documents/${id}`, { method: 'PATCH', headers: authHeaders(token), body: JSON.stringify(data) }),
-  remove: (token: string, id: number) =>
-    request<{ message: string }>(`/documents/${id}`, { method: 'DELETE', headers: authHeaders(token) }),
-};
-
 export interface Investment {
   id: number;
   title: string;

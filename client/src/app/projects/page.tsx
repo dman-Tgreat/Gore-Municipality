@@ -7,6 +7,7 @@ import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
 import { tField } from '@/lib/locale';
 import { projectsApi, type Project } from '@/lib/api';
+import { ClipboardList } from 'lucide-react';
 
 const statusColors: Record<string, string> = {
   ongoing: 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200',
@@ -80,7 +81,7 @@ export default function ProjectsPage() {
             </div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-12 sm:py-16">
-              <p className="text-3xl sm:text-4xl mb-3">📋</p>
+              <ClipboardList className="w-12 h-12 mx-auto mb-3 text-slate-400" />
               <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base">{t.projects.noProjects}</p>
             </div>
           ) : (

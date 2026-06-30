@@ -7,6 +7,7 @@ import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
 import { tField } from '@/lib/locale';
 import { investmentsApi, type Investment } from '@/lib/api';
+import { MapPin } from 'lucide-react';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
@@ -195,7 +196,7 @@ export default function InvestmentTourismPage() {
                                 </h4>
                                 <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">{inv.description}</p>
                                 {inv.location && (
-                                  <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">📍 {inv.location}</p>
+                                  <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" /> {inv.location}</p>
                                 )}
                               </div>
                               <svg className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 shrink-0 group-hover/card:text-slate-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -292,7 +293,7 @@ export default function InvestmentTourismPage() {
                                 </h4>
                                 <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">{inv.description}</p>
                                 {inv.location && (
-                                  <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">📍 {inv.location}</p>
+                                  <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" /> {inv.location}</p>
                                 )}
                               </div>
                               <svg className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 shrink-0 group-hover/card:text-slate-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

@@ -7,6 +7,7 @@ import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
 import { tField } from '@/lib/locale';
 import { newsApi, announcementsApi, settingsApi, type NewsArticle, type Announcement, type SiteSetting } from '@/lib/api';
+import { Newspaper, Megaphone } from 'lucide-react';
 
 type Tab = 'news' | 'announcements';
 
@@ -49,9 +50,9 @@ export default function NewsPage() {
     return url;
   };
 
-  const tabs: { key: Tab; label: string; icon: string }[] = [
-    { key: 'news', label: t.header.news, icon: '📰' },
-    { key: 'announcements', label: t.announcements.title, icon: '📢' },
+  const tabs: { key: Tab; label: string; icon: React.ReactNode }[] = [
+    { key: 'news', label: t.header.news, icon: <Newspaper className="w-4 h-4" /> },
+    { key: 'announcements', label: t.announcements.title, icon: <Megaphone className="w-4 h-4" /> },
   ];
 
   return (
@@ -93,7 +94,7 @@ export default function NewsPage() {
                       : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-600'
                   }`}
                 >
-                  <span className="text-base">{tab.icon}</span>
+                  {tab.icon}
                   {tab.label}
                   {tab.key === 'news' && articles.length > 0 && (
                     <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-full px-1.5 py-0.5 font-mono">
