@@ -204,8 +204,8 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           {/* Brand Identity */}
           <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition shrink-0">
-            <div className="w-11 h-11 rounded-full bg-gold flex items-center justify-center shadow-sm">
-              <span className="text-white font-black text-sm">GW</span>
+            <div className="w-15 h-15 rounded-full  flex items-center justify-center shadow-sm">
+              <img src="https://www.chora.pro.et/assets/logo_1781643314244-B4wJ3hZB.png" alt="Gore Woreda Seal" className="object-contain" />
             </div>
             <div className="flex flex-col">
               <span className="text-[18px] font-bold text-slate-800 dark:text-white leading-tight">
