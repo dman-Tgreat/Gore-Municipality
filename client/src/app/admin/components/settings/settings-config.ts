@@ -68,7 +68,7 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
   {
     id: 'stats',
     title: 'Homepage Stats Grid',
-    description: 'Labels and details for the four stat cards on the homepage (Updates, Departments, Projects, etc.).',
+    description: 'Labels, values, and details for the four woreda indicator stat cards on the homepage (Population, Area, Administration, Economy).',
     fields: [
       { key: 'stats_label_1', label: 'Stat 1 — Label', type: 'text', placeholder: 'Total Population' },
       { key: 'stats_detail_1', label: 'Stat 1 — Detail', type: 'text', placeholder: 'Urban & rural settlements combined' },

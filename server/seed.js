@@ -282,6 +282,10 @@ async function seed() {
     { settingKey: 'stats_detail_3', settingValue: 'Governed municipal sectors' },
     { settingKey: 'stats_label_4', settingValue: 'Primary Economic Engine' },
     { settingKey: 'stats_detail_4', settingValue: 'Premium Tea, Coffee, & Apiculture' },
+    { settingKey: 'stats_value_1', settingValue: 'Over 90,000' },
+    { settingKey: 'stats_value_2', settingValue: 'Approx. 650 km²' },
+    { settingKey: 'stats_value_3', settingValue: '22 Kebeles' },
+    { settingKey: 'stats_value_4', settingValue: 'Agriculture' },
   ];
 
   for (const s of settingsData) {

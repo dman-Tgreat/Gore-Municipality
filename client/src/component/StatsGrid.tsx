@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocale } from '@/context/LocaleContext';
-import { newsApi, departmentsApi, projectsApi, settingsApi, type SiteSetting, type NewsArticle, type Project } from '@/lib/api';
+import { settingsApi, type SiteSetting } from '@/lib/api';
 import { Newspaper, Landmark, Construction, BarChart3 } from 'lucide-react';
 
 interface StatsItem {
@@ -60,10 +60,6 @@ function AnimatedCounter({ value, duration = 1500 }: { value: string; duration?:
 
 export default function StatsGrid() {
   const { t } = useLocale();
-  const [newsCount, setNewsCount] = useState(0);
-  const [deptCount, setDeptCount] = useState(0);
-  const [projectCount, setProjectCount] = useState(0);
-  const [ongoingCount, setOngoingCount] = useState(0);
   const [settings, setSettings] = useState<SiteSetting[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -73,53 +69,43 @@ export default function StatsGrid() {
   };
 
   useEffect(() => {
-    Promise.all([
-      newsApi.getAll().catch(() => []),
-      departmentsApi.getAll().catch(() => []),
-      projectsApi.getAll().catch(() => []),
-      settingsApi.getAll().catch(() => [] as SiteSetting[]),
-    ]).then(([news, depts, projects, sets]) => {
-      setNewsCount((news as NewsArticle[]).filter((n) => n.published).length);
-      setDeptCount(depts.length);
-      setProjectCount(projects.length);
-      setOngoingCount((projects as Project[]).filter((p) => p.status === 'ongoing').length);
-      setSettings(sets as SiteSetting[]);
-    }).finally(() => setLoading(false));
+    settingsApi.getAll()
+      .then((sets) => setSettings(sets as SiteSetting[]))
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   const stats: StatsItem[] = [
     {
       label: getSetting('stats_label_1', t.stats.stats[0].label),
-      value: loading ? '—' : `${newsCount}`,
+      value: getSetting('stats_value_1', t.stats.stats[0].value),
       icon: <Newspaper className="w-5 h-5" />,
       detail: getSetting('stats_detail_1', t.stats.stats[0].detail),
     },
     {
       label: getSetting('stats_label_2', t.stats.stats[1].label),
-      value: loading ? '—' : `${deptCount}`,
+      value: getSetting('stats_value_2', t.stats.stats[1].value),
       icon: <Landmark className="w-5 h-5" />,
       detail: getSetting('stats_detail_2', t.stats.stats[1].detail),
     },
     {
       label: getSetting('stats_label_3', t.stats.stats[2].label),
-      value: loading ? '—' : `${ongoingCount}`,
+      value: getSetting('stats_value_3', t.stats.stats[2].value),
       icon: <Construction className="w-5 h-5" />,
       detail: getSetting('stats_detail_3', t.stats.stats[2].detail),
     },
     {
       label: getSetting('stats_label_4', t.stats.stats[3].label),
-      value: loading ? '—' : `${projectCount}`,
+      value: getSetting('stats_value_4', t.stats.stats[3].value),
       icon: <BarChart3 className="w-5 h-5" />,
       detail: getSetting('stats_detail_4', t.stats.stats[3].detail),
     },
   ];
 
   return (
-    <section className="relative py-0 bg-slate-50 dark:bg-slate-900 ">
-      {/* Subtle top border */}
+    <section className="relative py-0 bg-slate-50 dark:bg-slate-900  z-20">
 
-      <div className="relative container mx-auto px-6 -mt-24 relative z-20 max-w-6xl">
-        {/* Stats Grid */}
+      <div className="container mx-auto px-6 -mt-24 relative z-20">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {stats.map((stat, idx) => (
             <div
@@ -127,31 +113,26 @@ export default function StatsGrid() {
               className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 lg:p-8 text-center shadow-sm
                          hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-md transition-all duration-300 hover:-translate-y-0.5"
             >
-              <div className="flex flex-row items-center">
               {/* Icon */}
-              <div className="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light
+              <div className="shrink-0 inline-flex items-center justify-center w-14 h-14 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light
                             text-2xl mb-5 group-hover:scale-110 transition-transform duration-300">
                 <span>{stat.icon}</span>
               </div>
 
-                <div className="flex flex-col text-center">
+              {/* Value */}
+              <p className="text-3xl lg:text-4xl font-black text-slate-800 dark:text-white mb-2 tracking-tight">
+                <AnimatedCounter value={loading ? '—' : stat.value} />
+              </p>
 
-                    {/* Value */}
-                    <p className="text-xl lg:text-3xl font-black text-slate-800 dark:text-white mb-1.5 tracking-tight">
-                      <AnimatedCounter value={stat.value} />
-                    </p>
+              {/* Label */}
+              <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                {stat.label}
+              </p>
 
-                    {/* Label */}
-                    <p className="text-base lg:text-lg font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-2">
-                      {stat.label}
-                    </p>
-
-                    {/* Detail */}
-                    <p className="text-base text-slate-700 dark:text-slate-500 leading-relaxed font-light">
-                      {stat.detail}
-                    </p>
-                  </div>
-              </div>
+              {/* Detail */}
+              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-light">
+                {stat.detail}
+              </p>
             </div>
           ))}
         </div>
