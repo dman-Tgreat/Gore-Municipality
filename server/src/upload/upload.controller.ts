@@ -13,9 +13,9 @@ import {
   ParseFilePipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+import { memoryStorage } from 'multer';
 import { extname, join, basename } from 'path';
-import { existsSync, mkdirSync, unlinkSync } from 'fs';
+import { existsSync, mkdirSync, writeFileSync, unlinkSync } from 'fs';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 const UPLOADS_DIR = join(__dirname, '..', '..', 'uploads');
@@ -31,14 +31,7 @@ export class UploadController {
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: diskStorage({
-        destination: UPLOADS_DIR,
-        filename: (_req, file, callback) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          const ext = extname(file.originalname);
-          callback(null, `${uniqueSuffix}${ext}`);
-        },
-      }),
+      storage: memoryStorage(), // Use memoryStorage so file.buffer is available for validation
       limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
     }),
   )
@@ -54,11 +47,24 @@ export class UploadController {
     )
     file: Express.Multer.File,
   ) {
-    const url = `/uploads/${file.filename}`;
+    // Generate unique filename
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const ext = extname(file.originalname);
+    const filename = `${uniqueSuffix}${ext}`;
+    const filePath = join(UPLOADS_DIR, filename);
+
+    // Write the buffer to disk manually
+    try {
+      writeFileSync(filePath, file.buffer);
+    } catch (error) {
+      throw new BadRequestException(`Failed to save file: ${error.message}`);
+    }
+
+    const url = `/uploads/${filename}`;
     return {
       success: true,
       url,
-      filename: file.filename,
+      filename,
       originalName: file.originalname,
       size: file.size,
       mimetype: file.mimetype,
