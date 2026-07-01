@@ -115,38 +115,43 @@ export default function StatsGrid() {
   ];
 
   return (
-    <section className="relative py-0 bg-slate-50 dark:bg-slate-900 overflow-hidden z-20">
+    <section className="relative py-0 bg-slate-50 dark:bg-slate-900 ">
       {/* Subtle top border */}
 
-      <div className="relative container mx-auto px-6">
+      <div className="relative container mx-auto px-6 -mt-24 relative z-20 max-w-6xl">
         {/* Stats Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-100 lg:gap-16">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {stats.map((stat, idx) => (
             <div
               key={idx}
               className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 lg:p-8 text-center shadow-sm
                          hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-md transition-all duration-300 hover:-translate-y-0.5"
             >
+              <div className="flex flex-row items-center">
               {/* Icon */}
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light
+              <div className="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light
                             text-2xl mb-5 group-hover:scale-110 transition-transform duration-300">
                 <span>{stat.icon}</span>
               </div>
 
-              {/* Value */}
-              <p className="text-3xl lg:text-4xl font-black text-slate-800 dark:text-white mb-2 tracking-tight">
-                <AnimatedCounter value={stat.value} />
-              </p>
+                <div className="flex flex-col text-center">
 
-              {/* Label */}
-              <p className="text-lg font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                {stat.label}
-              </p>
+                    {/* Value */}
+                    <p className="text-xl lg:text-3xl font-black text-slate-800 dark:text-white mb-1.5 tracking-tight">
+                      <AnimatedCounter value={stat.value} />
+                    </p>
 
-              {/* Detail */}
-              <p className="text-base text-slate-400 dark:text-slate-500 leading-relaxed font-light">
-                {stat.detail}
-              </p>
+                    {/* Label */}
+                    <p className="text-base lg:text-lg font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-2">
+                      {stat.label}
+                    </p>
+
+                    {/* Detail */}
+                    <p className="text-base text-slate-700 dark:text-slate-500 leading-relaxed font-light">
+                      {stat.detail}
+                    </p>
+                  </div>
+              </div>
             </div>
           ))}
         </div>

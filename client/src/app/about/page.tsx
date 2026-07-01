@@ -35,10 +35,22 @@ export default function AboutPage() {
     return found ? found.settingValue : fallback;
   };
 
-  // Parse council members from settings JSON or use i18n fallback
+  // Parse council members from pipe-separated text or use i18n fallback
   const getCouncilMembers = (): { name: string; role: string; desc: string }[] => {
     const raw = getSetting('about_council_members', '');
     if (raw) {
+      // Try pipe-separated format (new): Name | Role | Description
+      const lines = raw.split('\n').filter((l) => l.trim());
+      const members: { name: string; role: string; desc: string }[] = [];
+      for (const line of lines) {
+        const parts = line.split('|').map((p) => p.trim());
+        if (parts.length >= 3) {
+          members.push({ name: parts[0], role: parts[1], desc: parts.slice(2).join(' | ') });
+        }
+      }
+      if (members.length > 0) return members;
+
+      // Fallback: try JSON (old format, for backward compatibility)
       try { return JSON.parse(raw); } catch {}
     }
     return t.about.councilMembers as { name: string; role: string; desc: string }[];

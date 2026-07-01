@@ -41,7 +41,7 @@ interface NavDropdownProps {
 // ── Static items ──
 
 const dropdownItems: DropdownItem[] = [
-  { key: 'title', href: '/news', icon: <Newspaper className="w-4 h-4" />, section: 'news' },
+  { key: 'title', href: '/news', icon: <Newspaper className="w-4 h-4 " />, section: 'news' },
   { key: 'announcements', href: '/news?tab=announcements', icon: <Megaphone className="w-4 h-4" />, section: 'news' },
   { key: 'municipalServices', href: '/service', icon: <Landmark className="w-4 h-4" />, section: 'services' },
   { key: 'overview', href: '/investment-tourism', icon: <ClipboardList className="w-4 h-4" />, section: 'invest' },
@@ -62,13 +62,13 @@ function NavDropdown({ items, label, href, isActive, isOpen, onMouseEnter, onMou
     <div className="relative" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <Link
         href={href}
-        className={`inline-flex items-center gap-1.5 transition font-medium text-sm whitespace-nowrap px-1.5 py-1 ${
+        className={`inline-flex items-center gap-1.5 hover:bg-red-300 rounded lg transition font-medium text-[18px] whitespace-nowrap px-1.5 py-1 ${
           isActive
-            ? 'text-primary dark:text-gold-light'
+            ? 'text-primary bg-red-300 dark:text-gold-light'
             : 'text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-gold-light'
         }`}
       >
-        {label}
+        {label }
         {isActive && <span className="w-1.5 h-1.5 rounded-full bg-gold" />}
         <svg className={`w-3 h-3 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''} text-slate-400`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -148,9 +148,9 @@ export default function Header() {
 
   const linkStyle = (path: string) => {
     const active = pathname === path;
-    return `transition font-medium text-base whitespace-nowrap px-1.5 py-1 ${
+    return `transition font-medium text-[18px] hover:bg-red-300 rounded lg whitespace-nowrap px-1.5 py-1 ${
       active
-        ? 'text-slate-800 dark:text-white size 18'
+        ? 'text-slate-800 bg-red-300 dark:bg-slate-700 dark:text-white'
         : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
     }`;
   };
@@ -208,10 +208,10 @@ export default function Header() {
               <span className="text-white font-black text-sm">GW</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-bold text-slate-800 dark:text-white leading-tight">
+              <span className="text-[18px] font-bold text-slate-800 dark:text-white leading-tight">
                 Gore Woreda
               </span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider leading-tight">
+              <span className="text-[14px] text-slate-500 dark:text-slate-400 uppercase tracking-wider leading-tight">
                 Official Municipal Portal
               </span>
             </div>
