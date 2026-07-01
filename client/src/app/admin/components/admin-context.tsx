@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from '@/context/LocaleContext';
+import { type Messages } from '@/i18n/messages';
 import {
   contactAdminApi, adminApi, newsApi, announcementsApi, projectsApi, departmentsApi, investmentsApi,
   heroSlidesApi, settingsApi,
@@ -25,7 +26,7 @@ export const emptyDeptForm = { name: '', nameAm: '', nameOm: '', description: ''
 export const emptyInvestmentForm = { title: '', titleAm: '', titleOm: '', description: '', descriptionAm: '', descriptionOm: '', content: '', contentAm: '', contentOm: '', category: 'opportunity', coverImage: '', location: '', contactPhone: '', contactEmail: '', published: true };
 
 interface AdminContextType {
-  t: any;
+  t: Messages;
   token: string | null;
   messages: ContactMessage[];
   setMessages: React.Dispatch<React.SetStateAction<ContactMessage[]>>;

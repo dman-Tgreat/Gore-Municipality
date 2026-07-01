@@ -63,7 +63,7 @@ export default function AboutPage() {
   const councilMembers = getCouncilMembers();
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans">
+    <div className="min-h-screen bg-page-bg dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans">
       <Header />
 
       {/* ── Hero ── */}

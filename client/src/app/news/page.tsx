@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Header from '@/component/Header';
 import Footer from '@/component/Footer';
@@ -13,7 +13,7 @@ type Tab = 'news' | 'announcements';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
-export default function NewsPage() {
+function NewsContent() {
   const { locale, t } = useLocale();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>(() => {
@@ -268,5 +268,20 @@ export default function NewsPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function NewsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
+        <div className="text-center animate-pulse">
+          <div className="w-12 h-12 border-4 border-slate-300 border-t-[#1a7a3a] rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-sm font-semibold">Loading news & announcements...</p>
+        </div>
+      </div>
+    }>
+      <NewsContent />
+    </Suspense>
   );
 }

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocale } from '@/context/LocaleContext';
-import { newsApi, departmentsApi, projectsApi, settingsApi, type SiteSetting } from '@/lib/api';
+import { newsApi, departmentsApi, projectsApi, settingsApi, type SiteSetting, type NewsArticle, type Project } from '@/lib/api';
 import { Newspaper, Landmark, Construction, BarChart3 } from 'lucide-react';
 
 interface StatsItem {
@@ -79,10 +79,10 @@ export default function StatsGrid() {
       projectsApi.getAll().catch(() => []),
       settingsApi.getAll().catch(() => [] as SiteSetting[]),
     ]).then(([news, depts, projects, sets]) => {
-      setNewsCount(news.filter((n: any) => n.published).length);
+      setNewsCount((news as NewsArticle[]).filter((n) => n.published).length);
       setDeptCount(depts.length);
       setProjectCount(projects.length);
-      setOngoingCount(projects.filter((p: any) => p.status === 'ongoing').length);
+      setOngoingCount((projects as Project[]).filter((p) => p.status === 'ongoing').length);
       setSettings(sets as SiteSetting[]);
     }).finally(() => setLoading(false));
   }, []);
@@ -115,13 +115,12 @@ export default function StatsGrid() {
   ];
 
   return (
-    <section className="relative py-12 bg-slate-50 dark:bg-slate-900 overflow-hidden">
+    <section className="relative py-0 bg-slate-50 dark:bg-slate-900 overflow-hidden z-10">
       {/* Subtle top border */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1 rounded-full bg-gradient-to-r from-primary via-gold to-ethiopian-red" />
 
       <div className="relative container mx-auto px-6">
         {/* Stats Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-150 lg:gap-6">
           {stats.map((stat, idx) => (
             <div
               key={idx}

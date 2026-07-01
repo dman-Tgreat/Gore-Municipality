@@ -52,23 +52,15 @@ export default function Services() {
     <section id="services" className="py-12 bg-white dark:bg-slate-900">
       <div className="container mx-auto px-6">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="section-badge mb-4">
             <span className="w-1.5 h-1.5 bg-slate-500 dark:bg-white/60 rounded-full" />
             {t.header.services}
           </div>
-          <h2 className="section-title mb-3">
-            {t.services.latestNews}
-          </h2>
-          <p className="text-slate-500 dark:text-slate-400 text-sm max-w-xl mx-auto">
-            {t.services.latestNewsDesc}
-          </p>
-        </div>
-
+        
         {/* Service Cards */}
         <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
           {/* ── Card 1: Latest News ── */}
-          <div className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:-translate-y-0.5">
+          <div className="group bg-white dark:bg-slate-800  border border-slate-200 dark:border-slate-700 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:-translate-y-0.5">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light mb-5 group-hover:scale-110 transition-transform duration-300">
               {serviceIcons.news}
             </div>

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLocale, type LocaleCode } from '@/context/LocaleContext';
 import { useTheme } from '@/context/ThemeContext';
-import { locales } from '@/i18n/messages';
+import { locales, type Messages } from '@/i18n/messages';
 import { departmentsApi, projectsApi, type Department, type Project } from '@/lib/api';
 import { Newspaper, Megaphone, Landmark, ClipboardList, Briefcase, Star, Leaf, Hotel, BarChart3, ChevronRight } from 'lucide-react';
 
@@ -33,7 +33,7 @@ interface NavDropdownProps {
   onMouseEnter: () => void;
   onMouseLeave: () => void;
   pathname: string;
-  t: any;
+  t: Messages;
   dynamicItems?: DynamicDropdownItem[];
   dynamicLabel?: string;
 }
