@@ -60,19 +60,19 @@ export default function ServicesPage() {
                 >
                   <div className="p-6 bg-slate-100 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600 flex items-center space-x-3">
                     <div className="w-12 h-12 rounded-xl bg-slate-700 flex items-center justify-center text-2xl shadow-sm">
-                      {React.createElement(deptIcons[idx % deptIcons.length], { className: 'w-6 h-6' })}
+                      {React.createElement(deptIcons[idx % deptIcons.length], { className: 'w-6 h-6 text-green-500' })}
                     </div>
-                    <div className="text-white">
+                    <div className="text-slate-900 dark:text-slate-100">
                       <h2 className="text-lg font-bold">{tField(dept, 'name', locale)}</h2>
-                      <p className="text-xs text-slate-300">{dept.head}</p>
+                      <p className="text-base text-slate-700">{dept.head}</p>
                     </div>
                   </div>
                   <div className="p-6 space-y-3">
-                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">{tField(dept, 'description', locale)}</p>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 space-y-1.5 pt-3 border-t border-slate-200 dark:border-slate-700">
-                      {dept.phone && <p className="flex items-center gap-1.5"><Phone className="w-3.5 h-3.5 text-slate-400" /> {dept.phone}</p>}
-                      {dept.email && <p className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5 text-slate-400" /> {dept.email}</p>}
-                      {dept.office && <p className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-slate-400" /> {dept.office}</p>}
+                    <p className="text-base text-slate-600 dark:text-slate-600 leading-relaxed line-clamp-3">{tField(dept, 'description', locale)}</p>
+                    <div className="text-xs text-slate-500 dark:text-slate-600 space-y-1.5 pt-3 border-t border-slate-200 dark:border-slate-700">
+                      {dept.phone && <p className="flex items-center gap-1.5 text-base"><Phone className="w-3.5 h-3.5 text-slate-600 " /> {dept.phone}</p>}
+                      {dept.email && <p className="flex items-center gap-1.5 text-base"><Mail className="w-3.5 h-3.5 text-slate-600 " /> {dept.email}</p>}
+                      {dept.office && <p className="flex items-center gap-1.5 text-base"><MapPin className="w-3.5 h-3.5 text-slate-600 " /> {dept.office}</p>}
                     </div>
                     <div className="pt-2">
                       <span className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:gap-2 transition-all">

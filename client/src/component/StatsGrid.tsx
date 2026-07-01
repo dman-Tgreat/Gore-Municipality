@@ -115,12 +115,12 @@ export default function StatsGrid() {
   ];
 
   return (
-    <section className="relative py-0 bg-slate-50 dark:bg-slate-900 overflow-hidden z-10">
+    <section className="relative py-0 bg-slate-50 dark:bg-slate-900 overflow-hidden z-20">
       {/* Subtle top border */}
 
       <div className="relative container mx-auto px-6">
         {/* Stats Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-150 lg:gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-100 lg:gap-16">
           {stats.map((stat, idx) => (
             <div
               key={idx}
@@ -139,12 +139,12 @@ export default function StatsGrid() {
               </p>
 
               {/* Label */}
-              <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+              <p className="text-lg font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                 {stat.label}
               </p>
 
               {/* Detail */}
-              <p className="text-xs text-slate-400 dark:text-slate-500 leading-relaxed font-light">
+              <p className="text-base text-slate-400 dark:text-slate-500 leading-relaxed font-light">
                 {stat.detail}
               </p>
             </div>

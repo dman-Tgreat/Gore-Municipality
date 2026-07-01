@@ -42,7 +42,7 @@ export default function Hero() {
   // Fallback when no slides
   if (!loading && slides.length === 0) {
     return (
-      <section className="relative min-h-[500px] lg:min-h-[580px] w-full overflow-hidden bg-slate-800 flex items-center justify-center z-20">
+      <section className="relative min-h-[500px] lg:min-h-[580px] w-full overflow-hidden bg-slate-800 flex items-center justify-center z-10">
         <div className="absolute inset-0 bg-gradient-to-br from-primary-dark via-primary to-primary-dark" />
         <div className="relative text-center text-white px-6 max-w-3xl mx-auto">
           {/* Seal */}
@@ -71,7 +71,7 @@ export default function Hero() {
 
   if (loading || slides.length === 0) {
     return (
-      <section className="relative min-h-[500px] lg:min-h-[580px] w-full bg-slate-800 animate-pulse flex items-center justify-center">
+      <section className="relative min-h-[500px] lg:min-h-[580px] w-full bg-slate-800 animate-pulse flex items-center justify-center z-10">
         <div className="text-center">
           <div className="w-20 h-20 bg-slate-700 rounded-full mx-auto mb-6" />
           <div className="h-6 bg-slate-700 rounded w-72 mx-auto mb-3" />

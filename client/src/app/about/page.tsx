@@ -63,12 +63,10 @@ export default function AboutPage() {
   const councilMembers = getCouncilMembers();
 
   return (
-    <div className="min-h-screen bg-page-bg dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans">
+    <div className="min-h-screen bg-page-bg dark:bg-slate-300 text-slate-900 dark:text-slate-100 font-sans">
       <Header />
-
       {/* ── Hero ── */}
-      <section className="relative bg-slate-900 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDE4YzEuNjU3IDAgMy0xLjM0MyAzLTNzLTEuMzQzLTMtMy0zLTMgMS4zNDMtMyAzIDEuMzQzIDMgMyAzem0tMTIgMGMxLjY1NyAwIDMtMS4zNDMgMy0zcy0xLjM0My0zLTMtMy0zIDEuMzQzLTMgMyAxLjM0MyAzIDMgM3oiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40" />
+      <section className="relative bg-green-700 text-white overflow-hidden">
         <div className="container mx-auto px-6 py-12 md:py-16 relative z-10">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 bg-white/10 text-white/70 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4 backdrop-blur-sm border border-white/10">
@@ -86,10 +84,10 @@ export default function AboutPage() {
       <div className="container mx-auto px-6 -mt-8 relative z-20">
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
-            { label: t.about.statUpdates, value: loading ? '—' : news.length, icon: <Newspaper className="w-6 h-6" /> },
-            { label: t.about.statDepartments, value: loading ? '—' : departments.length, icon: <Landmark className="w-6 h-6" /> },
-            { label: t.about.statActiveProjects, value: loading ? '—' : projects.filter((p) => p.status === 'ongoing').length, icon: <Construction className="w-6 h-6" /> },
-            { label: t.about.statKebeles, value: '22', icon: <MapPin className="w-6 h-6" /> },
+            { label: t.about.statUpdates, value: loading ? '—' : news.length, icon: <Newspaper className="w-6 h-6 text-green-500" /> },
+            { label: t.about.statDepartments, value: loading ? '—' : departments.length, icon: <Landmark className="w-6 h-6 text-green-500" /> },
+            { label: t.about.statActiveProjects, value: loading ? '—' : projects.filter((p) => p.status === 'ongoing').length, icon: <Construction className="w-6 h-6 text-green-500" /> },
+            { label: t.about.statKebeles, value: '22', icon: <MapPin className="w-6 h-6 text-green-500" /> },
           ].map((stat, i) => (
             <div key={i} className="text-center">
               <span className="inline-flex items-center justify-center mb-1 text-slate-500 dark:text-slate-400">{stat.icon}</span>
@@ -105,18 +103,18 @@ export default function AboutPage() {
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-10 items-center max-w-5xl mx-auto">
             <div>
-              <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
+              <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-300 text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
                 <span className="w-1.5 h-1.5 bg-slate-600 dark:bg-slate-400 rounded-full" />
                 {t.about.historyTitle}
               </div>
-              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{getSetting('about_history_desc', t.about.historyDesc)}</p>
+              <p className="text-white dark:text-slate-400 text-base leading-relaxed">{getSetting('about_history_desc', t.about.historyDesc)}</p>
             </div>
             <div className="relative">
               <div className="aspect-[4/3] rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200 dark:border-slate-700 flex items-center justify-center">
                 <div className="text-center p-6">
                   <ScrollText className="w-16 h-16 mx-auto mb-4 text-slate-400" />
-                  <p className="text-slate-700 dark:text-slate-300 font-semibold text-sm">{t.about.historyIllustration}</p>
-                  <p className="text-slate-500 dark:text-slate-400 text-xs mt-2">{t.about.historyIllustrationSub}</p>
+                  <p className="text-slate-700 dark:text-slate-300 font-semibold text-base">{t.about.historyIllustration}</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-sm mt-2">{t.about.historyIllustrationSub}</p>
                 </div>
               </div>
             </div>
@@ -125,24 +123,24 @@ export default function AboutPage() {
       </section>
 
       {/* ── Geography ── */}
-      <section className="py-10 bg-white dark:bg-slate-800/50">
+      <section className="py-10 bg-slate-50 dark:bg-slate-800/50">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-10 items-center max-w-5xl mx-auto">
             <div className="relative order-2 md:order-1">
-              <div className="aspect-[4/3] rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200 dark:border-slate-700 flex items-center justify-center">
+              <div className="aspect-[4/3] rounded-2xl bg-slate-100 dark:bg-slate-150 overflow-hidden border border-slate-200 dark:border-slate-700 flex items-center justify-center">
                 <div className="text-center p-6">
-                  <Globe className="w-16 h-16 mx-auto mb-4 text-slate-400" />
-                  <p className="text-slate-700 dark:text-slate-300 font-semibold text-sm">{t.about.geographyIllustration}</p>
-                  <p className="text-slate-500 dark:text-slate-400 text-xs mt-2">{t.about.geographyIllustrationSub}</p>
+                  <Globe className="w-16 h-16 text-green-500 mx-auto mb-4 text-slate-400" />
+                  <p className="text-slate-500 dark:text-slate-300 font-semibold text-base">{t.about.geographyIllustration}</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-sm mt-2">{t.about.geographyIllustrationSub}</p>
                 </div>
               </div>
             </div>
             <div className="order-1 md:order-2">
-              <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-                <span className="w-1.5 h-1.5 bg-slate-600 dark:bg-slate-400 rounded-full" />
+              <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
+                <span className="w-1.5 h-1.5 text-green-500 bg-slate-600 dark:bg-slate-400 rounded-full" />
                 {t.about.geographyTitle}
               </div>
-              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{getSetting('about_geography_desc', t.about.geographyDesc)}</p>
+              <p className="text-slate-600 dark:text-slate-400 text-base leading-relaxed">{getSetting('about_geography_desc', t.about.geographyDesc)}</p>
             </div>
           </div>
         </div>
@@ -152,14 +150,14 @@ export default function AboutPage() {
       <section className="py-12">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-3xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
+            <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
               <span className="w-1.5 h-1.5 bg-slate-600 dark:bg-slate-400 rounded-full" />
               {t.about.leadershipTitle}
             </div>
             <h2 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white mb-3 tracking-tight">
               {t.about.leadershipTitle}
             </h2>
-            <p className="text-slate-500 dark:text-slate-400 text-sm">{t.about.leadershipDesc}</p>
+            <p className="text-white dark:text-slate-400 text-base">{t.about.leadershipDesc}</p>
           </div>
 
           {/* Mayor & Vice Mayor */}
@@ -170,7 +168,7 @@ export default function AboutPage() {
               </div>
               <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-1">{t.about.mayorTitle}</h3>
               <p className="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-3">{getSetting('about_mayor_name', t.about.mayorName)}</p>
-              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{getSetting('about_mayor_bio', t.about.mayorBio)}</p>
+              <p className="text-slate-500 dark:text-slate-400 text-base leading-relaxed">{getSetting('about_mayor_bio', t.about.mayorBio)}</p>
             </div>
 
             {/* Vice Mayor Card */}
@@ -179,7 +177,7 @@ export default function AboutPage() {
               </div>
               <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-1">{t.about.viceMayorTitle}</h3>
               <p className="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-3">{getSetting('about_vice_mayor_name', t.about.viceMayorName)}</p>
-              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{getSetting('about_vice_mayor_bio', t.about.viceMayorBio)}</p>
+              <p className="text-slate-500 dark:text-slate-400 text-base leading-relaxed">{getSetting('about_vice_mayor_bio', t.about.viceMayorBio)}</p>
             </div>
           </div>
 
@@ -204,8 +202,8 @@ export default function AboutPage() {
                     </div>
                     <div className="min-w-0">
                       <p className="font-semibold text-slate-800 dark:text-white text-sm">{member.name}</p>
-                      <p className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">{member.role}</p>
-                      <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">{member.desc}</p>
+                      <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">{member.role}</p>
+                      <p className="text-slate-500 dark:text-slate-400 text-base leading-relaxed">{member.desc}</p>
                     </div>
                   </div>
                 </div>
@@ -216,7 +214,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── Vision & Mission ── */}
-      <section className="py-12 bg-white dark:bg-slate-800/50">
+      <section className="py-12 bg-slate-50 dark:bg-slate-800/50">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-10">
@@ -227,19 +225,19 @@ export default function AboutPage() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8">
+              <div className="bg-slate-150 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8">
                 <div className="flex items-center gap-3 mb-4">
                   <Crosshair className="w-6 h-6 text-slate-500 dark:text-slate-400" />
                   <h3 className="text-lg font-bold text-slate-700 dark:text-slate-300">{t.about.visionLabel}</h3>
                 </div>
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{getSetting('about_vision_text', t.about.visionText)}</p>
+                <p className="text-slate-600 dark:text-slate-400 text-base leading-relaxed">{getSetting('about_vision_text', t.about.visionText)}</p>
               </div>
               <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8">
                 <div className="flex items-center gap-3 mb-4">
                   <Zap className="w-6 h-6 text-slate-500 dark:text-slate-400" />
                   <h3 className="text-lg font-bold text-slate-700 dark:text-slate-300">{t.about.missionLabel}</h3>
                 </div>
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{getSetting('about_mission_text', t.about.missionText)}</p>
+                <p className="text-slate-600 dark:text-slate-400 text-base leading-relaxed">{getSetting('about_mission_text', t.about.missionText)}</p>
               </div>
             </div>
           </div>
@@ -250,7 +248,7 @@ export default function AboutPage() {
       <section className="py-10 bg-gradient-to-r from-green-900 via-green-800 to-green-950 text-white">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-2xl md:text-3xl font-black mb-3">{t.about.ctaTitle}</h2>
-          <p className="text-emerald-100/80 text-sm max-w-xl mx-auto mb-8">
+          <p className="text-emerald-100/80 text-base max-w-xl mx-auto mb-8">
             {t.about.ctaDesc}
           </p>
           <div className="flex flex-wrap justify-center gap-4">

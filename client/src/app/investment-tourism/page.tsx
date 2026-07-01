@@ -114,7 +114,7 @@ export default function InvestmentTourismPage() {
         <Header />
 
         {/* Banner */}
-        <section className="relative bg-slate-800 text-white py-16 text-center overflow-hidden">
+        <section className="relative bg-green-700 text-white py-16 text-center overflow-hidden">
           <div className="absolute inset-0 opacity-10" style={{
             backgroundImage: `radial-gradient(circle at 30% 20%, rgba(255,255,255,0.2) 0%, transparent 50%),
                               radial-gradient(circle at 70% 80%, rgba(255,255,255,0.15) 0%, transparent 50%)`,
@@ -134,16 +134,16 @@ export default function InvestmentTourismPage() {
         </section>
 
         {/* Investment Section */}
-        <section className="py-10 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+        <section className="py-10 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
           <div className="container mx-auto px-6">
             <div className="max-w-5xl mx-auto">
               <div className="flex items-center gap-4 mb-8">
-                <div className="w-14 h-14 rounded-2xl bg-slate-700 flex items-center justify-center text-white shadow-lg">
+                <div className="w-14 h-14 rounded-2xl bg-slate-700 flex items-center justify-center text-green-500 shadow-lg">
                   {investmentIcon}
                 </div>
                 <div>
                   <h2 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white">{t.investmentTourism.investmentTitle}</h2>
-                  <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{t.investmentTourism.investmentDesc}</p>
+                  <p className="text-slate-500 dark:text-slate-700 text-base mt-1">{t.investmentTourism.investmentDesc}</p>
                 </div>
               </div>
 
@@ -159,14 +159,14 @@ export default function InvestmentTourismPage() {
                         href={section.href}
                         className="group flex items-start gap-4 p-5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:-translate-y-0.5 transition-all duration-200 hover:shadow-md"
                       >
-                        <div className="shrink-0 w-11 h-11 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <div className="shrink-0 w-11 h-11 rounded-xl bg-slate-200 dark:bg-slate-700 text-green-800 dark:text-slate-300 flex items-center justify-center group-hover:scale-110 transition-transform">
                           {section.icon}
                         </div>
                         <div>
-                          <h3 className="font-bold text-sm text-slate-700 dark:text-slate-300 mb-1">
+                          <h3 className="font-bold text-lg text-slate-700 dark:text-slate-300 mb-1">
                             {t.investmentTourism[section.key as keyof typeof t.investmentTourism] as unknown as string}
                           </h3>
-                          <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
+                          <p className="text-slate-600 dark:text-slate-400 text-base leading-relaxed">
                             {t.investmentTourism[`${section.key}Desc` as keyof typeof t.investmentTourism] as unknown as string}
                           </p>
                         </div>
@@ -191,12 +191,12 @@ export default function InvestmentTourismPage() {
                                 </div>
                               )}
                               <div className="min-w-0 flex-1">
-                                <h4 className="text-xs font-semibold text-slate-800 dark:text-white truncate group-hover/card:text-slate-700 dark:group-hover/card:text-slate-300 transition-colors">
+                                <h4 className="text-base font-semibold text-slate-800 dark:text-white truncate group-hover/card:text-slate-700 dark:group-hover/card:text-slate-300 transition-colors">
                                   {inv.title}
                                 </h4>
-                                <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">{inv.description}</p>
+                                <p className="text-[16px] text-slate-500 dark:text-slate-400 line-clamp-1">{inv.description}</p>
                                 {inv.location && (
-                                  <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" /> {inv.location}</p>
+                                  <p className="text-[12px] text-slate-400 dark:text-slate-500 mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" /> {inv.location}</p>
                                 )}
                               </div>
                               <svg className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 shrink-0 group-hover/card:text-slate-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -207,14 +207,14 @@ export default function InvestmentTourismPage() {
                           {catInvestments.length > 3 && (
                             <Link
                               href={section.href}
-                              className="text-[11px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors inline-flex items-center gap-1 mt-0.5"
+                              className="text-[16px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors inline-flex items-center gap-1 mt-0.5"
                             >
                               {t.projects.viewDetails} ({catInvestments.length}) →
                             </Link>
                           )}
                         </div>
                       ) : !invLoading ? (
-                        <p className="text-[11px] text-slate-400 dark:text-slate-500 italic pl-1">{t.services.noUpdates}</p>
+                        <p className="text-[13px] text-slate-400 dark:text-slate-500 italic pl-1">{t.services.noUpdates}</p>
                       ) : (
                         <div className="space-y-2 pl-1">
                           {[1, 2].map((s) => (
@@ -231,7 +231,7 @@ export default function InvestmentTourismPage() {
         </section>
 
         {/* Tourism Section */}
-        <section className="py-10 bg-slate-50 dark:bg-slate-900">
+        <section className="py-10 bg-slate-100 dark:bg-slate-900">
           <div className="container mx-auto px-6">
             <div className="max-w-5xl mx-auto">
               <div className="flex items-center gap-4 mb-8">
@@ -240,7 +240,7 @@ export default function InvestmentTourismPage() {
                 </div>
                 <div>
                   <h2 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white">{t.investmentTourism.tourismTitle}</h2>
-                  <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{t.investmentTourism.tourismDesc}</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-base mt-1">{t.investmentTourism.tourismDesc}</p>
                 </div>
               </div>
 
@@ -260,10 +260,10 @@ export default function InvestmentTourismPage() {
                           {section.icon}
                         </div>
                         <div>
-                          <h3 className="font-bold text-sm text-slate-700 dark:text-slate-300 mb-1">
+                          <h3 className="font-bold text-lg text-slate-700 dark:text-slate-300 mb-1">
                             {t.investmentTourism[section.key as keyof typeof t.investmentTourism] as unknown as string}
                           </h3>
-                          <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
+                          <p className="text-slate-600 dark:text-slate-400 text-base leading-relaxed">
                             {t.investmentTourism[`${section.key}Desc` as keyof typeof t.investmentTourism] as unknown as string}
                           </p>
                         </div>
@@ -291,9 +291,9 @@ export default function InvestmentTourismPage() {
                                 <h4 className="text-xs font-semibold text-slate-800 dark:text-white truncate group-hover/card:text-slate-700 dark:group-hover/card:text-slate-300 transition-colors">
                                   {inv.title}
                                 </h4>
-                                <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">{inv.description}</p>
+                                <p className="text-[16px] text-slate-500 dark:text-slate-400 line-clamp-1">{inv.description}</p>
                                 {inv.location && (
-                                  <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" /> {inv.location}</p>
+                                  <p className="text-[12px] text-slate-400 dark:text-slate-500 mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" /> {inv.location}</p>
                                 )}
                               </div>
                               <svg className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 shrink-0 group-hover/card:text-slate-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -304,14 +304,14 @@ export default function InvestmentTourismPage() {
                           {catInvestments.length > 3 && (
                             <Link
                               href={section.href}
-                              className="text-[11px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors inline-flex items-center gap-1 mt-0.5"
+                              className="text-[16px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors inline-flex items-center gap-1 mt-0.5"
                             >
                               {t.projects.viewDetails} ({catInvestments.length}) →
                             </Link>
                           )}
                         </div>
                       ) : !invLoading ? (
-                        <p className="text-[11px] text-slate-400 dark:text-slate-500 italic pl-1">{t.services.noUpdates}</p>
+                        <p className="text-[16px] text-slate-400 dark:text-slate-500 italic pl-1">{t.services.noUpdates}</p>
                       ) : (
                         <div className="space-y-2 pl-1">
                           {[1, 2].map((s) => (
@@ -328,7 +328,7 @@ export default function InvestmentTourismPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-10 bg-slate-800 dark:bg-slate-950 text-white">
+        <section className="py-10 bg-green-800 dark:bg-slate-950 text-white">
           <div className="container mx-auto px-6 text-center">
             <h3 className="text-2xl md:text-3xl font-black mb-4">{t.investmentTourism.contactInvest}</h3>
             <p className="text-slate-300 max-w-xl mx-auto text-sm mb-8">

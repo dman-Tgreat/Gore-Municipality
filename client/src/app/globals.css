@@ -16,7 +16,7 @@
 }
 
 body {
-  background: #ffffff;
+  background: #15803D;
   color: #1e293b;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -51,7 +51,7 @@ html {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  background: #f0e8d5;
+  background: #9c927b;
   color: #8a6a00;
 }
 

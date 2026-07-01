@@ -148,7 +148,7 @@ export default function Header() {
 
   const linkStyle = (path: string) => {
     const active = pathname === path;
-    return `transition font-medium text-sm whitespace-nowrap px-1.5 py-1 ${
+    return `transition font-medium text-base whitespace-nowrap px-1.5 py-1 ${
       active
         ? 'text-slate-800 dark:text-white size 18'
         : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'

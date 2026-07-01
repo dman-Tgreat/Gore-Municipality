@@ -56,7 +56,7 @@ function NewsContent() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans flex flex-col justify-between">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans flex flex-col justify-between">
       <div>
         <Header />
 
@@ -67,7 +67,7 @@ function NewsContent() {
                               radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)`,
           }} />
           <div className="relative container mx-auto px-6">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
               <span className="w-1.5 h-1.5 bg-emerald-300/80 rounded-full animate-pulse" />
               {t.header.home}
             </div>
@@ -88,7 +88,7 @@ function NewsContent() {
                 <button
                   key={tab.key}
                   onClick={() => { setActiveTab(tab.key); setExpandedId(null); }}
-                  className={`flex items-center gap-2 px-5 py-3.5 text-sm font-semibold transition-all duration-200 border-b-2 ${
+                  className={`flex items-center gap-2 px-5 py-3.5 text-base font-semibold transition-all duration-200 border-b-2 ${
                     activeTab === tab.key
                       ? 'border-[#1a7a3a] dark:border-[#d4a017] text-slate-800 dark:text-white bg-slate-50 dark:bg-slate-800/50'
                       : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-600'
@@ -117,7 +117,7 @@ function NewsContent() {
           {loading ? (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 animate-pulse space-y-3">
+                <div key={i} className="bg-slate-150 dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 animate-pulse space-y-3">
                   <div className="h-4 bg-gray-200 rounded w-20" />
                   <div className="h-5 bg-gray-200 rounded w-3/4" />
                   <div className="h-4 bg-gray-200 rounded w-full" />
@@ -145,12 +145,12 @@ function NewsContent() {
                   </div>
                 ) : (
                   articles.map((article) => (
-                    <article key={article.id} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
+                    <article key={article.id} className="bg-slate-100 dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
                       {article.coverImage && (
                         <img src={imgSrc(article.coverImage)} alt={article.title} className="w-full h-52 object-cover" />
                       )}
                       <div className="p-6 space-y-3">
-                        <div className="flex items-center gap-2 text-xs">
+                        <div className="flex items-center gap-2 text-sm">
                           <span className="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-2 py-0.5 rounded-full font-medium">
                             {t.news.latestPress}
                           </span>
@@ -161,7 +161,7 @@ function NewsContent() {
                         <h3 className="text-lg font-bold text-slate-800 dark:text-white hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer">
                           {tField(article, 'title', locale)}
                         </h3>
-                        <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                        <p className="text-slate-600 dark:text-slate-400 text-base leading-relaxed">
                           {tField(article, 'summary', locale)}
                         </p>
                         <button className="text-slate-700 dark:text-slate-300 text-sm font-semibold hover:text-slate-800 dark:hover:text-white transition-colors inline-flex items-center gap-1">
@@ -193,11 +193,11 @@ function NewsContent() {
                   </div>
                   <div className="p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
                     <span className="block font-semibold text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-wider mb-1">{t.news.historicalRoots}</span>
-                    <p className="text-slate-800 dark:text-white text-sm">{getSetting('news_quickfact_2_value', t.news.historicalRootsValue)}</p>
+                    <p className="text-slate-800 dark:text-white text-base">{getSetting('news_quickfact_2_value', t.news.historicalRootsValue)}</p>
                   </div>
                   <div className="p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
                     <span className="block font-semibold text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-wider mb-1">{t.news.primaryEconomics}</span>
-                    <p className="text-slate-800 dark:text-white text-sm">{getSetting('news_quickfact_3_value', t.news.primaryEconomicsValue)}</p>
+                    <p className="text-slate-800 dark:text-white text-base">{getSetting('news_quickfact_3_value', t.news.primaryEconomicsValue)}</p>
                   </div>
                 </div>
               </div>
@@ -206,7 +206,7 @@ function NewsContent() {
             /* === ANNOUNCEMENTS TAB === */
             <div className="max-w-4xl mx-auto">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-300">
+                <div className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-300">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38a.875.875 0 01-.978-.017 13.112 13.112 0 01-2.827-2.436m0 0a15.052 15.052 0 01-2.373-5.474m10.264 3.527c.253-.962.584-1.892.985-2.783.247-.55.06-1.21-.463-1.511l-.657-.38a.875.875 0 00-.978.017 13.112 13.112 0 00-2.827 2.436m0 0a15.052 15.052 0 012.373 5.474M16.5 7.5h3.75a.75.75 0 01.75.75v.75m0 0v11.25c0 .414-.336.75-.75.75H12.75a.75.75 0 01-.75-.75v-2.25" />
                   </svg>
@@ -232,12 +232,12 @@ function NewsContent() {
                             <span className="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider">
                               {t.announcements.published}
                             </span>
-                            <span className="text-slate-400 dark:text-slate-500 text-xs">
+                            <span className="text-slate-400 dark:text-slate-500 text-sm">
                               {new Date(announcement.createdAt).toLocaleDateString()}
                             </span>
                           </div>
                           <h3 className="text-lg font-bold text-slate-800 dark:text-white">{tField(announcement, 'title', locale)}</h3>
-                          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">{tField(announcement, 'description', locale)}</p>
+                          <p className="text-base text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">{tField(announcement, 'description', locale)}</p>
                         </div>
                         <div className={`shrink-0 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center transition-all duration-200 ${
                           expandedId === announcement.id ? 'rotate-180 bg-slate-200 dark:bg-slate-600 text-slate-700 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500'
@@ -250,7 +250,7 @@ function NewsContent() {
                       {expandedId === announcement.id && (
                         <div className="px-6 pb-6 border-t border-slate-200 dark:border-slate-700 pt-4">
                           <div className="p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
-                            <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed whitespace-pre-line">
+                            <p className="text-slate-700 dark:text-slate-300 text-base leading-relaxed whitespace-pre-line">
                               {tField(announcement, 'content', locale)}
                             </p>
                           </div>

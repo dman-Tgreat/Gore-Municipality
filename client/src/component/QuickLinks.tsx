@@ -118,19 +118,16 @@ export default function QuickLinks({ page }: QuickLinksProps) {
       <div className="container mx-auto px-6">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="section-badge mb-4">
-            <span className="w-1.5 h-1.5 bg-slate-500 dark:bg-white/60 rounded-full" />
+            <span className="w-1.5 h-1.5 bg-slate-100 dark:bg-white/60 rounded-full" />
             {t.footer.quickLinks}
           </div>
-          <h2 className="section-title mb-3">
-            {t.footer.quickLinks}
-          </h2>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-6xl mx-auto">
           {links.map((link) => (
             <div
               key={link.key}
-              className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:-translate-y-0.5"
+              className="group bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:-translate-y-0.5"
             >
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 mb-5 group-hover:scale-110 transition-transform duration-300">
                 {iconMap[link.key]}
@@ -139,13 +136,13 @@ export default function QuickLinks({ page }: QuickLinksProps) {
               <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-3">
                 {getTitle(link.key)}
               </h3>
-              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
+              <p className="text-slate-500 dark:text-slate-400 text-base leading-relaxed mb-6">
                 {getDesc(link.key)}
               </p>
 
               <Link
                 href={link.href}
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-800 dark:text-white hover:gap-2.5 transition-all group/link"
+                className="inline-flex items-center gap-1.5 text-base font-semibold text-slate-800 dark:text-white hover:gap-2.5 transition-all group/link"
               >
                 {t.services.viewAll}
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
