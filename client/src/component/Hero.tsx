@@ -71,7 +71,7 @@ export default function Hero() {
 
   if (loading || slides.length === 0) {
     return (
-      <section className="relative min-h-[500px] lg:min-h-[580px] w-full bg-slate-800 animate-pulse flex items-center justify-center z-10">
+      <section className="relative min-h-[500px] lg:min-h-[580px] w-full bg-slate-800 animate-pulse flex items-center justify-center z-5">
         <div className="text-center">
           <div className="w-20 h-20 bg-slate-700 rounded-full mx-auto mb-6" />
           <div className="h-6 bg-slate-700 rounded w-72 mx-auto mb-3" />
@@ -89,7 +89,7 @@ export default function Hero() {
 
   return (
     <section
-      className="relative min-h-[500px] lg:min-h-[580px] w-full overflow-hidden bg-slate-900"
+      className="relative min-h-[500px] lg:min-h-[580px] w-full overflow-hidden bg-slate-900 z-5"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >

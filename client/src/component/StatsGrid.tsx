@@ -104,35 +104,36 @@ export default function StatsGrid() {
 
   return (
     <section className="relative py-0 bg-slate-50 dark:bg-slate-900  z-20">
-
-      <div className="container mx-auto px-6 -mt-24 relative z-20">
+      
+      <div className="container mx-auto px-6  relative z-20 max-w-6xl">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {stats.map((stat, idx) => (
             <div
               key={idx}
-              className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 lg:p-8 text-center shadow-sm
+              className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 lg:p-5 flex items-start gap-3.5 shadow-sm 
                          hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-md transition-all duration-300 hover:-translate-y-0.5"
             >
               {/* Icon */}
-              <div className="shrink-0 inline-flex items-center justify-center w-14 h-14 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light
+              <div className="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light
                             text-2xl mb-5 group-hover:scale-110 transition-transform duration-300">
                 <span>{stat.icon}</span>
               </div>
+              <div className="flex flex-col text-left">
+                {/* Value */}
+                <p className="text-xl lg:text-xl font-bold text-slate-600 dark:text-white mb-2 tracking-tight">
+                  <AnimatedCounter value={loading ? '—' : stat.value} />
+                </p>
 
-              {/* Value */}
-              <p className="text-3xl lg:text-4xl font-black text-slate-800 dark:text-white mb-2 tracking-tight">
-                <AnimatedCounter value={loading ? '—' : stat.value} />
-              </p>
+                {/* Label */}
+                <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                  {stat.label}
+                </p>
 
-              {/* Label */}
-              <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                {stat.label}
-              </p>
-
-              {/* Detail */}
-              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed font-light">
-                {stat.detail}
-              </p>
+                {/* Detail */}
+                <p className="text-base text-slate-700 dark:text-slate-400 leading-relaxed font-light">
+                  {stat.detail}
+                </p>
+              </div>
             </div>
           ))}
         </div>
