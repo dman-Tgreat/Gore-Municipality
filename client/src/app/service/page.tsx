@@ -28,8 +28,8 @@ export default function ServicesPage() {
       <div>
         <Header />
         
-        <section className="bg-gradient-to-br from-green-900 via-green-800 to-green-950 text-white py-8 text-center">
-          <div className="container mx-auto px-6">
+        <section className="bg-gradient-to-br from-green-900 via-green-800 to-green-950 text-white py-8 text-center overflow-x-hidden">
+          <div className="container mx-auto px-4 sm:px-6">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
               <span className="w-1.5 h-1.5 bg-emerald-300/80 rounded-full animate-pulse" />
               {t.header.services}
@@ -39,7 +39,7 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <main className="container mx-auto px-6 py-12 max-w-6xl">
+        <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-6xl">
           {loading ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[1, 2, 3].map((i) => (

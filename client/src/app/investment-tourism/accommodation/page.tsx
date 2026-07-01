@@ -14,13 +14,13 @@ export default function AccommodationPage() {
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans flex flex-col justify-between">
       <div>
         <Header />
-        <section className="bg-gradient-to-br from-green-900 via-green-800 to-green-950 text-white py-14 text-center">
-          <div className="container mx-auto px-6">
+        <section className="bg-gradient-to-br from-green-900 via-green-800 to-green-950 text-white py-10 sm:py-14 text-center overflow-x-hidden">
+          <div className="container mx-auto px-4 sm:px-6">
             <h1 className="text-3xl md:text-4xl font-black">{t.investmentTourism.accommodation}</h1>
             <p className="mt-2 text-emerald-100/80 max-w-xl mx-auto text-sm">{t.investmentTourism.accommodationDesc}</p>
           </div>
         </section>
-        <main className="container mx-auto px-6 py-12 max-w-4xl">
+        <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-4xl">
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8">
             <div className="grid md:grid-cols-2 gap-4">
               {items.map((item, i) => (

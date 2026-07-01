@@ -46,176 +46,151 @@ export default function Services() {
 
   const publishedNewsCount = news.length;
   const deptCount = departments.length;
-  const projectCount = projects.filter((p) => p.status === 'ongoing').length;
 
   return (
     <section id="services" className="py-12 bg-slate-100 dark:bg-slate-900">
-      <div className="container mx-auto px-6 items-center ">
+      <div className="container mx-auto px-4 sm:px-6">
         {/* Section Header */}
-          <div className="section-badge mb-4  ml-170">
-            <span className="w-1.5 h-1.5  text-white bg-slate-500 dark:bg-white/60 rounded-full" />
-            {t.header.services}
-          </div>
+        <div className="section-badge mb-4 mx-auto">
+          <span className="w-1.5 h-1.5 text-white bg-slate-500 dark:bg-white/60 rounded-full" />
+          {t.header.services}
+        </div>
         
-        {/* Service Cards */}
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
+        {/* Service Cards Container */}
+        <div className="grid grid-cols-1 gap-6 lg:gap-8 max-w-9xl mx-auto">
+          
           {/* ── Card 1: Latest News ── */}
-          <div className="group bg-white dark:bg-slate-800  border border-slate-200 dark:border-slate-700 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:-translate-y-0.5">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light mb-5 group-hover:scale-110 transition-transform duration-300">
-              {serviceIcons.news}
-            </div>
-            <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-4">{t.services.latestNews}</h3>
+          <div className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:-translate-y-0.5">
+            <div className="grid md:grid-cols-2 gap-8 items-center"> 
+              
+              {/* Text Area */}
+              <div>
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light mb-5 group-hover:scale-110 transition-transform duration-300">
+                  {serviceIcons.news}
+                </div>
+                <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-4">{t.services.latestNews}</h3>
 
-            {loading ? (
-              <div className="space-y-3">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-4 bg-slate-100 dark:bg-slate-700 rounded animate-pulse" />
-                ))}
+                {loading ? (
+                  <div className="space-y-3">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="h-4 bg-slate-100 dark:bg-slate-700 rounded animate-pulse" />
+                    ))}
+                  </div>
+                ) : news.length > 0 ? (
+                  <ul className="space-y-3 mb-6">
+                    {news.map((article) => (
+                      <li key={article.id}>
+                        <Link
+                          href={`/news`}
+                          className="group/item flex items-start gap-2.5 text-lg text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
+                        >
+                          <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600 mt-2 shrink-0 group-hover/item:bg-slate-800 dark:group-hover/item:bg-white" />
+                          <div className="min-w-0">
+                            <p className="font-medium text-slate-800 dark:text-slate-200 leading-snug line-clamp-1">
+                              {article.title}
+                            </p>
+                            <span className="text-[16px] text-slate-400 dark:text-slate-500">
+                              {new Date(article.createdAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-slate-400 dark:text-slate-500 text-sm mb-6">{t.services.noUpdates}</p>
+                )}
+
+                <Link
+                  href="/news"
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-800 dark:text-white hover:gap-2.5 transition-all group/link"
+                >
+                  {t.services.viewAll} ({publishedNewsCount})
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                  </svg>
+                </Link>
               </div>
-            ) : news.length > 0 ? (
-              <ul className="space-y-3 mb-6">
-                {news.map((article) => (
-                  <li key={article.id}>
-                    <Link
-                      href={`/news`}
-                      className="group/item flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
-                    >
-                      <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600 mt-2 shrink-0 group-hover/item:bg-slate-800 dark:group-hover/item:bg-white" />
-                      <div className="min-w-0">
-                        <p className="font-medium text-slate-800 dark:text-slate-200 leading-snug line-clamp-1">
-                          {article.title}
-                        </p>
-                        <span className="text-[10px] text-slate-400 dark:text-slate-500">
-                          {new Date(article.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-slate-400 dark:text-slate-500 text-sm mb-6">{t.services.noUpdates}</p>
-            )}
 
-            <Link
-              href="/news"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-800 dark:text-white hover:gap-2.5 transition-all group/link"
-            >
-              {t.services.viewAll} ({publishedNewsCount})
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
-            </Link>
+              {/* Image Area */}
+              <div className="md:order-last w-full h-full min-h-[250px]">
+                <img src="news.webp" alt="news paper" className="w-full max-w-[500px] mx-auto h-full object-cover rounded-xl" />
+              </div>
+
+            </div>
           </div>
 
           {/* ── Card 2: Municipal Services ── */}
           <div className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:-translate-y-0.5">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light mb-5 group-hover:scale-110 transition-transform duration-300">
-              {serviceIcons.services}
-            </div>
-            <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-4">{t.services.municipalServices}</h3>
-
-            {loading ? (
-              <div className="space-y-3">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-4 bg-slate-100 dark:bg-slate-700 rounded animate-pulse" />
-                ))}
-              </div>
-            ) : departments.length > 0 ? (
-              <>
-                <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-2xl font-black text-slate-800 dark:text-white">{deptCount}</span>
-                  <span className="text-sm text-slate-500 dark:text-slate-400">{t.services.departmentsLabel}</span>
+            {/* Added a responsive 2-column grid container identical to Card 1 */}
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              
+              {/* Text Area */}
+              <div>
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light mb-5 group-hover:scale-110 transition-transform duration-300">
+                  {serviceIcons.services}
                 </div>
-                <ul className="space-y-2 mb-6">
-                  {departments.slice(0, 5).map((dept) => (
-                    <li key={dept.id}>
-                      <Link
-                        href={`/service/${dept.id}`}
-                        className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors group/item"
-                      >
-                        <span className="w-5 h-5 rounded bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 flex items-center justify-center text-[10px] font-bold shrink-0">
-                          {dept.name.charAt(0)}
+                <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-4">{t.services.municipalServices}</h3>
+
+                {loading ? (
+                  <div className="space-y-3">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="h-4 bg-slate-100 dark:bg-slate-700 rounded animate-pulse" />
+                    ))}
+                  </div>
+                ) : departments.length > 0 ? (
+                  <>
+                    <div className="flex items-baseline gap-2 mb-4">
+                      <span className="text-2xl font-black text-slate-800 dark:text-white">{deptCount}</span>
+                      <span className="text-lg text-slate-500 dark:text-slate-400">{t.services.departmentsLabel}</span>
+                    </div>
+                    <ul className="space-y-2 mb-6">
+                      {departments.slice(0, 5).map((dept) => (
+                        <li key={dept.id}>
+                          <Link
+                            href={`/service/${dept.id}`}
+                            className="flex items-center gap-2 text-lg text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors group/item"
+                          >
+                            <span className="w-5 h-5 rounded bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 flex items-center justify-center text-[10px] font-bold shrink-0">
+                              {dept.name.charAt(0)}
                         </span>
-                        <span className="truncate">{dept.name}</span>
-                      </Link>
-                    </li>
-                  ))}
-                  {deptCount > 5 && (
-                    <li className="text-xs text-slate-400 dark:text-slate-500 italic">
-                      +{deptCount - 5} more departments
-                    </li>
-                  )}
-                </ul>
-              </>
-            ) : (
-              <p className="text-slate-400 dark:text-slate-500 text-sm mb-6">{t.services.noUpdates}</p>
-            )}
+                            <span className="truncate">{dept.name}</span>
+                          </Link>
+                        </li>
+                      ))}
+                      {deptCount > 5 && (
+                        <li className="text-xs text-slate-400 dark:text-slate-500 italic">
+                          +{deptCount - 5} more departments
+                        </li>
+                      )}
+                    </ul>
+                  </>
+                ) : (
+                  <p className="text-slate-400 dark:text-slate-500 text-sm mb-6">{t.services.noUpdates}</p>
+                )}
 
-            <Link
-              href="/service"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-800 dark:text-white hover:gap-2.5 transition-all group/link"
-            >
-              {t.services.viewAll}
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
-            </Link>
-          </div>
-
-          {/* ── Card 3: About Gore ── */}
-          <div className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:-translate-y-0.5">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light mb-5 group-hover:scale-110 transition-transform duration-300">
-              {serviceIcons.about}
-            </div>
-            <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-4">{t.services.aboutGore}</h3>
-
-            {loading ? (
-              <div className="space-y-3">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-4 bg-slate-100 dark:bg-slate-700 rounded animate-pulse" />
-                ))}
+                <Link
+                  href="/service"
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-800 dark:text-white hover:gap-2.5 transition-all group/link"
+                >
+                  {t.services.viewAll}
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                  </svg>
+                </Link>
               </div>
-            ) : (
-              <>
-                <div className="grid grid-cols-2 gap-3 mb-6">
-                  <div className="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl p-3 text-center">
-                    <p className="text-xl font-black text-slate-800 dark:text-white">{publishedNewsCount + deptCount}</p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">{t.services.updatesLabel}</p>
-                  </div>
-                  <div className="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl p-3 text-center">
-                    <p className="text-xl font-black text-slate-800 dark:text-white">{deptCount}</p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">{t.services.departmentsLabel}</p>
-                  </div>
-                  <div className="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl p-3 text-center">
-                    <p className="text-xl font-black text-slate-800 dark:text-white">{projectCount}</p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">{t.services.activeProjectsLabel}</p>
-                  </div>
-                  <div className="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl p-3 text-center">
-                    <p className="text-xl font-black text-slate-800 dark:text-white">{projects.length}</p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">{t.services.totalProjectsLabel}</p>
-                  </div>
-                </div>
-                <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">
-                  {t.services.aboutGoreDesc}
-                </p>
-              </>
-            )}
 
-            <Link
-              href="/about"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-800 dark:text-white hover:gap-2.5 transition-all group/link"
-            >
-              {t.services.readHistory}
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
-            </Link>
+              <div className="md:order-last w-full h-full min-h-[250px]">
+                <img src="services.jpg" alt="municipal services" className="w-full max-w-[500px] mx-auto h-full object-cover rounded-xl" />
+              </div>
+
+            </div>
           </div>
-        </div>
+
+        </div> 
 
         {/* Bottom decorative element */}
-        <div className="flex items-center justify-center gap-3 mt-5 text-slate-400 dark:text-slate-500">
+        <div className="flex items-center justify-center gap-3 mt-12 text-slate-400 dark:text-slate-500">
           <div className="h-px w-12 bg-gradient-to-r from-transparent via-slate-300 dark:via-slate-600 to-transparent" />
           <span className="text-[10px] uppercase tracking-[0.2em] font-semibold">{t.services.goreWoredaTagline}</span>
           <div className="h-px w-12 bg-gradient-to-r from-transparent via-slate-300 dark:via-slate-600 to-transparent" />

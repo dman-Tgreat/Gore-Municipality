@@ -105,32 +105,32 @@ export default function StatsGrid() {
   return (
     <section className="relative py-0 bg-slate-50 dark:bg-slate-900 ">
       
-      <div className="container mx-auto px-6 -mt-24 relative z-20 max-w-6xl">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+      <div className="container mx-auto px-4 sm:px-6 -mt-20 sm:-mt-24 relative z-20 max-w-6xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
           {stats.map((stat, idx) => (
             <div
               key={idx}
-              className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 lg:p-5 flex items-start gap-3.5 shadow-sm 
+              className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 sm:p-4 lg:p-5 flex items-start gap-2.5 sm:gap-3.5 shadow-sm 
                          hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-md transition-all duration-300 hover:-translate-y-0.5"
             >
               {/* Icon */}
-              <div className="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light
-                            text-2xl mb-5 group-hover:scale-110 transition-transform duration-300">
-                <span>{stat.icon}</span>
+              <div className="shrink-0 inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-primary/10 dark:bg-primary-dark/50 text-primary dark:text-gold-light
+                            text-lg sm:text-2xl group-hover:scale-110 transition-transform duration-300">
+                <span className="w-4 h-4 sm:w-5 sm:h-5">{stat.icon}</span>
               </div>
-              <div className="flex flex-col text-left">
+              <div className="flex flex-col text-left min-w-0">
                 {/* Value */}
-                <p className="text-xl lg:text-xl font-bold text-slate-600 dark:text-white mb-2 tracking-tight">
+                <p className="text-lg sm:text-xl lg:text-xl font-bold text-slate-600 dark:text-white mb-1 sm:mb-2 tracking-tight">
                   <AnimatedCounter value={loading ? '—' : stat.value} />
                 </p>
 
                 {/* Label */}
-                <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                <p className="text-[11px] sm:text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1 sm:mb-1.5">
                   {stat.label}
                 </p>
 
                 {/* Detail */}
-                <p className="text-base text-slate-700 dark:text-slate-400 leading-relaxed font-light">
+                <p className="text-xs sm:text-base text-slate-700 dark:text-slate-400 leading-relaxed font-light">
                   {stat.detail}
                 </p>
               </div>

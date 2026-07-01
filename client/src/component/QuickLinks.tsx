@@ -123,7 +123,7 @@ export default function QuickLinks({ page }: QuickLinksProps) {
           </div>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-20 lg:gap-10 max-w-6xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-20 lg:gap-10 max-w-6xl mx-auto">
           {links.map((link) => (
             <div
               key={link.key}

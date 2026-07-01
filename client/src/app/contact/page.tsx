@@ -75,8 +75,8 @@ export default function ContactPage() {
         </section>
 
         {/* ── Contact Info Cards ── */}
-        <section className="container mx-auto px-6 -mt-10 relative z-10">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
+        <section className="container mx-auto px-4 sm:px-6 -mt-8 sm:-mt-10 relative z-10 overflow-x-hidden">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-5xl mx-auto">
             {contactChannels.map((channel) => (
               <div key={channel.key} className="bg-white dark:bg-slate-800 rounded-xl shadow-md border border-slate-200 dark:border-slate-700 p-5 hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5">
                 <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-700 text-white text-xl mb-4 shadow-sm`}>
@@ -113,7 +113,7 @@ export default function ContactPage() {
         </section>
 
         {/* ── Main Content: Form + Info ── */}
-        <main className="container mx-auto px-6 py-8 max-w-6xl">
+        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-6xl">
           <div className="grid lg:grid-cols-5 gap-10">
             {/* Left — Get In Touch & Map */}
             <div className="lg:col-span-2 space-y-8">

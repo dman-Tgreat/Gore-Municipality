@@ -82,8 +82,8 @@ function NewsContent() {
 
         {/* Tab Selector */}
         <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-[73px] z-30">
-          <div className="container mx-auto px-6">
-            <div className="flex gap-1 -mb-px">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="flex gap-1 -mb-px overflow-x-auto scrollbar-hide">
               {tabs.map((tab) => (
                 <button
                   key={tab.key}
@@ -113,7 +113,7 @@ function NewsContent() {
         </div>
 
         {/* Content */}
-        <main className="container mx-auto px-6 py-8 max-w-6xl">
+        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-6xl">
           {loading ? (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
@@ -177,7 +177,7 @@ function NewsContent() {
               </div>
 
               {/* Quick Facts Sidebar */}
-              <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-md border border-slate-200 dark:border-slate-700 h-fit space-y-6 sticky top-[140px]">
+              <div className="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-xl shadow-md border border-slate-200 dark:border-slate-700 h-fit space-y-4 sm:space-y-6 lg:sticky lg:top-[140px]">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-300">
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

@@ -114,12 +114,12 @@ export default function InvestmentTourismPage() {
         <Header />
 
         {/* Banner */}
-        <section className="relative bg-green-700 text-white py-16 text-center overflow-hidden">
+        <section className="relative bg-green-700 text-white py-10 sm:py-16 text-center overflow-hidden">
           <div className="absolute inset-0 opacity-10" style={{
             backgroundImage: `radial-gradient(circle at 30% 20%, rgba(255,255,255,0.2) 0%, transparent 50%),
                               radial-gradient(circle at 70% 80%, rgba(255,255,255,0.15) 0%, transparent 50%)`,
           }} />
-          <div className="relative container mx-auto px-6">
+          <div className="relative container mx-auto px-4 sm:px-6">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
               <span className="w-1.5 h-1.5 bg-white/60 rounded-full animate-pulse" />
               {t.investmentTourism.title}
@@ -134,16 +134,16 @@ export default function InvestmentTourismPage() {
         </section>
 
         {/* Investment Section */}
-        <section className="py-10 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-          <div className="container mx-auto px-6">
+        <section className="py-8 sm:py-10 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+          <div className="container mx-auto px-4 sm:px-6">
             <div className="max-w-5xl mx-auto">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-14 h-14 rounded-2xl bg-slate-700 flex items-center justify-center text-green-500 shadow-lg">
+              <div className="flex items-start sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+                <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-slate-700 flex items-center justify-center text-green-500 shadow-lg shrink-0">
                   {investmentIcon}
                 </div>
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white">{t.investmentTourism.investmentTitle}</h2>
-                  <p className="text-slate-500 dark:text-slate-700 text-base mt-1">{t.investmentTourism.investmentDesc}</p>
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 dark:text-white">{t.investmentTourism.investmentTitle}</h2>
+                  <p className="text-slate-500 dark:text-slate-700 text-sm sm:text-base mt-1">{t.investmentTourism.investmentDesc}</p>
                 </div>
               </div>
 
@@ -231,16 +231,16 @@ export default function InvestmentTourismPage() {
         </section>
 
         {/* Tourism Section */}
-        <section className="py-10 bg-slate-100 dark:bg-slate-900">
-          <div className="container mx-auto px-6">
+        <section className="py-8 sm:py-10 bg-slate-100 dark:bg-slate-900">
+          <div className="container mx-auto px-4 sm:px-6">
             <div className="max-w-5xl mx-auto">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-14 h-14 rounded-2xl bg-slate-700 flex items-center justify-center text-white shadow-lg">
+              <div className="flex items-start sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+                <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-slate-700 flex items-center justify-center text-white shadow-lg shrink-0">
                   {tourismIcon}
                 </div>
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white">{t.investmentTourism.tourismTitle}</h2>
-                  <p className="text-slate-500 dark:text-slate-400 text-base mt-1">{t.investmentTourism.tourismDesc}</p>
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 dark:text-white">{t.investmentTourism.tourismTitle}</h2>
+                  <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base mt-1">{t.investmentTourism.tourismDesc}</p>
                 </div>
               </div>
 
@@ -328,8 +328,8 @@ export default function InvestmentTourismPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-10 bg-green-800 dark:bg-slate-950 text-white">
-          <div className="container mx-auto px-6 text-center">
+        <section className="py-8 sm:py-10 bg-green-800 dark:bg-slate-950 text-white">
+          <div className="container mx-auto px-4 sm:px-6 text-center">
             <h3 className="text-2xl md:text-3xl font-black mb-4">{t.investmentTourism.contactInvest}</h3>
             <p className="text-slate-300 max-w-xl mx-auto text-sm mb-8">
               {t.contact.description}

@@ -846,7 +846,7 @@ const omMessages: Messages = {
     overview: 'Ibsa Waliggaa',
   },
   about: {
-    title: 'Waa ee Gore Woredaa',
+    title: 'Waae\'e Gore Woredaa',
     subtitle: 'Seenaa, lafa fi hooggansa Bulchiinsa Gore Muniisipaaltee baradhu.',
     historyTitle: 'Seenaa Keenya',
     historyDesc: 'Gore Woreda godina Iluu Abbaa Booraa, Oromiyaa, Itoophiyaa keessatti argamtu, woreda seenaa qabdu dha. Dhuma jaarraa 19ffaatti hundeeffamtee, Gore guddattee bakka bulchiinsaa fi daldalaa jiraataa taate. Woreda keenyi daldala buna, misooma dammanaa fi qonna shaayii Gummaroodhaan beekamti.',

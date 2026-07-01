@@ -99,7 +99,7 @@ export default function ServiceDetailPage() {
         </div>
       </section>
 
-      <main className="container mx-auto px-6 py-10 max-w-5xl">
+      <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-10 max-w-5xl">
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
@@ -133,7 +133,7 @@ export default function ServiceDetailPage() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Contact Card */}
-            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-5 sm:p-6">
               <h3 className="font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
                 <span className="w-1 h-5 bg-slate-500 rounded-full" />
                 {t.servicesPage.contactInfo}

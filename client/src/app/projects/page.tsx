@@ -40,7 +40,7 @@ export default function ProjectsPage() {
       <div>
         <Header />
         
-        <section className="bg-gradient-to-br from-green-900 via-green-800 to-green-950 text-white py-8 px-4 text-center">
+        <section className="bg-gradient-to-br from-green-900 via-green-800 to-green-950 text-white py-8 px-4 text-center overflow-x-hidden">
           <div className="container mx-auto">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
               <span className="w-1.5 h-1.5 bg-emerald-300/80 rounded-full animate-pulse" />
@@ -51,9 +51,9 @@ export default function ProjectsPage() {
           </div>
         </section>
 
-        <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-6xl">
+        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 lg:py-12 max-w-6xl">
           {/* Status Filter */}
-          <div className="flex gap-2 mb-6 sm:mb-8 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide snap-x">
+          <div className="flex gap-2 mb-4 sm:mb-8 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide snap-x">
             {statuses.map((status) => (
               <button
                 key={status}

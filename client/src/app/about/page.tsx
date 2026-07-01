@@ -63,7 +63,7 @@ export default function AboutPage() {
   const councilMembers = getCouncilMembers();
 
   return (
-    <div className="min-h-screen bg-page-bg dark:bg-slate-300 text-slate-900 dark:text-slate-100 font-sans">
+    <div className="min-h-screen bg-page-bg  text-slate-900 dark:text-slate-100 font-sans">
       <Header />
       {/* ── Hero ── */}
       <section className="relative bg-green-700 text-white overflow-hidden">
@@ -81,8 +81,8 @@ export default function AboutPage() {
       </section>
 
       {/* ── Quick Stats Bar ── */}
-      <div className="container mx-auto px-6 -mt-8 relative z-20">
-        <div className="bg-white dark:bg-slate-800 rounded-2xl  border border-slate-200 dark:border-slate-700 p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="container mx-auto px-4 sm:px-6 -mt-6 sm:-mt-8 relative z-20 overflow-x-hidden">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
           {[
             { label: t.about.statUpdates, value: loading ? '—' : news.length, icon: <Newspaper className="w-6 h-6 text-green-500" /> },
             { label: t.about.statDepartments, value: loading ? '—' : departments.length, icon: <Landmark className="w-6 h-6 text-green-500" /> },
@@ -99,8 +99,8 @@ export default function AboutPage() {
       </div>
 
       {/* ── History ── */}
-      <section className="py-12">
-        <div className="container mx-auto px-6">
+      <section className="py-8 sm:py-12">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="grid md:grid-cols-2 gap-10 items-center max-w-5xl mx-auto">
             <div>
               <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-300 text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
@@ -123,11 +123,11 @@ export default function AboutPage() {
       </section>
 
       {/* ── Geography ── */}
-      <section className="py-10 bg-slate-50 dark:bg-slate-800/50">
-        <div className="container mx-auto px-6">
+      <section className="py-8 sm:py-10 bg-slate-50 dark:bg-slate-800/50">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="grid md:grid-cols-2 gap-10 items-center max-w-5xl mx-auto">
             <div className="relative order-2 md:order-1">
-              <div className="aspect-[4/3] rounded-2xl bg-slate-200 dark:bg-slate-150 overflow-hidden border border-slate-200 dark:border-slate-700 flex items-center justify-center">
+              <div className="aspect-[4/3] rounded-2xl bg-slate-200 dark:bg-slate-800 overflow-hidden border border-slate-200 dark:border-slate-700 flex items-center justify-center">
                 <div className="text-center p-6">
                   <Globe className="w-16 h-16 text-green-700 mx-auto mb-4 " />
                   <p className="text-slate-500 dark:text-slate-300 font-semibold text-lg">{t.about.geographyIllustration}</p>
@@ -147,8 +147,8 @@ export default function AboutPage() {
       </section>
 
       {/* ── Leadership ── */}
-      <section className="py-12">
-        <div className="container mx-auto px-6">
+      <section className="py-8 sm:py-12">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-10">
             <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-base font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
               <span className="w-1.5 h-1.5 bg-slate-600 dark:bg-slate-400 rounded-full" />
@@ -214,8 +214,8 @@ export default function AboutPage() {
       </section>
 
       {/* ── Vision & Mission ── */}
-      <section className="py-12 bg-slate-50 dark:bg-slate-800/50">
-        <div className="container mx-auto px-6">
+      <section className="py-8 sm:py-12 bg-slate-50 dark:bg-slate-800/50">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-10">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 mx-auto mb-4">
@@ -245,8 +245,8 @@ export default function AboutPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="py-10 bg-gradient-to-r from-green-900 via-green-800 to-green-950 text-white">
-        <div className="container mx-auto px-6 text-center">
+      <section className="py-8 sm:py-10 bg-gradient-to-r from-green-900 via-green-800 to-green-950 text-white">
+        <div className="container mx-auto px-4 sm:px-6 text-center">
           <h2 className="text-2xl md:text-3xl font-black mb-3">{t.about.ctaTitle}</h2>
           <p className="text-emerald-100/80 text-base max-w-xl mx-auto mb-8">
             {t.about.ctaDesc}

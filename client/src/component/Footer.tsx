@@ -48,20 +48,20 @@ export default function Footer() {
       </div>
 
       {/* Main Footer */}
-      <div className="container mx-auto px-6 py-10 lg:py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
+      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-10 lg:py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-8">
           {/* Brand & About - spans 4 cols */}
           <div className="lg:col-span-4">
-            <Link href="/" className="inline-flex bg-primary-dark items-center gap-3 mb-4">
-              <div className="w-15 h-15 rounded-full  flex items-center justify-center shadow-sm">
-                <img src="https://www.chora.pro.et/assets/logo_1781643314244-B4wJ3hZB.png" alt="Gore Woreda Seal" className="object-contain" />
+            <Link href="/" className="inline-flex bg-primary-dark items-center gap-2 sm:gap-3 mb-4">
+              <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-sm shrink-0">
+                <img src="https://www.chora.pro.et/assets/logo_1781643314244-B4wJ3hZB.png" alt="Gore Woreda Seal" className="object-contain w-full h-full" />
               </div>
               <div>
-                <h3 className="text-white font-bold text-lg leading-tight">Gore Woreda</h3>
-                <p className="text-gold-light text-base uppercase tracking-wider">Administration</p>
+                <h3 className="text-white font-bold text-base sm:text-lg leading-tight">Gore Woreda</h3>
+                <p className="text-gold-light text-sm sm:text-base uppercase tracking-wider">Administration</p>
               </div>
             </Link>
-            <p className="text-slate-300 dark:text-slate-500 text-base leading-relaxed mb-5 max-w-sm">
+            <p className="text-slate-300 dark:text-slate-500 text-sm sm:text-base leading-relaxed mb-5">
               {t.footer.aboutDesc}
             </p>
             <div className="inline-flex items-center gap-2 text-sm bg-primary/50 dark:bg-slate-800 rounded-lg px-3 py-2 text-gold-light">
@@ -138,16 +138,16 @@ export default function Footer() {
 
       {/* Bottom Bar */}
       <div className="border-t border-slate-800 dark:border-slate-800">
-        <div className="container mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-slate-500 dark:text-slate-600 text-sm">
+        <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3">
+          <p className="text-slate-500 dark:text-slate-600 text-xs sm:text-sm text-center sm:text-left">
             &copy; {year} {t.footer.copyright}
           </p>
-          <div className="flex items-center gap-4 text-slate-800 dark:text-slate-700 text-[14px] uppercase tracking-wider">
-            <span>{tagline1}</span>
+          <div className="flex items-center flex-wrap justify-center gap-2 sm:gap-4 text-[10px] sm:text-[14px] uppercase tracking-wider">
+            <span className="text-slate-800 dark:text-slate-700">{tagline1}</span>
             <span className="w-px h-3 bg-slate-700 dark:bg-slate-700" />
-            <span>{tagline2}</span>
+            <span className="text-slate-800 dark:text-slate-700">{tagline2}</span>
             <span className="w-px h-3 bg-slate-700 dark:bg-slate-700" />
-            <span>{tagline3}</span>
+            <span className="text-slate-800 dark:text-slate-700">{tagline3}</span>
           </div>
         </div>
       </div>

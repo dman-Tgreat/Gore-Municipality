@@ -38,21 +38,33 @@ export default function FileUpload({
       const formData = new FormData();
       formData.append('file', file);
 
+      // Read JWT token from localStorage (set by admin login)
+      const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null;
+
+      // IMPORTANT: Do NOT pass a headers object at all when using FormData.
+      // The browser MUST auto-set Content-Type: multipart/form-data; boundary=...
+      // Passing any custom headers object can prevent this in some environments.
       const res = await fetch(`${API_BASE}/upload`, {
         method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         body: formData,
       });
 
-      if (!res.ok) throw new Error('Upload failed');
+      if (!res.ok) {
+        const errText = await res.text().catch(() => 'Unknown error');
+        throw new Error(`Upload failed (${res.status}): ${errText}`);
+      }
 
       const data = await res.json();
       if (data.success && data.url) {
         setPreview(data.url);
         onUpload(data.url);
       }
-    } catch {
+    } catch (err) {
       if (file.type.startsWith('image/')) setPreview('');
-      alert('Upload failed. Please try again.');
+      console.error('Upload error:', err);
+      const message = err instanceof Error ? err.message : 'Upload failed';
+      alert(message);
     } finally {
       setUploading(false);
     }

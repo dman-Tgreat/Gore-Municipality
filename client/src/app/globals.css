@@ -16,12 +16,11 @@
 }
 
 body {
-  background: #18b351;
+  background: #33df72;
   color: #1e293b;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
   width: 100%;
 }
 
@@ -131,6 +130,14 @@ section {
   .section-padding-md {
     padding-top: 3rem;
     padding-bottom: 3rem;
+  }
+  /* Hide scrollbar for overflowing tab/filter bars */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }
 

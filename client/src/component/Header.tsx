@@ -187,11 +187,10 @@ export default function Header() {
         <span className="red" />
       </div>
       {/* === Top Bar: Official Seal & Identity === */}
-      <div className="bg-primary text-white border-b border-primary-dark">
-        <div className="container mx-auto px-6 py-1.5 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-[10px] text-white/80 uppercase tracking-wider">
-            <span className="w-1.5 h-1.5 rounded-full bg-gold-light" />
-            {t.footer.copyright}
+      <div className="bg-primary text-white border-b border-primary-dark">          <div className="container mx-auto px-3 sm:px-6 py-1.5 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-[9px] sm:text-[10px] text-white/80 uppercase tracking-wider truncate max-w-[60vw]">
+            <span className="w-1.5 h-1.5 rounded-full bg-gold-light shrink-0" />
+            <span className="truncate">{t.footer.copyright}</span>
           </div>
           <div className="hidden sm:flex items-center gap-3 text-[10px] text-white/70">
             <span>{t.footer.workingHours}</span>
@@ -200,18 +199,18 @@ export default function Header() {
       </div>
 
       {/* === Main Nav Bar === */}
-      <div className="container mx-auto px-6">
-        <div className="flex justify-between items-center h-16">
+      <div className="container mx-auto px-3 sm:px-6">
+        <div className="flex justify-between items-center h-14 sm:h-16">
           {/* Brand Identity */}
-          <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition shrink-0">
-            <div className="w-15 h-15 rounded-full  flex items-center justify-center shadow-sm">
-              <img src="https://www.chora.pro.et/assets/logo_1781643314244-B4wJ3hZB.png" alt="Gore Woreda Seal" className="object-contain" />
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-90 transition shrink-0 min-w-0 max-w-[50vw] sm:max-w-none">
+            <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-sm shrink-0">
+              <img src="https://www.chora.pro.et/assets/logo_1781643314244-B4wJ3hZB.png" alt="Gore Woreda Seal" className="object-contain w-full h-full" />
             </div>
-            <div className="flex flex-col">
-              <span className="text-[18px] font-bold text-slate-800 dark:text-white leading-tight">
+            <div className="flex flex-col min-w-0">
+              <span className="text-sm sm:text-[18px] font-bold text-slate-800 dark:text-white leading-tight truncate">
                 Gore Woreda
               </span>
-              <span className="text-[14px] text-slate-500 dark:text-slate-400 uppercase tracking-wider leading-tight">
+              <span className="text-[10px] sm:text-[14px] text-slate-500 dark:text-slate-400 uppercase tracking-wider leading-tight truncate">
                 Official Municipal Portal
               </span>
             </div>
