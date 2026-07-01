@@ -35,22 +35,10 @@ export default function AboutPage() {
     return found ? found.settingValue : fallback;
   };
 
-  // Parse council members from pipe-separated text or use i18n fallback
+  // Parse council members from settings JSON or use i18n fallback
   const getCouncilMembers = (): { name: string; role: string; desc: string }[] => {
     const raw = getSetting('about_council_members', '');
     if (raw) {
-      // Try pipe-separated format (new): Name | Role | Description
-      const lines = raw.split('\n').filter((l) => l.trim());
-      const members: { name: string; role: string; desc: string }[] = [];
-      for (const line of lines) {
-        const parts = line.split('|').map((p) => p.trim());
-        if (parts.length >= 3) {
-          members.push({ name: parts[0], role: parts[1], desc: parts.slice(2).join(' | ') });
-        }
-      }
-      if (members.length > 0) return members;
-
-      // Fallback: try JSON (old format, for backward compatibility)
       try { return JSON.parse(raw); } catch {}
     }
     return t.about.councilMembers as { name: string; role: string; desc: string }[];
@@ -94,7 +82,7 @@ export default function AboutPage() {
 
       {/* ── Quick Stats Bar ── */}
       <div className="container mx-auto px-6 -mt-8 relative z-20">
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl  border border-slate-200 dark:border-slate-700 p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
             { label: t.about.statUpdates, value: loading ? '—' : news.length, icon: <Newspaper className="w-6 h-6 text-green-500" /> },
             { label: t.about.statDepartments, value: loading ? '—' : departments.length, icon: <Landmark className="w-6 h-6 text-green-500" /> },
@@ -116,17 +104,17 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 gap-10 items-center max-w-5xl mx-auto">
             <div>
               <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-300 text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-                <span className="w-1.5 h-1.5 bg-slate-600 dark:bg-slate-400 rounded-full" />
+                <span className="w-1.5 h-1.5 bg-slate-100 dark:bg-slate-400 rounded-full" />
                 {t.about.historyTitle}
               </div>
-              <p className="text-white dark:text-slate-400 text-base leading-relaxed">{getSetting('about_history_desc', t.about.historyDesc)}</p>
+              <p className="text-white dark:text-slate-400 text-lg leading-relaxed">{getSetting('about_history_desc', t.about.historyDesc)}</p>
             </div>
             <div className="relative">
               <div className="aspect-[4/3] rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200 dark:border-slate-700 flex items-center justify-center">
                 <div className="text-center p-6">
-                  <ScrollText className="w-16 h-16 mx-auto mb-4 text-slate-400" />
-                  <p className="text-slate-700 dark:text-slate-300 font-semibold text-base">{t.about.historyIllustration}</p>
-                  <p className="text-slate-500 dark:text-slate-400 text-sm mt-2">{t.about.historyIllustrationSub}</p>
+                  <ScrollText className="w-16 h-16 mx-auto mb-4 text-green-700" />
+                  <p className="text-slate-700 dark:text-slate-300 font-semibold text-lg">{t.about.historyIllustration}</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-base mt-2">{t.about.historyIllustrationSub}</p>
                 </div>
               </div>
             </div>
@@ -139,20 +127,20 @@ export default function AboutPage() {
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-10 items-center max-w-5xl mx-auto">
             <div className="relative order-2 md:order-1">
-              <div className="aspect-[4/3] rounded-2xl bg-slate-100 dark:bg-slate-150 overflow-hidden border border-slate-200 dark:border-slate-700 flex items-center justify-center">
+              <div className="aspect-[4/3] rounded-2xl bg-slate-200 dark:bg-slate-150 overflow-hidden border border-slate-200 dark:border-slate-700 flex items-center justify-center">
                 <div className="text-center p-6">
-                  <Globe className="w-16 h-16 text-green-500 mx-auto mb-4 text-slate-400" />
-                  <p className="text-slate-500 dark:text-slate-300 font-semibold text-base">{t.about.geographyIllustration}</p>
-                  <p className="text-slate-500 dark:text-slate-400 text-sm mt-2">{t.about.geographyIllustrationSub}</p>
+                  <Globe className="w-16 h-16 text-green-700 mx-auto mb-4 " />
+                  <p className="text-slate-500 dark:text-slate-300 font-semibold text-lg">{t.about.geographyIllustration}</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-base mt-2">{t.about.geographyIllustrationSub}</p>
                 </div>
               </div>
             </div>
             <div className="order-1 md:order-2">
-              <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-                <span className="w-1.5 h-1.5 text-green-500 bg-slate-600 dark:bg-slate-400 rounded-full" />
+              <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-base font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
+                <span className="w-1.5 h-1.5 text-green-500 bg-slate-100 dark:bg-slate-400 rounded-full" />
                 {t.about.geographyTitle}
               </div>
-              <p className="text-slate-600 dark:text-slate-400 text-base leading-relaxed">{getSetting('about_geography_desc', t.about.geographyDesc)}</p>
+              <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">{getSetting('about_geography_desc', t.about.geographyDesc)}</p>
             </div>
           </div>
         </div>
@@ -162,7 +150,7 @@ export default function AboutPage() {
       <section className="py-12">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-3xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
+            <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-base font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
               <span className="w-1.5 h-1.5 bg-slate-600 dark:bg-slate-400 rounded-full" />
               {t.about.leadershipTitle}
             </div>
@@ -213,8 +201,8 @@ export default function AboutPage() {
                       {member.name.charAt(0)}
                     </div>
                     <div className="min-w-0">
-                      <p className="font-semibold text-slate-800 dark:text-white text-sm">{member.name}</p>
-                      <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">{member.role}</p>
+                      <p className="font-semibold text-slate-800 dark:text-white text-lg">{member.name}</p>
+                      <p className="text-base font-medium text-slate-600 dark:text-slate-400 mb-1">{member.role}</p>
                       <p className="text-slate-500 dark:text-slate-400 text-base leading-relaxed">{member.desc}</p>
                     </div>
                   </div>

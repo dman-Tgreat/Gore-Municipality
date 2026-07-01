@@ -62,9 +62,9 @@ function NavDropdown({ items, label, href, isActive, isOpen, onMouseEnter, onMou
     <div className="relative" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <Link
         href={href}
-        className={`inline-flex items-center gap-1.5 hover:bg-red-300 rounded lg transition font-medium text-[18px] whitespace-nowrap px-1.5 py-1 ${
+        className={`inline-flex items-center gap-1.5 hover:bg-green-300 rounded lg transition font-medium text-[18px] whitespace-nowrap px-1.5 py-1 ${
           isActive
-            ? 'text-primary bg-red-300 dark:text-gold-light'
+            ? 'text-primary bg-green-500 dark:text-gold-light'
             : 'text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-gold-light'
         }`}
       >
@@ -148,9 +148,9 @@ export default function Header() {
 
   const linkStyle = (path: string) => {
     const active = pathname === path;
-    return `transition font-medium text-[18px] hover:bg-red-300 rounded lg whitespace-nowrap px-1.5 py-1 ${
+    return `transition font-medium text-[18px] hover:bg-green-300 rounded lg whitespace-nowrap px-1.5 py-1 ${
       active
-        ? 'text-slate-800 bg-red-300 dark:bg-slate-700 dark:text-white'
+        ? 'text-slate-800 bg-green-500 dark:bg-slate-700 dark:text-white'
         : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
     }`;
   };
