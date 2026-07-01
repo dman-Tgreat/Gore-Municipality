@@ -114,8 +114,8 @@ export default function QuickLinks({ page }: QuickLinksProps) {
   };
 
   return (
-    <section className="py-16 bg-slate-50 dark:bg-slate-900">
-      <div className="container mx-auto px-6">
+    <section className="py-5 bg-slate-50 dark:bg-slate-900">
+      <div className="container mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="section-badge mb-4">
             <span className="w-1.5 h-1.5 bg-slate-100 dark:bg-white/60 rounded-full" />
@@ -123,7 +123,7 @@ export default function QuickLinks({ page }: QuickLinksProps) {
           </div>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-6xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-20 lg:gap-10 max-w-6xl mx-auto">
           {links.map((link) => (
             <div
               key={link.key}

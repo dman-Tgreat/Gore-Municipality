@@ -215,7 +215,7 @@ export default function Services() {
         </div>
 
         {/* Bottom decorative element */}
-        <div className="flex items-center justify-center gap-3 mt-12 text-slate-400 dark:text-slate-500">
+        <div className="flex items-center justify-center gap-3 mt-5 text-slate-400 dark:text-slate-500">
           <div className="h-px w-12 bg-gradient-to-r from-transparent via-slate-300 dark:via-slate-600 to-transparent" />
           <span className="text-[10px] uppercase tracking-[0.2em] font-semibold">{t.services.goreWoredaTagline}</span>
           <div className="h-px w-12 bg-gradient-to-r from-transparent via-slate-300 dark:via-slate-600 to-transparent" />
