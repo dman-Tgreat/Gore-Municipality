@@ -103,9 +103,9 @@ export default function StatsGrid() {
   ];
 
   return (
-    <section className="relative py-0 bg-slate-50 dark:bg-slate-900  z-20">
+    <section className="relative py-0 bg-slate-50 dark:bg-slate-900 ">
       
-      <div className="container mx-auto px-6  relative z-20 max-w-6xl">
+      <div className="container mx-auto px-6 -mt-24 relative z-20 max-w-6xl">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {stats.map((stat, idx) => (
             <div

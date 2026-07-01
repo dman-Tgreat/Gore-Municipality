@@ -50,9 +50,9 @@ export default function Services() {
 
   return (
     <section id="services" className="py-12 bg-slate-100 dark:bg-slate-900">
-      <div className="container mx-auto px-6 ">
+      <div className="container mx-auto px-6 items-center ">
         {/* Section Header */}
-          <div className="section-badge mb-4">
+          <div className="section-badge mb-4  ml-170">
             <span className="w-1.5 h-1.5  text-white bg-slate-500 dark:bg-white/60 rounded-full" />
             {t.header.services}
           </div>
