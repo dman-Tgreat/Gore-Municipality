@@ -401,24 +401,21 @@ export default function Header() {
             <div className="border-t border-slate-100 dark:border-slate-800 pt-3 mt-3">
               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 px-4">{t.header.services}</p>
               <MobileNavLink href="/service" label={t.header.services} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<Landmark className="w-4 h-4" />} />
-              {departments.slice(0, 8).map((dept) => (
-                <MobileNavLink key={dept.id} href={`/service/${dept.id}`} label={dept.name} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<ChevronRight className="w-3 h-3 text-slate-400" />} />
-              ))}
             </div>
 
             <div className="border-t border-slate-100 dark:border-slate-800 pt-3 mt-3">
               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 px-4">{t.investmentTourism.title}</p>
-              {investItems.map((item) => (
-                <MobileNavLink key={item.href} href={item.href} label={`${item.icon} ${t.investmentTourism[item.key as keyof typeof t.investmentTourism]}`} pathname={pathname} onClick={() => setMobileOpen(false)} />
-              ))}
+              <MobileNavLink href="/investment-tourism" label={t.investmentTourism.title} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<ClipboardList className="w-4 h-4" />} />
             </div>
 
             <div className="border-t border-slate-100 dark:border-slate-800 pt-3 mt-3">
               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 px-4">{t.projects.title}</p>
               <MobileNavLink href="/projects" label={t.projects.title} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<BarChart3 className="w-4 h-4" />} />
-              {projects.slice(0, 8).map((proj) => (
-                <MobileNavLink key={proj.id} href={`/projects/${proj.id}`} label={proj.name} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<ChevronRight className="w-3 h-3 text-slate-400" />} />
-              ))}
+            </div>
+
+            <div className="border-t border-slate-100 dark:border-slate-800 pt-3 mt-3">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 px-4">{t.header.contact}</p>
+              <MobileNavLink href="/contact" label={t.header.contact} pathname={pathname} onClick={() => setMobileOpen(false)} />
             </div>
           </div>
         </div>
