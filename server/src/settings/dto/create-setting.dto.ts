@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateSettingDto {
   @IsNotEmpty()
@@ -8,4 +8,12 @@ export class CreateSettingDto {
   @IsNotEmpty()
   @IsString()
   settingValue!: string;
+
+  @IsOptional()
+  @IsString()
+  settingValueam!: string;
+
+  @IsOptional()
+  @IsString()
+  settingValueom!: string;
 }

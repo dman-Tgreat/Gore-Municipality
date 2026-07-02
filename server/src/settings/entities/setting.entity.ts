@@ -22,6 +22,18 @@ export class Setting {
   })
   settingValue!: string;
 
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  settingValueom!: string;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  settingValueam!: string;
+
   @CreateDateColumn()
   createdAt!: Date;
 
