@@ -33,13 +33,13 @@ export class Investment {
   @Column({ type: 'text', nullable: true })
   descriptionOm!: string;
 
-  @Column({ type: 'longtext' })
+  @Column({ type: 'text' })
   content!: string;
 
-  @Column({ type: 'longtext', nullable: true })
+  @Column({ type: 'text', nullable: true })
   contentAm!: string;
 
-  @Column({ type: 'longtext', nullable: true })
+  @Column({ type: 'text', nullable: true })
   contentOm!: string;
 
   @Column({ length: 100 })

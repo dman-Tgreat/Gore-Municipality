@@ -51,18 +51,18 @@ export class Announcement {
       descriptionOm!: string;
 
       @Column({
-        type: 'longtext',
+        type: 'text',
       })
       content!: string;
 
       @Column({
-        type: 'longtext',
+        type: 'text',
         nullable: true,
       })
       contentAm!: string;
 
       @Column({
-        type: 'longtext',
+        type: 'text',
         nullable: true,
       })
       contentOm!: string;

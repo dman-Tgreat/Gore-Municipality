@@ -1,40 +1,44 @@
-const mysql = require('mysql2/promise');
+const { Client } = require('pg');
 const bcrypt = require('bcrypt');
 
 async function seed() {
   // Load .env file if dotenv is available (from @nestjs/config dependency)
   try { require('dotenv').config({ path: require('path').join(__dirname, '.env') }); } catch {}
 
-  const conn = await mysql.createConnection({
-    host: process.env.DB_HOST || 'localhost',
-    port: Number(process.env.DB_PORT) || 3306,
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'Ddg@36240667',
-    database: process.env.DB_NAME || 'gore_db',
+  const conn = new Client({
+    host: process.env.DB_HOST ,
+    port: Number(process.env.DB_PORT) ,
+    user: process.env.DB_USER ,
+    password: process.env.DB_PASSWORD ,
+    database: process.env.DB_NAME ,
   });
+
+  await conn.connect();
 
   console.log('Connected to database.\n');
 
   // Clear existing data for clean re-run
-  await conn.execute('DELETE FROM contact');
-  await conn.execute('DELETE FROM project');
-  await conn.execute('DELETE FROM announcement');
-  await conn.execute('DELETE FROM department');
-  await conn.execute('DELETE FROM news');
-  await conn.execute('DELETE FROM hero_slide');
-  await conn.execute('DELETE FROM setting');
+  await conn.query('DELETE FROM contact');
+  await conn.query('DELETE FROM project');
+  await conn.query('DELETE FROM announcement');
+  await conn.query('DELETE FROM department');
+  await conn.query('DELETE FROM news');
+  await conn.query('DELETE FROM hero_slide');
+  await conn.query('DELETE FROM setting');
   console.log('Cleared existing seed data.\n');
 
   // ====== 1. Admins ======
   const adminPassword = await bcrypt.hash('admin1234', 10);
-  const [adminResult] = await conn.execute(
-    `INSERT IGNORE INTO admins (fullName, email, password, isActive) VALUES (?, ?, ?, ?)`,
+  const adminResult = await conn.query(
+    `INSERT INTO admins ("fullName", email, password, "isActive") VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING ; `,
     ['Sys Admin', 'admin@gmail.com', adminPassword, true],
   );
-  console.log(`Admin: ${adminResult.affectedRows > 0 ? 'Created' : 'Already exists'}`);
+  const isCreated = adminResult.rowCounts > 0;
+  
+  console.log(`Admin: ${isCreated ? 'Created' : 'Already exists'}`);
 
-  const [admins] = await conn.query(`SELECT id FROM admins LIMIT 1`);
-  const adminId = admins[0].id;
+  const admins = await conn.query(`SELECT id FROM admins LIMIT 1`);
+  const adminId = admins.rows[0].id;
 
   // ====== 2. News ======
   const newsData = [
@@ -111,8 +115,8 @@ async function seed() {
   ];
 
   for (const article of newsData) {
-    await conn.execute(
-      `INSERT IGNORE INTO news (title, titleAm, titleOm, slug, summary, summaryAm, summaryOm, content, contentAm, contentOm, coverImage, published, createdBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    await conn.query(
+      `INSERT INTO news (title, "titleAm", "titleOm", slug, summary, "summaryAm", "summaryOm", content, "contentAm", "contentOm", "coverImage", published, "createdBy") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) ON CONFLICT DO NOTHING`,
       [article.title, article.titleAm, article.titleOm, article.slug, article.summary, article.summaryAm, article.summaryOm, article.content, article.contentAm, article.contentOm, article.coverImage, article.published, adminId],
     );
   }
@@ -155,8 +159,8 @@ async function seed() {
   ];
 
   for (const ann of announcementData) {
-    await conn.execute(
-      `INSERT IGNORE INTO announcement (title, titleAm, titleOm, description, descriptionAm, descriptionOm, content, contentAm, contentOm, published, createdBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    await conn.query(
+      `INSERT INTO announcement (title, "titleAm", "titleOm", description, "descriptionAm", "descriptionOm", content, "contentAm", "contentOm", published, "createdBy") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) ON CONFLICT DO NOTHING`,
       [ann.title, ann.titleAm, ann.titleOm, ann.description, ann.descriptionAm, ann.descriptionOm, ann.content, ann.contentAm, ann.contentOm, ann.published, adminId],
     );
   }
@@ -175,8 +179,8 @@ async function seed() {
   ];
 
   for (const dept of deptData) {
-    await conn.execute(
-      `INSERT IGNORE INTO department (name, nameAm, nameOm, description, descriptionAm, descriptionOm, head, phone, email, office) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    await conn.query(
+      `INSERT INTO department (name, "nameAm", "nameOm", description, "descriptionAm", "descriptionOm", head, phone, email, office) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) ON CONFLICT DO NOTHING`,
       [dept.name, dept.nameAm, dept.nameOm, dept.description, dept.descriptionAm, dept.descriptionOm, dept.head, dept.phone, dept.email, dept.office],
     );
   }
@@ -193,8 +197,8 @@ async function seed() {
   ];
 
   for (const proj of projectData) {
-    await conn.execute(
-      `INSERT IGNORE INTO project (name, nameAm, nameOm, description, descriptionAm, descriptionOm, budget, status, startDate, endDate, location, fundingSource, contractor, category, createdBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    await conn.query(
+      `INSERT INTO project (name, "nameAm", "nameOm", description, "descriptionAm", "descriptionOm", budget, status, "startDate", "endDate", location, "fundingSource", contractor, category, "createdBy") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) ON CONFLICT DO NOTHING`,
       [proj.name, proj.nameAm, proj.nameOm, proj.description, proj.descriptionAm, proj.descriptionOm, proj.budget, proj.status, proj.startDate, proj.endDate, proj.location, proj.fundingSource, proj.contractor, proj.category, adminId],
     );
   }
@@ -209,8 +213,8 @@ async function seed() {
   ];
 
   for (const msg of contactData) {
-    await conn.execute(
-      `INSERT INTO contact (name, email, subject, message, isRead) VALUES (?, ?, ?, ?, ?)`,
+    await conn.query(
+      `INSERT INTO contact (name, email, subject, message, "isRead") VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING`,
       [msg.name, msg.email, msg.subject, msg.message, msg.isRead],
     );
   }
@@ -239,8 +243,8 @@ async function seed() {
   ];
 
   for (const slide of heroSlideData) {
-    await conn.execute(
-      `INSERT IGNORE INTO hero_slide (imageUrl, description, sortOrder, isActive) VALUES (?, ?, ?, ?)`,
+    await conn.query(
+      `INSERT INTO hero_slide ("imageUrl", description, "sortOrder", "isActive") VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING`,
       [slide.imageUrl, slide.description, slide.sortOrder, slide.isActive],
     );
   }
@@ -289,8 +293,8 @@ async function seed() {
   ];
 
   for (const s of settingsData) {
-    await conn.execute(
-      `INSERT IGNORE INTO setting (settingKey, settingValue) VALUES (?, ?)`,
+    await conn.query(
+      `INSERT INTO setting ("settingKey", "settingValue") VALUES ($1, $2) ON CONFLICT DO NOTHING`,
       [s.settingKey, s.settingValue],
     );
   }
