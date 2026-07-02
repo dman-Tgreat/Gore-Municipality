@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { LocaleProvider } from "@/context/LocaleContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import "./globals.css";
+import Script from "next/script";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -25,9 +26,7 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+export default function RootLayout({children,}: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
@@ -38,7 +37,7 @@ export default function RootLayout({
     >
       <head>
         {/* Blocking script to prevent FOUC — sets .dark class before paint */}
-        <script
+        <Script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
