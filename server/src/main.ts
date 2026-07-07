@@ -16,6 +16,11 @@ async function bootstrap() {
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     credentials: true,
   });
+  // app.enableCors({
+  //   origin: 'http://localhost:3000',    
+  //   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  //   credentials: true,
+  // });
 
   app.useGlobalPipes(
     new ValidationPipe({
