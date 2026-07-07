@@ -12,7 +12,7 @@ async function bootstrap() {
   });
 
   app.enableCors({
-    origin: [process.env.FRONTEND_URL || 'http://localhost:3000'],
+    origin: 'https://gore-municipality.vercel.app/',
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     credentials: true,
   });
