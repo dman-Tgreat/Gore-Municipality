@@ -28,10 +28,13 @@ function getInitialLocale(): LocaleCode {
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<LocaleCode>(() => getInitialLocale());
 
+  React.useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
+
   const setLocale = useCallback((code: LocaleCode) => {
     setLocaleState(code);
     localStorage.setItem('locale', code);
-    document.documentElement.lang = code === 'en' ? 'en' : code === 'am' ? 'am' : 'om';
   }, []);
 
   const t = allMessages[locale];

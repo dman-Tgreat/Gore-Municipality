@@ -143,11 +143,11 @@ export default function Footer() {
             &copy; {year} {t.footer.copyright}
           </p>
           <div className="flex items-center flex-wrap justify-center gap-2 sm:gap-4 text-[10px] sm:text-[14px] uppercase tracking-wider">
-            <span className="text-slate-800 dark:text-slate-700">{tagline1}</span>
+            <span className="text-slate-300 dark:text-slate-500">{tagline1}</span>
             <span className="w-px h-3 bg-slate-700 dark:bg-slate-700" />
-            <span className="text-slate-800 dark:text-slate-700">{tagline2}</span>
+            <span className="text-slate-300 dark:text-slate-500">{tagline2}</span>
             <span className="w-px h-3 bg-slate-700 dark:bg-slate-700" />
-            <span className="text-slate-800 dark:text-slate-700">{tagline3}</span>
+            <span className="text-slate-300 dark:text-slate-500">{tagline3}</span>
           </div>
         </div>
       </div>

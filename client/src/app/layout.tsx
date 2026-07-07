@@ -38,6 +38,7 @@ export default function RootLayout({children,}: Readonly<{
       <head>
         {/* Blocking script to prevent FOUC — sets .dark class before paint */}
         <Script
+          id="theme-loader"
           dangerouslySetInnerHTML={{
             __html: `
               (function() {

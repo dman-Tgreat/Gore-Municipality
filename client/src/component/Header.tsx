@@ -62,10 +62,10 @@ function NavDropdown({ items, label, href, isActive, isOpen, onMouseEnter, onMou
     <div className="relative" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <Link
         href={href}
-        className={`inline-flex items-center gap-1.5 hover:bg-green-300 rounded lg transition font-medium text-[18px] whitespace-nowrap px-1.5 py-1 ${
+        className={`inline-flex items-center gap-1.5 hover:bg-primary hover:text-white dark:hover:bg-slate-700 dark:hover:text-white rounded lg transition font-medium text-[18px] whitespace-nowrap px-1.5 py-1 ${
           isActive
-            ? 'text-primary bg-green-500 dark:text-gold-light'
-            : 'text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-gold-light'
+            ? 'text-white bg-primary dark:text-white dark:bg-slate-700'
+            : 'text-slate-700 dark:text-slate-300'
         }`}
       >
         {label }
@@ -76,15 +76,16 @@ function NavDropdown({ items, label, href, isActive, isOpen, onMouseEnter, onMou
       </Link>
 
       {isOpen && (
-        <div className="absolute left-0 mt-1 w-64 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-2 overflow-hidden z-50">
+        <div role="menu" className="absolute left-0 mt-1 w-64 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-2 overflow-hidden z-50">
           {items.map((item) => (
             <Link
               key={item.href}
               href={item.href}
+              role="menuitem"
               className={`flex items-center gap-3 px-4 py-2.5 text-sm transition ${
                 isActiveItem(item.href)
                   ? 'text-primary dark:text-gold-light bg-cream dark:bg-primary-dark/30 font-semibold'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-cream dark:hover:bg-primary-dark/20 hover:text-primary dark:hover:text-gold-light'
+                  : 'text-slate-700 dark:text-slate-300 hover:bg-cream dark:hover:bg-primary-dark/20 hover:text-primary dark:hover:text-gold-light'
               }`}
             >
               {item.icon}
@@ -104,10 +105,11 @@ function NavDropdown({ items, label, href, isActive, isOpen, onMouseEnter, onMou
                 <Link
                   key={dyn.href}
                   href={dyn.href}
+                  role="menuitem"
                   className={`flex items-center gap-3 px-4 py-2 text-sm transition ${
                     pathname === dyn.href
                       ? 'text-slate-800 dark:text-white bg-slate-50 dark:bg-slate-700 font-semibold'
-                      : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-800 dark:hover:text-white'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-800 dark:hover:text-white'
                   }`}
                 >
                   <span className="text-base">{dyn.icon}</span>
@@ -148,15 +150,21 @@ export default function Header() {
 
   const linkStyle = (path: string) => {
     const active = pathname === path;
-    return `transition font-medium text-[18px] hover:bg-green-300 rounded lg whitespace-nowrap px-1.5 py-1 ${
+    return `transition font-medium text-[18px] hover:bg-primary hover:text-white dark:hover:bg-slate-700 dark:hover:text-white rounded lg whitespace-nowrap px-1.5 py-1 ${
       active
-        ? 'text-slate-800 bg-green-500 dark:bg-slate-700 dark:text-white'
-        : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
+        ? 'text-white bg-primary dark:bg-slate-700 dark:text-white'
+        : 'text-slate-700 dark:text-slate-300'
     }`;
-  };
+  }; 
 
   const openDropdownFn = useCallback((name: string | null) => {
     setOpenDropdown(prev => prev === name ? null : name);
+  }, []);
+
+  const handleBlur = useCallback((e: React.FocusEvent) => {
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setOpenDropdown(null);
+    }
   }, []);
 
   const newsItems = dropdownItems.filter(i => i.section === 'news');
@@ -297,25 +305,30 @@ export default function Header() {
             <span className="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-1" />
 
             {/* Language Selector */}
-            <div className="relative">
+            <div className="relative" onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setLangOpen(false); }}>
               <button 
                 onClick={() => setLangOpen(!langOpen)}
-                className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white px-2 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white px-2 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                aria-expanded={langOpen}
+                aria-haspopup="listbox"
+                aria-label="Select language"
               >
                 <span>{currentLocale.native}</span>
                 <span className={`text-[10px] transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`}>▾</span>
               </button>
 
               {langOpen && (
-                <div className="absolute right-0 mt-1 w-40 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50">
+                <div role="listbox" className="absolute right-0 mt-1 w-40 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50">
                   {locales.map((lang) => (
                     <button
                       key={lang.code}
+                      role="option"
+                      aria-selected={locale === lang.code}
                       onClick={() => handleLanguageChange({ code: lang.code })}
                       className={`w-full text-left px-3 py-2 text-xs transition flex justify-between items-center ${
                         locale === lang.code
                           ? 'text-slate-800 dark:text-white bg-slate-50 dark:bg-slate-700 font-semibold'
-                          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'
+                          : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
                       }`}
                     >
                       <span>{lang.native}</span>
@@ -345,21 +358,25 @@ export default function Header() {
               )}
             </button>
 
-            <div className="relative">
+            <div className="relative" onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setLangOpen(false); }}>
               <button 
                 onClick={() => setLangOpen(!langOpen)}
-                className="px-2 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                className="px-2 py-1.5 rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                aria-expanded={langOpen}
+                aria-label="Select language"
               >
                 {currentLocale.native}
               </button>
               {langOpen && (
-                <div className="absolute right-0 mt-1 w-36 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50">
+                <div role="listbox" className="absolute right-0 mt-1 w-36 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50">
                   {locales.map((lang) => (
                     <button
                       key={lang.code}
+                      role="option"
+                      aria-selected={locale === lang.code}
                       onClick={() => handleLanguageChange({ code: lang.code })}
                       className={`w-full text-left px-3 py-2 text-xs transition ${
-                        locale === lang.code ? 'font-semibold text-slate-800 dark:text-white bg-slate-50 dark:bg-slate-700' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'
+                        locale === lang.code ? 'font-semibold text-slate-800 dark:text-white bg-slate-50 dark:bg-slate-700' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
                       }`}
                     >
                       {lang.native}
@@ -372,6 +389,8 @@ export default function Header() {
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="flex items-center justify-center w-9 h-9 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+              aria-label="Toggle navigation menu"
+              aria-expanded={mobileOpen}
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 {mobileOpen ? (
@@ -434,7 +453,7 @@ function MobileNavLink({ href, label, pathname, onClick, icon }: { href: string;
       className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition ${
         active
           ? 'text-slate-800 dark:text-white bg-slate-50 dark:bg-slate-800 font-semibold'
-          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
+          : 'text-slate-700 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
       }`}
     >
       {icon && <span className="shrink-0">{icon}</span>}

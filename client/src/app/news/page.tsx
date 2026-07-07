@@ -226,6 +226,7 @@ function NewsContent() {
                       <button
                         onClick={() => setExpandedId(expandedId === announcement.id ? null : announcement.id)}
                         className="w-full text-left p-6 flex justify-between items-start gap-4"
+                        aria-expanded={expandedId === announcement.id}
                       >
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-2 flex-wrap">

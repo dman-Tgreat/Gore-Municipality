@@ -136,7 +136,7 @@ export default function QuickLinks({ page }: QuickLinksProps) {
               <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-3">
                 {getTitle(link.key)}
               </h3>
-              <p className="text-slate-500 dark:text-slate-400 text-base leading-relaxed mb-6">
+              <p className="text-slate-700 dark:text-slate-400 text-base leading-relaxed mb-6">
                 {getDesc(link.key)}
               </p>
 

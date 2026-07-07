@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@100..900&display=swap');
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -15,8 +16,9 @@
   --color-cream-dark: #f0e8d5;
 }
 
+
 body {
-  background: #33df72;
+  background: #faf6ee;
   color: #1e293b;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -73,8 +75,8 @@ html {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  background: #9c927b;
-  color: #8a6a00;
+  background: #1a7a3a;
+  color: #ffffff;
 }
 
 .dark .section-badge {

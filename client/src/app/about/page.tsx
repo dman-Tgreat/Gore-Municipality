@@ -84,10 +84,10 @@ export default function AboutPage() {
       <div className="container mx-auto px-4 sm:px-6 -mt-6 sm:-mt-8 relative z-20 overflow-x-hidden">
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
           {[
-            { label: t.about.statUpdates, value: loading ? '—' : news.length, icon: <Newspaper className="w-6 h-6 text-green-500" /> },
-            { label: t.about.statDepartments, value: loading ? '—' : departments.length, icon: <Landmark className="w-6 h-6 text-green-500" /> },
-            { label: t.about.statActiveProjects, value: loading ? '—' : projects.filter((p) => p.status === 'ongoing').length, icon: <Construction className="w-6 h-6 text-green-500" /> },
-            { label: t.about.statKebeles, value: '22', icon: <MapPin className="w-6 h-6 text-green-500" /> },
+            { label: t.about.statUpdates, value: loading ? '—' : news.length, icon: <Newspaper className="w-6 h-6 text-primary" /> },
+            { label: t.about.statDepartments, value: loading ? '—' : departments.length, icon: <Landmark className="w-6 h-6 text-primary" /> },
+            { label: t.about.statActiveProjects, value: loading ? '—' : projects.filter((p) => p.status === 'ongoing').length, icon: <Construction className="w-6 h-6 text-primary" /> },
+            { label: t.about.statKebeles, value: '22', icon: <MapPin className="w-6 h-6 text-primary" /> },
           ].map((stat, i) => (
             <div key={i} className="text-center">
               <span className="inline-flex items-center justify-center mb-1 text-slate-500 dark:text-slate-400">{stat.icon}</span>
@@ -107,7 +107,7 @@ export default function AboutPage() {
                 <span className="w-1.5 h-1.5 bg-slate-100 dark:bg-slate-400 rounded-full" />
                 {t.about.historyTitle}
               </div>
-              <p className="text-white dark:text-slate-400 text-lg leading-relaxed">{getSetting('about_history_desc', t.about.historyDesc)}</p>
+              <p className="text-slate-700 dark:text-slate-300 text-lg leading-relaxed">{getSetting('about_history_desc', t.about.historyDesc)}</p>
             </div>
             <div className="relative">
               <div className="aspect-[4/3] rounded-2xl bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200 dark:border-slate-700 flex items-center justify-center">
@@ -157,7 +157,7 @@ export default function AboutPage() {
             <h2 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white mb-3 tracking-tight">
               {t.about.leadershipTitle}
             </h2>
-            <p className="text-white dark:text-slate-400 text-base">{t.about.leadershipDesc}</p>
+            <p className="text-slate-700 dark:text-slate-300 text-base">{t.about.leadershipDesc}</p>
           </div>
 
           {/* Mayor & Vice Mayor */}
@@ -263,7 +263,7 @@ export default function AboutPage() {
             </Link>
             <Link
               href="/investment-tourism"
-              className="inline-flex items-center gap-2 bg-[#d4a017] text-white font-bold px-6 py-3 rounded-xl hover:bg-[#b8850f] transition-colors shadow-lg"
+              className="inline-flex items-center gap-2 bg-[#d4a017] text-slate-900 font-bold px-6 py-3 rounded-xl hover:bg-[#b8850f] hover:text-white transition-colors shadow-lg"
             >
               <Briefcase className="w-5 h-5" /> {t.investmentTourism.title}
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

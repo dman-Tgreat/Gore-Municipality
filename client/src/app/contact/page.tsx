@@ -206,10 +206,11 @@ export default function ContactPage() {
                   <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="grid md:grid-cols-2 gap-5">
                       <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">{t.contact.fullName}</label>
+                        <label htmlFor="full-name" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">{t.contact.fullName}</label>
                         <div className="relative">
                           <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                           <input
+                            id="full-name"
                             type="text"
                             required
                             value={formData.name}
@@ -220,10 +221,11 @@ export default function ContactPage() {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">{t.contact.emailAddress}</label>
+                        <label htmlFor="email-address" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">{t.contact.emailAddress}</label>
                         <div className="relative">
                           <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                           <input
+                            id="email-address"
                             type="email"
                             required
                             value={formData.email}
@@ -235,10 +237,12 @@ export default function ContactPage() {
                       </div>
                     </div>
 
-                    <div>                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">{t.contact.subject}</label>
+                    <div>
+                      <label htmlFor="subject" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">{t.contact.subject}</label>
                       <div className="relative">
                         <ClipboardList className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <input
+                          id="subject"
                           type="text"
                           required
                           value={formData.subject}
@@ -248,10 +252,12 @@ export default function ContactPage() {
                       </div>
                     </div>
 
-                    <div>                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">{t.contact.messageContent}</label>
+                    <div>
+                      <label htmlFor="message-content" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">{t.contact.messageContent}</label>
                       <div className="relative">
                         <MessageSquare className="absolute left-3.5 top-4 w-4 h-4 text-gray-400" />
                         <textarea
+                          id="message-content"
                           rows={5}
                           required
                           value={formData.message}

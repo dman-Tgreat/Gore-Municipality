@@ -103,7 +103,7 @@ export default function Hero() {
         >
           <img
             src={imgSrc(slide.imageUrl)}
-            alt={`Slide ${index + 1}`}
+            alt={slide.description || "Gore Woreda Banner Image"}
             className="w-full h-full object-cover object-center"
           />
 
