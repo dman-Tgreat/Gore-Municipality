@@ -13,6 +13,7 @@ export default function Hero() {
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     heroSlidesApi.getActive()
@@ -34,10 +35,10 @@ export default function Hero() {
   }, [slides.length]);
 
   useEffect(() => {
-    if (isHovering || slides.length <= 1) return;
+    if (isHovering || paused || slides.length <= 1) return;
     const timer = setInterval(goNext, 6000);
     return () => clearInterval(timer);
-  }, [isHovering, goNext, slides.length]);
+  }, [isHovering, paused, goNext, slides.length]);
 
   // Fallback when no slides
   if (!loading && slides.length === 0) {
@@ -92,6 +93,9 @@ export default function Hero() {
       className="relative min-h-[500px] lg:min-h-[580px] w-full overflow-hidden bg-slate-900 z-5"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
+      onFocus={() => setIsHovering(true)}
+      onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setIsHovering(false); }}
+      tabIndex={-1}
     >
       {/* Slides */}
       {slides.map((slide, index) => (
@@ -167,6 +171,16 @@ export default function Hero() {
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                 </svg>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setPaused(p => !p)}
+                className="absolute right-12 sm:right-16 top-1/2 -translate-y-1/2 z-20 px-3 py-1 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-white/80 hover:bg-white/15 transition-all duration-200"
+                aria-pressed={paused}
+                aria-label={paused ? 'Resume slideshow' : 'Pause slideshow'}
+              >
+                {paused ? 'Resume' : 'Pause'}
               </button>
 
               {/* Navigation Dots */}

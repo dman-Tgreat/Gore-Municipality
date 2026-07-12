@@ -26,12 +26,19 @@ export const metadata: Metadata = {
   ],
 };
 
+import { headers } from 'next/headers';
+
 export default function RootLayout({children,}: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Determine language for initial server render from Accept-Language header
+  const acceptLang = headers().get('accept-language') || 'en';
+  const detected = acceptLang.split(',')[0].split('-')[0];
+  const lang = ['en','am','om'].includes(detected) ? detected : 'en';
+
   return (
     <html
-      lang="en"
+      lang={lang}
       className={`${inter.variable} font-sans h-full antialiased`}
       suppressHydrationWarning
     >
@@ -57,6 +64,7 @@ export default function RootLayout({children,}: Readonly<{
         />
       </head>
       <body className="min-h-full flex flex-col bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
+        <a href="#main" className="sr-only focus:not-sr-only p-2">Skip to main content</a>
         <ThemeProvider>
           <LocaleProvider>{children}</LocaleProvider>
         </ThemeProvider>

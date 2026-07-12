@@ -62,6 +62,19 @@ function NavDropdown({ items, label, href, isActive, isOpen, onMouseEnter, onMou
     <div className="relative" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <Link
         href={href}
+        role="button"
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+        aria-controls={`menu-${label.replace(/\s+/g, '')}`}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault(); onMouseEnter();
+          }
+          if (e.key === 'ArrowDown') {
+            e.preventDefault(); onMouseEnter();
+          }
+        }}
+        onFocus={onMouseEnter}
         className={`inline-flex items-center gap-1.5 hover:bg-primary hover:text-white dark:hover:bg-slate-700 dark:hover:text-white rounded lg transition font-medium text-[18px] whitespace-nowrap px-1.5 py-1 ${
           isActive
             ? 'text-white bg-primary dark:text-white dark:bg-slate-700'
@@ -76,7 +89,7 @@ function NavDropdown({ items, label, href, isActive, isOpen, onMouseEnter, onMou
       </Link>
 
       {isOpen && (
-        <div role="menu" className="absolute left-0 mt-1 w-64 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-2 overflow-hidden z-50">
+        <div id={`menu-${label.replace(/\s+/g, '')}`} role="menu" className="absolute left-0 mt-1 w-64 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-2 overflow-hidden z-50">
           {items.map((item) => (
             <Link
               key={item.href}

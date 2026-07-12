@@ -113,7 +113,7 @@ function NewsContent() {
         </div>
 
         {/* Content */}
-        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-6xl">
+        <main id="main" className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-6xl">
           {loading ? (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
@@ -155,7 +155,7 @@ function NewsContent() {
                             {t.news.latestPress}
                           </span>
                           <span className="text-slate-400 dark:text-slate-500">
-                            {new Date(article.createdAt).toLocaleDateString()}
+                            {new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(article.createdAt))}
                           </span>
                         </div>
                         <h3 className="text-lg font-bold text-slate-800 dark:text-white hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer">
@@ -234,7 +234,7 @@ function NewsContent() {
                               {t.announcements.published}
                             </span>
                             <span className="text-slate-400 dark:text-slate-500 text-sm">
-                              {new Date(announcement.createdAt).toLocaleDateString()}
+                              {new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(announcement.createdAt))}
                             </span>
                           </div>
                           <h3 className="text-lg font-bold text-slate-800 dark:text-white">{tField(announcement, 'title', locale)}</h3>

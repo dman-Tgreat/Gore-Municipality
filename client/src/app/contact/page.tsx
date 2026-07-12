@@ -23,6 +23,7 @@ export default function ContactPage() {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [formError, setFormError] = useState('');
   const [siteSettings, setSiteSettings] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -47,9 +48,11 @@ export default function ContactPage() {
     try {
       await contactApi.submit(formData);
       setSubmitted(true);
+      setFormError('');
       setFormData({ name: '', email: '', subject: '', message: '' });
-    } catch {
-      alert('Failed to submit. Please try again later.');
+    } catch (err) {
+      console.error('Contact submit error:', err);
+      setFormError(t.contact.submitError || 'Failed to submit. Please try again later.');
     }
   };
 
@@ -113,7 +116,7 @@ export default function ContactPage() {
         </section>
 
         {/* ── Main Content: Form + Info ── */}
-        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-6xl">
+        <main id="main" className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-6xl">
           <div className="grid lg:grid-cols-5 gap-10">
             {/* Left — Get In Touch & Map */}
             <div className="lg:col-span-2 space-y-8">
@@ -203,6 +206,9 @@ export default function ContactPage() {
                     <p className="text-slate-500 dark:text-slate-400 max-w-sm mx-auto">{t.contact.messageSent}</p>
                   </div>
                 ) : (
+                  <div role="status" aria-live="polite" className="min-h-[1.25rem]">
+                    {formError && <p className="text-sm text-red-600">{formError}</p>}
+                  </div>
                   <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="grid md:grid-cols-2 gap-5">
                       <div>

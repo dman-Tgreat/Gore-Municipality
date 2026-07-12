@@ -46,7 +46,6 @@ export default function FileUpload({
       // Passing any custom headers object can prevent this in some environments.
       const res = await fetch(`${API_BASE}/upload`, {
         method: 'POST',
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         body: formData,
       });
 
@@ -115,6 +114,10 @@ export default function FileUpload({
         </div>
       ) : (
         <div
+          role="button"
+          tabIndex={0}
+          aria-label={label}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); inputRef.current?.click(); } }}
           onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
           onDrop={handleDrop}
