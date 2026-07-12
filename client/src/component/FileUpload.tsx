@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useCallback } from 'react';
+import { useLocale } from '@/context/LocaleContext';
 import { FileText } from 'lucide-react';
 
 interface FileUploadProps {
@@ -18,6 +19,8 @@ export default function FileUpload({
   accept = 'image/*,.pdf,.doc,.docx',
   label = 'Upload File',
 }: FileUploadProps) {
+  const { t } = useLocale();
+  const displayLabel = (t && (t as any).fileUpload && (t as any).fileUpload.upload) || label;
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState(existingUrl || '');
   const [dragOver, setDragOver] = useState(false);
@@ -132,15 +135,15 @@ export default function FileUpload({
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
               </svg>
-              Uploading...
+          {(t && (t as any).fileUpload && (t as any).fileUpload.uploading) || 'Uploading...'}
             </div>
           ) : (
             <>
               <svg className="w-6 h-6 text-gray-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
-              <span className="text-sm text-gray-500">{label}</span>
-              <span className="text-xs text-gray-400 mt-0.5">Click or drag & drop</span>
+          <span className="text-sm text-gray-500">{displayLabel}</span>
+          <span className="text-xs text-gray-400 mt-0.5">{(t && (t as any).fileUpload && (t as any).fileUpload.clickOrDrag) || 'Click or drag & drop'}</span>
             </>
           )}
         </div>

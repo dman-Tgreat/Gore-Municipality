@@ -18,6 +18,8 @@ const enMessages = {
       'Efficient and transparent civil registry and licensing services for everyone.',
     ],
     exploreServices: 'Explore Services',
+    pause: 'Pause slideshow',
+    resume: 'Resume slideshow',
   },
   stats: {
     title: 'Woreda Indicators',
@@ -110,6 +112,7 @@ const enMessages = {
     emailPlaceholder: 'abebe@example.com',
     subjectPlaceholder: 'Inquiry regarding business permits',
     messagePlaceholder: 'Write your message in detail here...',
+    submitError: 'Failed to submit. Please try again later.'
   },
   announcements: {
     title: 'Announcements & Public Notices',
@@ -219,6 +222,14 @@ const enMessages = {
     workingHours: 'Mon–Fri: 8:00 AM – 5:00 PM',
     adminPanel: 'Admin Panel',
     allRightsReserved: 'All rights reserved.',
+  },
+  fileUpload: {
+    upload: 'Upload File',
+    uploading: 'Uploading...',
+    clickOrDrag: 'Click or drag & drop'
+  },
+  loading: {
+    news: 'Loading news & announcements...'
   },
   language: { label: 'Language' },
   investmentTourism: {

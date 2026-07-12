@@ -28,12 +28,13 @@ export const metadata: Metadata = {
 
 import { headers } from 'next/headers';
 
-export default function RootLayout({children,}: Readonly<{
+export default async function RootLayout({children,}: Readonly<{
   children: React.ReactNode;
 }>) {
   // Determine language for initial server render from Accept-Language header
-  const acceptLang = headers().get('accept-language') || 'en';
-  const detected = acceptLang.split(',')[0].split('-')[0];
+  const hdrs = await headers();
+  const acceptLang = hdrs.get ? hdrs.get('accept-language') || 'en' : 'en';
+  const detected = (acceptLang || 'en').split(',')[0].split('-')[0];
   const lang = ['en','am','om'].includes(detected) ? detected : 'en';
 
   return (

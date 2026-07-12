@@ -58,20 +58,25 @@ function NavDropdown({ items, label, href, isActive, isOpen, onMouseEnter, onMou
   const isActiveItem = (href: string) =>
     pathname === href || (href !== '/news' && href !== '/service' && href !== '/projects' && href !== '/investment-tourism' && pathname.startsWith(href));
 
+  const menuId = `menu-${label.replace(/\s+/g, '')}`;
+  const firstItemId = `${menuId}-item-0`;
+
   return (
-    <div className="relative" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+    <div className="relative" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) onMouseLeave(); }}>
       <Link
         href={href}
         role="button"
         aria-haspopup="menu"
         aria-expanded={isOpen}
-        aria-controls={`menu-${label.replace(/\s+/g, '')}`}
+        aria-controls={menuId}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault(); onMouseEnter();
+            setTimeout(() => document.getElementById(firstItemId)?.focus(), 0);
           }
           if (e.key === 'ArrowDown') {
             e.preventDefault(); onMouseEnter();
+            setTimeout(() => document.getElementById(firstItemId)?.focus(), 0);
           }
         }}
         onFocus={onMouseEnter}
@@ -89,10 +94,11 @@ function NavDropdown({ items, label, href, isActive, isOpen, onMouseEnter, onMou
       </Link>
 
       {isOpen && (
-        <div id={`menu-${label.replace(/\s+/g, '')}`} role="menu" className="absolute left-0 mt-1 w-64 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-2 overflow-hidden z-50">
-          {items.map((item) => (
+        <div id={menuId} role="menu" className="absolute left-0 mt-1 w-64 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-2 overflow-hidden z-50">
+          {items.map((item, idx) => (
             <Link
               key={item.href}
+              id={idx === 0 ? `${menuId}-item-0` : undefined}
               href={item.href}
               role="menuitem"
               className={`flex items-center gap-3 px-4 py-2.5 text-sm transition ${

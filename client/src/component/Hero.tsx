@@ -178,9 +178,9 @@ export default function Hero() {
                 onClick={() => setPaused(p => !p)}
                 className="absolute right-12 sm:right-16 top-1/2 -translate-y-1/2 z-20 px-3 py-1 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-white/80 hover:bg-white/15 transition-all duration-200"
                 aria-pressed={paused}
-                aria-label={paused ? 'Resume slideshow' : 'Pause slideshow'}
+                aria-label={paused ? t.hero.resume : t.hero.pause}
               >
-                {paused ? 'Resume' : 'Pause'}
+                {paused ? t.hero.resume : t.hero.pause}
               </button>
 
               {/* Navigation Dots */}
