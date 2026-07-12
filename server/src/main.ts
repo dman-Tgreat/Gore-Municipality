@@ -11,16 +11,16 @@ async function bootstrap() {
     prefix: '/uploads/',
   });
 
-  // app.enableCors({
-  //   origin: ['https://gore-municipality.vercel.app',/\.vercel\.app$/,],    
-  //   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-  //   credentials: true,
-  // });
   app.enableCors({
-    origin: 'http://localhost:3000',    
+    origin: ['https://gore-municipality.vercel.app',/\.vercel\.app$/,],    
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     credentials: true,
   });
+  // app.enableCors({
+  //   origin: 'http://localhost:3000',    
+  //   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  //   credentials: true,
+  // });
 
   app.useGlobalPipes(
     new ValidationPipe({
