@@ -99,19 +99,19 @@ export default function ProjectsPage() {
                   )}
                   <div className="p-4 sm:p-6 space-y-2.5 sm:space-y-3">
                     <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-bold text-xl sm:text-base text-slate-800 dark:text-white leading-tight line-clamp-2">{tField(project, 'name', locale)}</h3>
-                      <span className={`text-base sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full font-medium shrink-0 whitespace-nowrap ${statusColors[project.status] || 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400'}`}>
+                      <h3 className="font-bold text-base sm:text-lg text-slate-800 dark:text-white leading-tight line-clamp-2">{tField(project, 'name', locale)}</h3>
+                      <span className={`text-[10px] sm:text-xs px-2 py-0.5 rounded-full font-medium shrink-0 whitespace-nowrap ${statusColors[project.status] || 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400'}`}>
                         {project.status}
                       </span>
                     </div>
-                    <p className="text-base sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-2 sm:line-clamp-3">{tField(project, 'description', locale)}</p>
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-2 sm:line-clamp-3">{tField(project, 'description', locale)}</p>
 
                     {/* Budget Progress Bar */}
                     {project.budget && (
                       <div className="pt-0.5 sm:pt-1">
-                        <div className="flex justify-between text-base sm:text-sm text-slate-500 dark:text-slate-400 mb-1">
+                        <div className="flex justify-between text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-1">
                           <span>{t.projects.budget}</span>
-                          <span className="font-semibold text-base sm:text-xs">ETB {project.budget.toLocaleString()}</span>
+                          <span className="font-semibold text-xs sm:text-sm">ETB {project.budget.toLocaleString()}</span>
                         </div>
                         <div className="w-full h-1.5 sm:h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                           <div
@@ -125,7 +125,7 @@ export default function ProjectsPage() {
                       </div>
                     )}
 
-                    <div className="text-base sm:text-sm text-slate-500 dark:text-slate-400 space-y-0.5 sm:space-y-1 pt-1.5 sm:pt-2 border-t border-slate-200 dark:border-slate-700">
+                    <div className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 space-y-0.5 sm:space-y-1 pt-1.5 sm:pt-2 border-t border-slate-200 dark:border-slate-700">
                       {project.location && (
                         <p className="truncate"><span className="font-medium">{t.projects.location}:</span> {project.location}</p>
                       )}
@@ -140,7 +140,7 @@ export default function ProjectsPage() {
                     </div>
 
                     <div className="pt-0.5 sm:pt-1">
-                      <span className="inline-flex items-center gap-1 text-lg sm:text-base font-semibold text-slate-700 dark:text-slate-300 group-hover:gap-2 transition-all">
+                      <span className="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 group-hover:gap-2 transition-all">
                         {t.projects.viewDetails}
                         <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />

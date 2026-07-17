@@ -81,7 +81,7 @@ function NewsContent() {
         </section>
 
         {/* Tab Selector */}
-        <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-[73px] z-30">
+        <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-[87px] lg:top-[97px] z-30">
           <div className="container mx-auto px-4 sm:px-6">
             <div className="flex gap-1 -mb-px overflow-x-auto scrollbar-hide">
               {tabs.map((tab) => (

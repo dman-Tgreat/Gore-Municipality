@@ -288,7 +288,7 @@ export default function InvestmentTourismPage() {
                                 </div>
                               )}
                               <div className="min-w-0 flex-1">
-                                <h4 className="text-xs font-semibold text-slate-800 dark:text-white truncate group-hover/card:text-slate-700 dark:group-hover/card:text-slate-300 transition-colors">
+                                <h4 className="text-base font-semibold text-slate-800 dark:text-white truncate group-hover/card:text-slate-700 dark:group-hover/card:text-slate-300 transition-colors">
                                   {inv.title}
                                 </h4>
                                 <p className="text-[16px] text-slate-500 dark:text-slate-400 line-clamp-1">{inv.description}</p>

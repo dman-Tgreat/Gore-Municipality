@@ -154,6 +154,10 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [departments, setDepartments] = useState<Department[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [mobileNewsOpen, setMobileNewsOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [mobileInvestOpen, setMobileInvestOpen] = useState(false);
+  const [mobileProjectsOpen, setMobileProjectsOpen] = useState(false);
 
   useEffect(() => {
     departmentsApi.getAll().then(setDepartments).catch(() => {});
@@ -430,25 +434,101 @@ export default function Header() {
             <MobileNavLink href="/" label={t.header.home} pathname={pathname} onClick={() => setMobileOpen(false)} />
             <MobileNavLink href="/about" label={t.header.about} pathname={pathname} onClick={() => setMobileOpen(false)} />
             
+            {/* News Accordion */}
             <div className="border-t border-slate-100 dark:border-slate-800 pt-3 mt-3">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 px-4">{t.header.news}</p>
-              <MobileNavLink href="/news" label={t.header.news} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<Newspaper className="w-4 h-4" />} />
-              <MobileNavLink href="/news?tab=announcements" label={t.announcements.title} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<Megaphone className="w-4 h-4" />} />
+              <button
+                onClick={() => setMobileNewsOpen(!mobileNewsOpen)}
+                className="w-full flex items-center justify-between px-4 mb-2 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
+              >
+                <span className="text-[10px] font-bold uppercase tracking-widest">{t.header.news}</span>
+                <svg className={`w-3 h-3 transition-transform duration-200 ${mobileNewsOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </button>
+              {mobileNewsOpen && (
+                <div className="pl-2 space-y-1">
+                  <MobileNavLink href="/news" label={t.header.news} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<Newspaper className="w-4 h-4" />} />
+                  <MobileNavLink href="/news?tab=announcements" label={t.announcements.title} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<Megaphone className="w-4 h-4" />} />
+                </div>
+              )}
             </div>
 
+            {/* Services Accordion */}
             <div className="border-t border-slate-100 dark:border-slate-800 pt-3 mt-3">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 px-4">{t.header.services}</p>
-              <MobileNavLink href="/service" label={t.header.services} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<Landmark className="w-4 h-4" />} />
+              <button
+                onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+                className="w-full flex items-center justify-between px-4 mb-2 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
+              >
+                <span className="text-[10px] font-bold uppercase tracking-widest">{t.header.services}</span>
+                <svg className={`w-3 h-3 transition-transform duration-200 ${mobileServicesOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </button>
+              {mobileServicesOpen && (
+                <div className="pl-2 space-y-1">
+                  <MobileNavLink href="/service" label={t.services.municipalServices} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<Landmark className="w-4 h-4" />} />
+                  {departments.map((d) => (
+                    <MobileNavLink
+                      key={d.id}
+                      href={`/service/${d.id}`}
+                      label={d.name}
+                      pathname={pathname}
+                      onClick={() => setMobileOpen(false)}
+                      icon={<ChevronRight className="w-3.5 h-3.5 text-slate-400" />}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
+            {/* Investment & Tourism Accordion */}
             <div className="border-t border-slate-100 dark:border-slate-800 pt-3 mt-3">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 px-4">{t.investmentTourism.title}</p>
-              <MobileNavLink href="/investment-tourism" label={t.investmentTourism.title} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<ClipboardList className="w-4 h-4" />} />
+              <button
+                onClick={() => setMobileInvestOpen(!mobileInvestOpen)}
+                className="w-full flex items-center justify-between px-4 mb-2 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
+              >
+                <span className="text-[10px] font-bold uppercase tracking-widest">{t.investmentTourism.title}</span>
+                <svg className={`w-3 h-3 transition-transform duration-200 ${mobileInvestOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </button>
+              {mobileInvestOpen && (
+                <div className="pl-2 space-y-1">
+                  <MobileNavLink href="/investment-tourism" label={t.investmentTourism.title} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<ClipboardList className="w-4 h-4" />} />
+                  <MobileNavLink href="/investment-tourism/opportunities" label={t.investmentTourism.opportunities} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<ChevronRight className="w-3.5 h-3.5 text-slate-400" />} />
+                  <MobileNavLink href="/investment-tourism/incentives" label={t.investmentTourism.incentives} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<ChevronRight className="w-3.5 h-3.5 text-slate-400" />} />
+                  <MobileNavLink href="/investment-tourism/attractions" label={t.investmentTourism.attractions} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<ChevronRight className="w-3.5 h-3.5 text-slate-400" />} />
+                  <MobileNavLink href="/investment-tourism/accommodation" label={t.investmentTourism.accommodation} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<ChevronRight className="w-3.5 h-3.5 text-slate-400" />} />
+                </div>
+              )}
             </div>
 
+            {/* Projects Accordion */}
             <div className="border-t border-slate-100 dark:border-slate-800 pt-3 mt-3">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 px-4">{t.projects.title}</p>
-              <MobileNavLink href="/projects" label={t.projects.title} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<BarChart3 className="w-4 h-4" />} />
+              <button
+                onClick={() => setMobileProjectsOpen(!mobileProjectsOpen)}
+                className="w-full flex items-center justify-between px-4 mb-2 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
+              >
+                <span className="text-[10px] font-bold uppercase tracking-widest">{t.projects.title}</span>
+                <svg className={`w-3 h-3 transition-transform duration-200 ${mobileProjectsOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </button>
+              {mobileProjectsOpen && (
+                <div className="pl-2 space-y-1">
+                  <MobileNavLink href="/projects" label={t.projects.title} pathname={pathname} onClick={() => setMobileOpen(false)} icon={<BarChart3 className="w-4 h-4" />} />
+                  {projects.map((p) => (
+                    <MobileNavLink
+                      key={p.id}
+                      href={`/projects/${p.id}`}
+                      label={p.name}
+                      pathname={pathname}
+                      onClick={() => setMobileOpen(false)}
+                      icon={<ChevronRight className="w-3.5 h-3.5 text-slate-400" />}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="border-t border-slate-100 dark:border-slate-800 pt-3 mt-3">

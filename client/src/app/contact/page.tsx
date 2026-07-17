@@ -206,86 +206,88 @@ export default function ContactPage() {
                     <p className="text-slate-500 dark:text-slate-400 max-w-sm mx-auto">{t.contact.messageSent}</p>
                   </div>
                 ) : (
-                  <div role="status" aria-live="polite" className="min-h-[1.25rem]">
-                    {formError && <p className="text-sm text-red-600">{formError}</p>}
-                  </div>
-                  <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="grid md:grid-cols-2 gap-5">
+                  <>
+                    <div role="status" aria-live="polite" className="min-h-[1.25rem]">
+                      {formError && <p className="text-sm text-red-600">{formError}</p>}
+                    </div>
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                      <div className="grid md:grid-cols-2 gap-5">
+                        <div>
+                          <label htmlFor="full-name" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">{t.contact.fullName}</label>
+                          <div className="relative">
+                            <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <input
+                              id="full-name"
+                              type="text"
+                              required
+                              value={formData.name}
+                              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                              className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800 transition"
+                              placeholder={t.contact.namePlaceholder}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label htmlFor="email-address" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">{t.contact.emailAddress}</label>
+                          <div className="relative">
+                            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <input
+                              id="email-address"
+                              type="email"
+                              required
+                              value={formData.email}
+                              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                              className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800 transition"
+                              placeholder={t.contact.emailPlaceholder}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
                       <div>
-                        <label htmlFor="full-name" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">{t.contact.fullName}</label>
+                        <label htmlFor="subject" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">{t.contact.subject}</label>
                         <div className="relative">
-                          <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                          <ClipboardList className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                           <input
-                            id="full-name"
+                            id="subject"
                             type="text"
                             required
-                            value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800 transition"
-                            placeholder={t.contact.namePlaceholder}
+                            value={formData.subject}
+                            onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                            className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800 transition"                            placeholder={t.contact.subjectPlaceholder}
                           />
                         </div>
                       </div>
+
                       <div>
-                        <label htmlFor="email-address" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">{t.contact.emailAddress}</label>
+                        <label htmlFor="message-content" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">{t.contact.messageContent}</label>
                         <div className="relative">
-                          <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                          <input
-                            id="email-address"
-                            type="email"
+                          <MessageSquare className="absolute left-3.5 top-4 w-4 h-4 text-gray-400" />
+                          <textarea
+                            id="message-content"
+                            rows={5}
                             required
-                            value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800 transition"
-                            placeholder={t.contact.emailPlaceholder}
+                            value={formData.message}
+                            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                            className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800 transition resize-none"                            placeholder={t.contact.messagePlaceholder}
                           />
                         </div>
                       </div>
-                    </div>
 
-                    <div>
-                      <label htmlFor="subject" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">{t.contact.subject}</label>
-                      <div className="relative">
-                        <ClipboardList className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                        <input
-                          id="subject"
-                          type="text"
-                          required
-                          value={formData.subject}
-                          onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                          className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800 transition"                            placeholder={t.contact.subjectPlaceholder}
-                        />
+                      <div className="flex items-center gap-4 pt-2">
+                        <button
+                          type="submit"
+                          className="inline-flex items-center gap-2 bg-[#1a7a3a] hover:bg-[#14632f] text-white font-semibold py-3.5 px-8 rounded-xl transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-green-900/20"
+                        >
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                          </svg>
+                          {t.contact.submit}
+                        </button>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400">{t.contact.privacyLabel}</p>
                       </div>
-                    </div>
-
-                    <div>
-                      <label htmlFor="message-content" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">{t.contact.messageContent}</label>
-                      <div className="relative">
-                        <MessageSquare className="absolute left-3.5 top-4 w-4 h-4 text-gray-400" />
-                        <textarea
-                          id="message-content"
-                          rows={5}
-                          required
-                          value={formData.message}
-                          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                          className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-slate-600 focus:border-transparent outline-none text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800 transition resize-none"                            placeholder={t.contact.messagePlaceholder}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-4 pt-2">
-                      <button
-                        type="submit"
-                        className="inline-flex items-center gap-2 bg-[#1a7a3a] hover:bg-[#14632f] text-white font-semibold py-3.5 px-8 rounded-xl transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-green-900/20"
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                        </svg>
-                        {t.contact.submit}
-                      </button>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400">{t.contact.privacyLabel}</p>
-                    </div>
-                  </form>
+                    </form>
+                  </>
                 )}
               </div>
             </div>
