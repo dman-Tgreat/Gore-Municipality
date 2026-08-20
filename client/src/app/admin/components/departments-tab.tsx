@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import FileUpload from '@/component/FileUpload';
 import { useAdmin } from './admin-context';
 import { Spinner } from './spinner';
+import { FormError } from './form-error';
 import { SearchBar } from './search-bar';
 import Pagination from '@/component/Pagination';
 
@@ -77,7 +78,7 @@ export function DepartmentsTab() {
 }
 
 function DepartmentsForm() {
-  const { t, deptForm, setDeptForm, handleSaveDept, deptSubmitting, formLang, setFormLang } = useAdmin();
+  const { t, deptForm, setDeptForm, handleSaveDept, deptSubmitting, deptError, formLang, setFormLang } = useAdmin();
   const d = deptForm.data;
   return (
     <form onSubmit={handleSaveDept} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-4 max-w-2xl">
@@ -125,6 +126,7 @@ function DepartmentsForm() {
           <FileUpload existingUrl={d.image} onUpload={(url) => setDeptForm((p) => ({ ...p, data: { ...p.data, image: url } }))} label="Upload Image" />
         </div>
       </div>
+      <FormError message={deptError} />
       <div className="flex gap-3 pt-2">
         <button type="submit" disabled={deptSubmitting}
           className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50 flex items-center gap-2">

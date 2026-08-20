@@ -42,6 +42,7 @@ export default function ContactPage() {
   const settingsPhonePR = siteSettings.contact_phone_pr || t.contact.publicRelations;
   const settingsHoursWeekday = siteSettings.contact_hours_weekday || 'Mon–Fri: 8:00 AM – 5:00 PM';
   const settingsHoursSaturday = siteSettings.contact_hours_saturday || 'Sat: 8:00 AM – 12:00 PM';
+  const settingsAddress = siteSettings.contact_address || `${t.contact.officeAddress1}\n${t.contact.officeAddress2}`;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,13 +91,12 @@ export default function ContactPage() {
                    channel.key === 'phone' ? t.contact.phone :
                    channel.key === 'email' ? t.contact.email :
                    t.footer.workingHours}
-                </h3>
-                {channel.lines.map((line, i) => {
+                </h3>                  {channel.lines.map((line, i) => {
                   let display = line;
-                  if (line === 'officeAddress1') display = t.contact.officeAddress1;
-                  else if (line === 'officeAddress2') display = t.contact.officeAddress2;
-                  else if (line === 'mainOffice') display = t.contact.mainOffice;
-                  else if (line === 'publicRelations') display = t.contact.publicRelations;
+                  if (line === 'officeAddress1') display = settingsAddress;
+                  else if (line === 'officeAddress2') return null; // address is a single line now
+                  else if (line === 'mainOffice') display = settingsPhoneMain;
+                  else if (line === 'publicRelations') display = settingsPhonePR;
                   else if (line === 'emailLine1') display = settingsEmailMain;
                   else if (line === 'emailLine2') display = settingsEmailSupport;
                   else if (line === 'hoursLine1') display = settingsHoursWeekday;
@@ -141,8 +141,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-bold text-base">{t.contact.officeLocation}</h3>
-                      <p className="text-slate-300 text-xs mt-0.5">{t.contact.officeAddress1}</p>
-                      <p className="text-slate-300 text-xs">{t.contact.officeAddress2}</p>
+                      <p className="text-slate-300 text-xs mt-0.5">{settingsAddress}</p>
                     </div>
                   </div>
                 </div>
@@ -151,8 +150,8 @@ export default function ContactPage() {
                     <Phone className="w-5 h-5 shrink-0 mt-0.5 text-slate-500" />
                     <div>
                       <p className="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">{t.contact.phone}</p>
-                      <p className="text-sm font-medium text-slate-800 dark:text-white">{t.contact.mainOffice}</p>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">{t.contact.publicRelations}</p>
+                      <p className="text-sm font-medium text-slate-800 dark:text-white">{settingsPhoneMain}</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{settingsPhonePR}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">

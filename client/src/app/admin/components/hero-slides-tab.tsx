@@ -4,6 +4,7 @@ import React from 'react';
 import FileUpload from '@/component/FileUpload';
 import { useAdmin } from './admin-context';
 import { Spinner } from './spinner';
+import { FormError } from './form-error';
 
 export function HeroSlidesTab() {
   const { t, heroSlides, slideForm, setSlideForm, handleSaveSlide, handleDeleteSlide, badge } = useAdmin();
@@ -59,7 +60,7 @@ export function HeroSlidesTab() {
 }
 
 function HeroSlidesForm() {
-  const { t, slideForm, setSlideForm, handleSaveSlide, slideSubmitting } = useAdmin();
+  const { t, slideForm, setSlideForm, handleSaveSlide, slideSubmitting, slideError } = useAdmin();
   const d = slideForm.data;
   return (
     <form onSubmit={handleSaveSlide} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-4 max-w-2xl">
@@ -92,6 +93,7 @@ function HeroSlidesForm() {
           </select>
         </div>
       </div>
+      <FormError message={slideError} />
       <div className="flex gap-3 pt-2">
         <button type="submit" disabled={slideSubmitting}
           className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50 flex items-center gap-2">

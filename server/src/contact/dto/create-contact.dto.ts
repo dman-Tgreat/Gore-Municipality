@@ -28,5 +28,6 @@ export class CreateContactDto {
   @ApiProperty({ example: 'Hello, I have a question about...' })
   @IsString()
   @IsNotEmpty()
+  @MaxLength(5000)
   message!: string;
 }

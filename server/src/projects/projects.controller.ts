@@ -22,6 +22,7 @@ import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @ApiTags('Projects')
 @Controller('projects')
@@ -48,14 +49,12 @@ export class ProjectsController {
   @ApiQuery({ name: 'status', required: false, type: String, description: 'Filter by status: planned, ongoing, completed' })
   @ApiResponse({ status: 200, description: 'Returns paginated or full list of projects' })
   findAll(
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
-    @Query('status') status?: string,
+    @Query() query: PaginationQueryDto & { status?: string },
   ) {
     return this.projectsService.findAll(
-      page ? parseInt(page, 10) : undefined,
-      limit ? parseInt(limit, 10) : undefined,
-      status || undefined,
+      query.page,
+      query.limit,
+      query.status || undefined,
     );
   }
 

@@ -56,7 +56,7 @@ describe('ContactController', () => {
   describe('findAll', () => {
     it('should return all messages', async () => {
       jest.spyOn(service, 'findAll').mockResolvedValue([mockContact] as any);
-      expect(await controller.findAll()).toEqual([mockContact]);
+      expect(await controller.findAll({})).toEqual([mockContact]);
     });
   });
 

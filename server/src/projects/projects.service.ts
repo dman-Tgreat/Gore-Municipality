@@ -43,6 +43,7 @@ export class ProjectsService {
       where.status = status;
     }
 
+
     if (page === undefined && limit === undefined) {
       return await this.projectsRepository.find({
         where,

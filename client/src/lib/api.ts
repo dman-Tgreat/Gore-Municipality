@@ -2,6 +2,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
+    cache: 'no-store',
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -11,7 +12,11 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 
   if (!res.ok) {
     const error = await res.json().catch(() => ({ message: res.statusText }));
-    throw new Error(error.message || `Request failed: ${res.status}`);
+    // Handle validation errors (message may be an array of strings)
+    const msg = Array.isArray(error.message)
+      ? error.message.join('. ')
+      : error.message || `Request failed: ${res.status}`;
+    throw new Error(msg);
   }
 
   return res.json();
@@ -328,7 +333,7 @@ export const settingsApi = {
   remove: (token: string, id: number) =>
     request<{ message: string }>(`/settings/${id}`, { method: 'DELETE', headers: authHeaders(token) }),
   upsertMany: (token: string, entries: { settingKey: string; settingValue: string }[]) =>
-    request<SiteSetting[]>('/settings/bulk', { method: 'POST', headers: authHeaders(token), body: JSON.stringify(entries) }),
+    request<SiteSetting[]>('/settings/bulk', { method: 'POST', headers: authHeaders(token), body: JSON.stringify({ entries }) }),
 };
 
 export const contactAdminApi = {

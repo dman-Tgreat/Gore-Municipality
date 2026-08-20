@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAdmin } from './admin-context';
 import { Spinner } from './spinner';
+import { FormError } from './form-error';
 import { SearchBar } from './search-bar';
 import Pagination from '@/component/Pagination';
 
@@ -86,7 +87,7 @@ export function AnnouncementsTab() {
 }
 
 function AnnouncementsForm() {
-  const { t, annForm, setAnnForm, handleSaveAnn, annSubmitting, formLang, setFormLang } = useAdmin();
+  const { t, annForm, setAnnForm, handleSaveAnn, annSubmitting, annError, formLang, setFormLang } = useAdmin();
   const d = annForm.data;
   return (
     <form onSubmit={handleSaveAnn} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-4 max-w-2xl">
@@ -115,6 +116,7 @@ function AnnouncementsForm() {
           <option value="false">{t.admin.draftBadge}</option>
         </select>
       </div>
+      <FormError message={annError} />
       <div className="flex gap-3 pt-2">
         <button type="submit" disabled={annSubmitting}
           className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50 flex items-center gap-2">

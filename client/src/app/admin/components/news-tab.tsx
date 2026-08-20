@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import FileUpload from '@/component/FileUpload';
 import { useAdmin } from './admin-context';
 import { Spinner } from './spinner';
+import { FormError } from './form-error';
 import { SearchBar } from './search-bar';
 import Pagination from '@/component/Pagination';
 
@@ -87,7 +88,7 @@ export function NewsTab() {
 }
 
 function NewsForm() {
-  const { t, newsForm, setNewsForm, handleSaveNews, newsSubmitting, formLang, setFormLang } = useAdmin();
+  const { t, newsForm, setNewsForm, handleSaveNews, newsSubmitting, newsError, formLang, setFormLang } = useAdmin();
   const d = newsForm.data;
   return (
     <form onSubmit={handleSaveNews} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-4 max-w-2xl">
@@ -134,6 +135,7 @@ function NewsForm() {
           </select>
         </div>
       </div>
+      <FormError message={newsError} />
       <div className="flex gap-3 pt-2">
         <button type="submit" disabled={newsSubmitting}
           className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50 flex items-center gap-2">

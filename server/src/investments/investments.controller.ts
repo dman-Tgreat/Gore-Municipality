@@ -23,6 +23,7 @@ import { InvestmentsService } from './investments.service';
 import { CreateInvestmentDto } from './dto/create-investment.dto';
 import { UpdateInvestmentDto } from './dto/update-investment.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @ApiTags('Investments')
 @Controller('investments')
@@ -50,16 +51,13 @@ export class InvestmentsController {
   @ApiQuery({ name: 'category', required: false, type: String, description: 'Filter by category' })
   @ApiResponse({ status: 200, description: 'Returns paginated or full list of investments' })
   findAll(
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
-    @Query('published') published?: string,
-    @Query('category') category?: string,
+    @Query() query: PaginationQueryDto & { published?: string; category?: string },
   ) {
     return this.investmentsService.findAll(
-      page ? parseInt(page, 10) : undefined,
-      limit ? parseInt(limit, 10) : undefined,
-      published === 'true' ? true : undefined,
-      category || undefined,
+      query.page,
+      query.limit,
+      query.published === 'true' ? true : undefined,
+      query.category || undefined,
     );
   }
 

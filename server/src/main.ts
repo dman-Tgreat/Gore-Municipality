@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
@@ -25,6 +25,22 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+      exceptionFactory: (errors) => {
+        const messages = errors.map((err) => {
+          const field = err.property;
+          const constraints = err.constraints ? Object.values(err.constraints) : [];
+          return constraints.length > 0 ? constraints[0] : `${field} is invalid`;
+        });
+        return new BadRequestException({
+          statusCode: 400,
+          message: messages,
+          error: 'Validation Error',
+        });
+      },
     }),
   );
 

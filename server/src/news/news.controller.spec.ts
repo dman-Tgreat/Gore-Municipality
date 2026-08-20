@@ -51,7 +51,7 @@ describe('NewsController', () => {
     it('should return all news', async () => {
       jest.spyOn(service, 'findAll').mockResolvedValue([mockNews] as any);
 
-      const result = await controller.findAll();
+      const result = await controller.findAll({});
       expect(result).toEqual([mockNews]);
     });
   });

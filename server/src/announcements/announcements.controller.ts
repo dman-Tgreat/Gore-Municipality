@@ -22,6 +22,7 @@ import { AnnouncementsService } from './announcements.service';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto';
 import { UpdateAnnouncementDto } from './dto/update-announcement.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @ApiTags('Announcements')
 @Controller('announcements')
@@ -48,14 +49,12 @@ export class AnnouncementsController {
   @ApiQuery({ name: 'published', required: false, type: Boolean })
   @ApiResponse({ status: 200, description: 'Returns paginated or full list of announcements' })
   findAll(
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
-    @Query('published') published?: string,
+    @Query() query: PaginationQueryDto & { published?: string },
   ) {
     return this.announcementsService.findAll(
-      page ? parseInt(page, 10) : undefined,
-      limit ? parseInt(limit, 10) : undefined,
-      published === 'true' ? true : undefined,
+      query.page,
+      query.limit,
+      query.published === 'true' ? true : undefined,
     );
   }
 

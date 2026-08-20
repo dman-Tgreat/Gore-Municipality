@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsUrl,
   MaxLength,
 } from 'class-validator';
 
@@ -65,6 +66,7 @@ export class CreateNewsDto {
   @ApiPropertyOptional({ example: 'https://res.cloudinary.com/.../image.jpg' })
   @IsOptional()
   @IsString()
+  @IsUrl({}, { message: 'coverImage must be a valid URL' })
   coverImage?: string;
 
   @ApiPropertyOptional({ example: true, default: true })

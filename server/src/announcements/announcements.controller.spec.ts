@@ -50,7 +50,7 @@ describe('AnnouncementsController', () => {
   describe('findAll', () => {
     it('should return all announcements', async () => {
       jest.spyOn(service, 'findAll').mockResolvedValue([mockAnnouncement] as any);
-      expect(await controller.findAll()).toEqual([mockAnnouncement]);
+      expect(await controller.findAll({})).toEqual([mockAnnouncement]);
     });
   });
 

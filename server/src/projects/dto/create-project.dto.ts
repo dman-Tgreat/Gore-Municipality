@@ -1,12 +1,20 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   MaxLength,
+  Min,
 } from 'class-validator';
+
+export enum ProjectStatus {
+  PLANNED = 'planned',
+  ONGOING = 'ongoing',
+  COMPLETED = 'completed',
+}
 
 export class CreateProjectDto {
   @ApiProperty({ example: 'Rural Roads Upgrade Project' })
@@ -45,13 +53,13 @@ export class CreateProjectDto {
   @ApiPropertyOptional({ example: 5000000 })
   @IsOptional()
   @IsNumber()
+  @Min(0)
   budget?: number;
 
-  @ApiPropertyOptional({ example: 'planned', enum: ['planned', 'ongoing', 'completed'], default: 'planned' })
+  @ApiPropertyOptional({ example: 'planned', enum: ProjectStatus, default: ProjectStatus.PLANNED })
   @IsOptional()
-  @IsString()
-  @MaxLength(50)
-  status?: string;
+  @IsEnum(ProjectStatus)
+  status?: ProjectStatus;
 
   @ApiPropertyOptional({ example: '2026-01-01' })
   @IsOptional()

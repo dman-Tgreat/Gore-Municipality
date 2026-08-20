@@ -49,7 +49,7 @@ describe('ProjectsController', () => {
   describe('findAll', () => {
     it('should return all', async () => {
       jest.spyOn(service, 'findAll').mockResolvedValue([mockProject] as any);
-      expect(await controller.findAll()).toEqual([mockProject]);
+      expect(await controller.findAll({})).toEqual([mockProject]);
     });
   });
 

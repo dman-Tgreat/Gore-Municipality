@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import FileUpload from '@/component/FileUpload';
 import { useAdmin } from './admin-context';
 import { Spinner } from './spinner';
+import { FormError } from './form-error';
 import Pagination from '@/component/Pagination';
 
 export function ProjectsTab() {
@@ -90,7 +91,7 @@ export function ProjectsTab() {
 }
 
 function ProjectsForm() {
-  const { t, projForm, setProjForm, handleSaveProject, projSubmitting, formLang, setFormLang } = useAdmin();
+  const { t, projForm, setProjForm, handleSaveProject, projSubmitting, projError, formLang, setFormLang } = useAdmin();
   const d = projForm.data;
   return (
     <form onSubmit={handleSaveProject} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-4 max-w-2xl">
@@ -162,6 +163,7 @@ function ProjectsForm() {
           <FileUpload existingUrl={d.coverImage} onUpload={(url) => setProjForm((p) => ({ ...p, data: { ...p.data, coverImage: url } }))} label="Upload Cover Image" />
         </div>
       </div>
+      <FormError message={projError} />
       <div className="flex gap-3 pt-2">
         <button type="submit" disabled={projSubmitting}
           className="bg-slate-800 text-white text-sm font-medium px-6 py-2.5 rounded-lg hover:bg-slate-700 transition disabled:opacity-50 flex items-center gap-2">

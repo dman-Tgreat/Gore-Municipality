@@ -19,6 +19,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { SettingsService } from './settings.service';
 import { CreateSettingDto } from './dto/create-setting.dto';
 import { UpdateSettingDto } from './dto/update-setting.dto';
+import { BulkUpsertSettingDto } from './dto/bulk-upsert-setting.dto';
 
 @ApiTags('Settings')
 @Controller('settings')
@@ -65,8 +66,8 @@ export class SettingsController {
   @ApiOperation({ summary: 'Bulk upsert settings' })
   @ApiResponse({ status: 201, description: 'Settings upserted successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  upsertMany(@Body() entries: { settingKey: string; settingValue: string }[]) {
-    return this.settingsService.upsertMany(entries);
+  upsertMany(@Body() dto: BulkUpsertSettingDto) {
+    return this.settingsService.upsertMany(dto.entries);
   }
 
   @UseGuards(JwtAuthGuard)

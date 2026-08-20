@@ -96,30 +96,44 @@ interface AdminContextType {
   setNewsForm: React.Dispatch<React.SetStateAction<CmsFormState<typeof emptyNewsForm>>>;
   newsSubmitting: boolean;
   setNewsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  newsError: string;
+  setNewsError: React.Dispatch<React.SetStateAction<string>>;
   annForm: CmsFormState<typeof emptyAnnouncementForm>;
   setAnnForm: React.Dispatch<React.SetStateAction<CmsFormState<typeof emptyAnnouncementForm>>>;
   annSubmitting: boolean;
   setAnnSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  annError: string;
+  setAnnError: React.Dispatch<React.SetStateAction<string>>;
   projForm: CmsFormState<typeof emptyProjectForm>;
   setProjForm: React.Dispatch<React.SetStateAction<CmsFormState<typeof emptyProjectForm>>>;
   projSubmitting: boolean;
   setProjSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  projError: string;
+  setProjError: React.Dispatch<React.SetStateAction<string>>;
   deptForm: CmsFormState<typeof emptyDeptForm>;
   setDeptForm: React.Dispatch<React.SetStateAction<CmsFormState<typeof emptyDeptForm>>>;
   deptSubmitting: boolean;
   setDeptSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  deptError: string;
+  setDeptError: React.Dispatch<React.SetStateAction<string>>;
   invForm: CmsFormState<typeof emptyInvestmentForm>;
   setInvForm: React.Dispatch<React.SetStateAction<CmsFormState<typeof emptyInvestmentForm>>>;
   invSubmitting: boolean;
   setInvSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  invError: string;
+  setInvError: React.Dispatch<React.SetStateAction<string>>;
   slideForm: CmsFormState<{ imageUrl: string; description: string; sortOrder: number; isActive: boolean }>;
   setSlideForm: React.Dispatch<React.SetStateAction<CmsFormState<{ imageUrl: string; description: string; sortOrder: number; isActive: boolean }>>>;
   slideSubmitting: boolean;
   setSlideSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  slideError: string;
+  setSlideError: React.Dispatch<React.SetStateAction<string>>;
   settingsForm: Record<string, string>;
   setSettingsForm: React.Dispatch<React.SetStateAction<Record<string, string>>>;
   settingsSaving: boolean;
   setSettingsSaving: React.Dispatch<React.SetStateAction<boolean>>;
+  settingsError: string;
+  setSettingsError: React.Dispatch<React.SetStateAction<string>>;
   showAdminModal: boolean;
   setShowAdminModal: React.Dispatch<React.SetStateAction<boolean>>;
   adminForm: { fullName: string; email: string; password: string };
@@ -211,20 +225,27 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   const [newsForm, setNewsForm] = useState<CmsFormState<typeof emptyNewsForm>>({ editing: false, editingId: null, data: { ...emptyNewsForm } });
   const [newsSubmitting, setNewsSubmitting] = useState(false);
+  const [newsError, setNewsError] = useState('');
   const [annForm, setAnnForm] = useState<CmsFormState<typeof emptyAnnouncementForm>>({ editing: false, editingId: null, data: { ...emptyAnnouncementForm } });
   const [annSubmitting, setAnnSubmitting] = useState(false);
+  const [annError, setAnnError] = useState('');
   const [projForm, setProjForm] = useState<CmsFormState<typeof emptyProjectForm>>({ editing: false, editingId: null, data: { ...emptyProjectForm } });
   const [projSubmitting, setProjSubmitting] = useState(false);
+  const [projError, setProjError] = useState('');
   const [deptForm, setDeptForm] = useState<CmsFormState<typeof emptyDeptForm>>({ editing: false, editingId: null, data: { ...emptyDeptForm } });
   const [deptSubmitting, setDeptSubmitting] = useState(false);
+  const [deptError, setDeptError] = useState('');
   const [invForm, setInvForm] = useState<CmsFormState<typeof emptyInvestmentForm>>({ editing: false, editingId: null, data: { ...emptyInvestmentForm } });
   const [invSubmitting, setInvSubmitting] = useState(false);
+  const [invError, setInvError] = useState('');
   const [slideForm, setSlideForm] = useState<CmsFormState<{ imageUrl: string; description: string; sortOrder: number; isActive: boolean }>>({
     editing: false, editingId: null, data: { imageUrl: '', description: '', sortOrder: 0, isActive: true },
   });
   const [slideSubmitting, setSlideSubmitting] = useState(false);
+  const [slideError, setSlideError] = useState('');
   const [settingsForm, setSettingsForm] = useState<Record<string, string>>({});
   const [settingsSaving, setSettingsSaving] = useState(false);
+  const [settingsError, setSettingsError] = useState('');
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [adminForm, setAdminForm] = useState({ fullName: '', email: '', password: '' });
   const [submitting, setSubmitting] = useState(false);
@@ -269,7 +290,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   const handleSaveNews = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
-    setNewsSubmitting(true);
+    setNewsSubmitting(true); setNewsError('');
     try {
       if (newsForm.editingId) {
         const updated = await newsApi.update(token, newsForm.editingId, newsForm.data);
@@ -279,7 +300,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         setNews((p) => [created, ...p]);
       }
       setNewsForm({ editing: false, editingId: null, data: { ...emptyNewsForm } });
-    } catch {} finally { setNewsSubmitting(false); }
+    } catch (err: unknown) { setNewsError(err instanceof Error ? err.message : 'Failed to save news'); } finally { setNewsSubmitting(false); }
   };
   const handleDeleteNews = async (id: number) => {
     if (!token) return;
@@ -292,7 +313,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   const handleSaveAnn = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
-    setAnnSubmitting(true);
+    setAnnSubmitting(true); setAnnError('');
     try {
       if (annForm.editingId) {
         const updated = await announcementsApi.update(token, annForm.editingId, annForm.data);
@@ -302,7 +323,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         setAnnouncements((p) => [created, ...p]);
       }
       setAnnForm({ editing: false, editingId: null, data: { ...emptyAnnouncementForm } });
-    } catch {} finally { setAnnSubmitting(false); }
+    } catch (err: unknown) { setAnnError(err instanceof Error ? err.message : 'Failed to save announcement'); } finally { setAnnSubmitting(false); }
   };
   const handleDeleteAnn = async (id: number) => {
     if (!token) return;
@@ -315,7 +336,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   const handleSaveProject = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
-    setProjSubmitting(true);
+    setProjSubmitting(true); setProjError('');
     try {
       const payload = { ...projForm.data, budget: projForm.data.budget || undefined };
       if (projForm.editingId) {
@@ -326,7 +347,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         setProjects((p) => [created, ...p]);
       }
       setProjForm({ editing: false, editingId: null, data: { ...emptyProjectForm } });
-    } catch {} finally { setProjSubmitting(false); }
+    } catch (err: unknown) { setProjError(err instanceof Error ? err.message : 'Failed to save project'); } finally { setProjSubmitting(false); }
   };
   const handleDeleteProject = async (id: number) => {
     if (!token) return;
@@ -335,7 +356,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   const handleSaveDept = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
-    setDeptSubmitting(true);
+    setDeptSubmitting(true); setDeptError('');
     try {
       if (deptForm.editingId) {
         const updated = await departmentsApi.update(token, deptForm.editingId, deptForm.data);
@@ -345,7 +366,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         setDepartments((p) => [created, ...p]);
       }
       setDeptForm({ editing: false, editingId: null, data: { ...emptyDeptForm } });
-    } catch {} finally { setDeptSubmitting(false); }
+    } catch (err: unknown) { setDeptError(err instanceof Error ? err.message : 'Failed to save department'); } finally { setDeptSubmitting(false); }
   };
   const handleDeleteDept = async (id: number) => {
     if (!token) return;
@@ -354,7 +375,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   const handleSaveInvestment = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
-    setInvSubmitting(true);
+    setInvSubmitting(true); setInvError('');
     try {
       if (invForm.editingId) {
         const updated = await investmentsApi.update(token, invForm.editingId, invForm.data);
@@ -364,7 +385,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         setInvestments((p) => [created, ...p]);
       }
       setInvForm({ editing: false, editingId: null, data: { ...emptyInvestmentForm } });
-    } catch {} finally { setInvSubmitting(false); }
+    } catch (err: unknown) { setInvError(err instanceof Error ? err.message : 'Failed to save investment'); } finally { setInvSubmitting(false); }
   };
   const handleDeleteInvestment = async (id: number) => {
     if (!token) return;
@@ -377,7 +398,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   const handleSaveSlide = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
-    setSlideSubmitting(true);
+    setSlideSubmitting(true); setSlideError('');
     try {
       if (slideForm.editingId) {
         const updated = await heroSlidesApi.update(token, slideForm.editingId, slideForm.data);
@@ -387,7 +408,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         setHeroSlides((p) => [...p, created]);
       }
       setSlideForm({ editing: false, editingId: null, data: { imageUrl: '', description: '', sortOrder: 0, isActive: true } });
-    } catch {} finally { setSlideSubmitting(false); }
+    } catch (err: unknown) { setSlideError(err instanceof Error ? err.message : 'Failed to save slide'); } finally { setSlideSubmitting(false); }
   };
   const handleDeleteSlide = async (id: number) => {
     if (!token) return;
@@ -397,12 +418,15 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault(); if (!token) return;
     setSettingsSaving(true);
+    setSettingsError('');
     try {
       const entries = Object.entries(settingsForm).map(([settingKey, settingValue]) => ({ settingKey, settingValue }));
       await settingsApi.upsertMany(token, entries);
       const fresh = await settingsApi.getAll();
       setSiteSettings(fresh);
-    } catch {} finally { setSettingsSaving(false); }
+    } catch (err: unknown) {
+      setSettingsError(err instanceof Error ? err.message : 'Failed to save settings');
+    } finally { setSettingsSaving(false); }
   };
 
   const handleCreateAdmin = async (e: React.FormEvent) => {
@@ -573,13 +597,13 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     invSearch, setInvSearch, invStatusFilter, setInvStatusFilter, invCategoryFilter, setInvCategoryFilter, filteredInvestments,
     adminSearch, setAdminSearch, adminStatusFilter, setAdminStatusFilter, filteredAdmins,
     filteredHeroSlides: heroSlides,
-    newsForm, setNewsForm, newsSubmitting, setNewsSubmitting,
-    annForm, setAnnForm, annSubmitting, setAnnSubmitting,
-    projForm, setProjForm, projSubmitting, setProjSubmitting,
-    deptForm, setDeptForm, deptSubmitting, setDeptSubmitting,
-    invForm, setInvForm, invSubmitting, setInvSubmitting,
-    slideForm, setSlideForm, slideSubmitting, setSlideSubmitting,
-    settingsForm, setSettingsForm, settingsSaving, setSettingsSaving,
+    newsForm, setNewsForm, newsSubmitting, setNewsSubmitting, newsError, setNewsError,
+    annForm, setAnnForm, annSubmitting, setAnnSubmitting, annError, setAnnError,
+    projForm, setProjForm, projSubmitting, setProjSubmitting, projError, setProjError,
+    deptForm, setDeptForm, deptSubmitting, setDeptSubmitting, deptError, setDeptError,
+    invForm, setInvForm, invSubmitting, setInvSubmitting, invError, setInvError,
+    slideForm, setSlideForm, slideSubmitting, setSlideSubmitting, slideError, setSlideError,
+    settingsForm, setSettingsForm, settingsSaving, setSettingsSaving, settingsError, setSettingsError,
     showAdminModal, setShowAdminModal, adminForm, setAdminForm, submitting, setSubmitting, adminError, setAdminError,
     confirmDelete, setConfirmDelete, togglingId, setTogglingId,
     handleLogout, handleMarkRead, handleDeleteMsg,

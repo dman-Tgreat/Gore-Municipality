@@ -1,11 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsUrl,
   MaxLength,
+  Matches,
 } from 'class-validator';
+import { ETHIOPIAN_PHONE_REGEX, ETHIOPIAN_PHONE_MESSAGE } from '../../common/constants/ethiopian-phone';
 
 export class CreateInvestmentDto {
   @ApiProperty({ example: 'Coffee Farm Investment Opportunity' })
@@ -65,6 +69,7 @@ export class CreateInvestmentDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
+  @IsUrl({}, { message: 'coverImage must be a valid URL' })
   coverImage?: string;
 
   @ApiPropertyOptional({ example: 'Gore Woreda, Illubabor Zone' })
@@ -72,14 +77,17 @@ export class CreateInvestmentDto {
   @IsString()
   location?: string;
 
-  @ApiPropertyOptional({ example: '+251 47 111 2200' })
+  @ApiPropertyOptional({ example: '+251911234567', description: 'Ethiopian phone number' })
   @IsOptional()
   @IsString()
+  @Matches(ETHIOPIAN_PHONE_REGEX, {
+    message: ETHIOPIAN_PHONE_MESSAGE,
+  })
   contactPhone?: string;
 
   @ApiPropertyOptional({ example: 'invest@gore.gov.et' })
   @IsOptional()
-  @IsString()
+  @IsEmail()
   contactEmail?: string;
 
   @ApiPropertyOptional({ example: true, default: true })

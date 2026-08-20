@@ -21,6 +21,7 @@ import { ContactService } from './contact.service';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @ApiTags('Contact')
 @Controller('contact')
@@ -44,12 +45,11 @@ export class ContactController {
   @ApiResponse({ status: 200, description: 'Returns paginated contact messages' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   findAll(
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
+    @Query() query: PaginationQueryDto,
   ) {
     return this.contactService.findAll(
-      page ? parseInt(page, 10) : undefined,
-      limit ? parseInt(limit, 10) : undefined,
+      query.page,
+      query.limit,
     );
   }
 

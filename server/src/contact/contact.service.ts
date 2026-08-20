@@ -28,6 +28,10 @@ export class ContactService {
     // Send email notification to the municipality inbox
     const adminEmail = this.configService.get<string>('CONTACT_NOTIFICATION_EMAIL') || 'info@goreworeda.gov.et';
 
+    // Sanitize user input to prevent HTML injection in email
+    const escapeHtml = (str: string) =>
+      str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
     try {
       await this.resend.emails.send({
         from: this.configService.getOrThrow<string>('RESEND_FROM_EMAIL'),
@@ -36,10 +40,10 @@ export class ContactService {
         html: `
           <h2>New Contact Form Submission</h2>
           <table style="border-collapse:collapse;width:100%;max-width:600px;">
-            <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Name</td><td style="padding:8px;border:1px solid #ddd;">${saved.name}</td></tr>
-            <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Email</td><td style="padding:8px;border:1px solid #ddd;">${saved.email}</td></tr>
-            <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Subject</td><td style="padding:8px;border:1px solid #ddd;">${saved.subject}</td></tr>
-            <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Message</td><td style="padding:8px;border:1px solid #ddd;">${saved.message}</td></tr>
+            <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Name</td><td style="padding:8px;border:1px solid #ddd;">${escapeHtml(saved.name)}</td></tr>
+            <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Email</td><td style="padding:8px;border:1px solid #ddd;">${escapeHtml(saved.email)}</td></tr>
+            <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Subject</td><td style="padding:8px;border:1px solid #ddd;">${escapeHtml(saved.subject)}</td></tr>
+            <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Message</td><td style="padding:8px;border:1px solid #ddd;">${escapeHtml(saved.message)}</td></tr>
           </table>
           <p style="color:#666;font-size:12px;margin-top:16px;">Received on ${saved.createdAt?.toISOString()}</p>
         `,

@@ -70,7 +70,7 @@ describe('DepartmentsController', () => {
     it('should return all departments', async () => {
       jest.spyOn(service, 'findAll').mockResolvedValue([mockDepartment] as any);
 
-      const result = await controller.findAll();
+      const result = await controller.findAll({});
 
       expect(result).toEqual([mockDepartment]);
     });
