@@ -3,17 +3,34 @@
 import React from 'react';
 import { useAdmin } from './admin-context';
 import { Spinner } from './spinner';
+import { SearchBar } from './search-bar';
 
 export function AnnouncementsTab() {
-  const { t, announcements, annForm, setAnnForm, handleSaveAnn, handleDeleteAnn, handleToggleAnn, badge, emptyAnnouncementForm } = useAdmin();
+  const { t, announcements, filteredAnnouncements, annSearch, setAnnSearch, annStatusFilter, setAnnStatusFilter, annForm, setAnnForm, handleSaveAnn, handleDeleteAnn, handleToggleAnn, badge, emptyAnnouncementForm } = useAdmin();
   if (annForm.editing) return AnnouncementsForm();
   return (
     <>
-      <div className="flex justify-between items-center mb-4">
-        <p className="text-sm text-slate-500">{announcements.length} announcement{announcements.length !== 1 ? 's' : ''}</p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+        <div className="flex flex-col sm:flex-row gap-3 flex-1 w-full">
+          <SearchBar
+            value={annSearch}
+            onChange={setAnnSearch}
+            placeholder={t.admin.searchAnnouncements}
+            className="flex-1"
+          />
+          <div className="flex gap-2 flex-wrap">
+            {(['all', 'published', 'draft'] as const).map((f) => (
+              <button key={f} onClick={() => setAnnStatusFilter(f)}
+                className={`text-xs px-3 py-1.5 rounded-full transition font-medium ${annStatusFilter === f ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700'}`}>
+                {f === 'all' ? t.admin.filterAll : f === 'published' ? t.admin.filterPublished : t.admin.filterDraft}
+              </button>
+            ))}
+          </div>
+        </div>
         <button onClick={() => setAnnForm({ editing: true, editingId: null, data: { ...emptyAnnouncementForm } })}
-          className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
+          className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition whitespace-nowrap">{t.admin.createItem}</button>
       </div>
+      <p className="text-xs text-slate-400 mb-3">{filteredAnnouncements.length} of {announcements.length} announcement{announcements.length !== 1 ? 's' : ''}</p>
       {announcements.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
           <div className="overflow-x-auto">
@@ -26,7 +43,7 @@ export function AnnouncementsTab() {
                 <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
               </tr></thead>
               <tbody>
-                {announcements.map((item) => (
+                {filteredAnnouncements.map((item) => (
                   <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
                     <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.title}</td>
                     <td className="p-4"><button onClick={() => handleToggleAnn(item)} className="hover:opacity-80">{badge(item.published)}</button></td>

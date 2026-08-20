@@ -2,19 +2,28 @@
 
 import React from 'react';
 import { useAdmin } from './admin-context';
+import { SearchBar } from './search-bar';
 
 export function MessagesTab() {
-  const { t, msgFilter, setMsgFilter, filteredMessages, unreadCount, expandedMsg, setExpandedMsg, handleMarkRead, handleDeleteMsg } = useAdmin();
+  const { t, msgFilter, setMsgFilter, msgSearch, setMsgSearch, filteredMessages, unreadCount, expandedMsg, setExpandedMsg, handleMarkRead, handleDeleteMsg } = useAdmin();
 
   return (
     <>
-      <div className="flex gap-2 mb-4 flex-wrap">
-        {(['all', 'unread', 'read'] as const).map((f) => (
-          <button key={f} onClick={() => setMsgFilter(f)}
-            className={`text-xs px-3 py-1.5 rounded-full transition font-medium ${msgFilter === f ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700'}`}>
-            {f === 'all' ? t.admin.allMessages : f === 'unread' ? `${t.admin.unread} (${unreadCount})` : t.admin.read}
-          </button>
-        ))}
+      <div className="flex flex-col sm:flex-row gap-3 mb-4">
+        <SearchBar
+          value={msgSearch}
+          onChange={setMsgSearch}
+          placeholder={t.admin.searchMessages}
+          className="flex-1"
+        />
+        <div className="flex gap-2 flex-wrap">
+          {(['all', 'unread', 'read'] as const).map((f) => (
+            <button key={f} onClick={() => setMsgFilter(f)}
+              className={`text-xs px-3 py-1.5 rounded-full transition font-medium ${msgFilter === f ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700'}`}>
+              {f === 'all' ? t.admin.allMessages : f === 'unread' ? `${t.admin.unread} (${unreadCount})` : t.admin.read}
+            </button>
+          ))}
+        </div>
       </div>
       {filteredMessages.length === 0 ? (
         <p className="text-center text-slate-500 dark:text-slate-400 py-12">{t.admin.noMessages}</p>

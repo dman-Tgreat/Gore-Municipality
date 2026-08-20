@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from '@/context/LocaleContext';
 import { type Messages } from '@/i18n/messages';
@@ -53,8 +53,23 @@ interface AdminContextType {
   setFormLang: React.Dispatch<React.SetStateAction<'en' | 'am' | 'om'>>;
   msgFilter: 'all' | 'unread' | 'read';
   setMsgFilter: React.Dispatch<React.SetStateAction<'all' | 'unread' | 'read'>>;
+  msgSearch: string;
+  setMsgSearch: React.Dispatch<React.SetStateAction<string>>;
   expandedMsg: number | null;
   setExpandedMsg: React.Dispatch<React.SetStateAction<number | null>>;
+  newsSearch: string;
+  setNewsSearch: React.Dispatch<React.SetStateAction<string>>;
+  newsStatusFilter: 'all' | 'published' | 'draft';
+  setNewsStatusFilter: React.Dispatch<React.SetStateAction<'all' | 'published' | 'draft'>>;
+  filteredNews: NewsArticle[];
+  annSearch: string;
+  setAnnSearch: React.Dispatch<React.SetStateAction<string>>;
+  annStatusFilter: 'all' | 'published' | 'draft';
+  setAnnStatusFilter: React.Dispatch<React.SetStateAction<'all' | 'published' | 'draft'>>;
+  filteredAnnouncements: Announcement[];
+  deptSearch: string;
+  setDeptSearch: React.Dispatch<React.SetStateAction<string>>;
+  filteredDepartments: Department[];
   newsForm: CmsFormState<typeof emptyNewsForm>;
   setNewsForm: React.Dispatch<React.SetStateAction<CmsFormState<typeof emptyNewsForm>>>;
   newsSubmitting: boolean;
@@ -155,7 +170,13 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const [tab, setTab] = useState<Tab>('messages');
   const [formLang, setFormLang] = useState<'en' | 'am' | 'om'>('en');
   const [msgFilter, setMsgFilter] = useState<'all' | 'unread' | 'read'>('all');
+  const [msgSearch, setMsgSearch] = useState('');
   const [expandedMsg, setExpandedMsg] = useState<number | null>(null);
+  const [newsSearch, setNewsSearch] = useState('');
+  const [newsStatusFilter, setNewsStatusFilter] = useState<'all' | 'published' | 'draft'>('all');
+  const [annSearch, setAnnSearch] = useState('');
+  const [annStatusFilter, setAnnStatusFilter] = useState<'all' | 'published' | 'draft'>('all');
+  const [deptSearch, setDeptSearch] = useState('');
   const [newsForm, setNewsForm] = useState<CmsFormState<typeof emptyNewsForm>>({ editing: false, editingId: null, data: { ...emptyNewsForm } });
   const [newsSubmitting, setNewsSubmitting] = useState(false);
   const [annForm, setAnnForm] = useState<CmsFormState<typeof emptyAnnouncementForm>>({ editing: false, editingId: null, data: { ...emptyAnnouncementForm } });
@@ -373,7 +394,68 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   };
 
   const unreadCount = messages.filter((m) => !m.isRead).length;
-  const filteredMessages = messages.filter((m) => { if (msgFilter === 'unread') return !m.isRead; if (msgFilter === 'read') return m.isRead; return true; });
+  const filteredMessages = useMemo(() => {
+    return messages.filter((m) => {
+      if (msgFilter === 'unread' && m.isRead) return false;
+      if (msgFilter === 'read' && !m.isRead) return false;
+      if (msgSearch) {
+        const q = msgSearch.toLowerCase();
+        return (
+          m.subject.toLowerCase().includes(q) ||
+          m.name.toLowerCase().includes(q) ||
+          m.email.toLowerCase().includes(q) ||
+          m.message.toLowerCase().includes(q)
+        );
+      }
+      return true;
+    });
+  }, [messages, msgFilter, msgSearch]);
+
+  const filteredNews = useMemo(() => {
+    return news.filter((n) => {
+      if (newsStatusFilter === 'published' && !n.published) return false;
+      if (newsStatusFilter === 'draft' && n.published) return false;
+      if (newsSearch) {
+        const q = newsSearch.toLowerCase();
+        return (
+          n.title.toLowerCase().includes(q) ||
+          (n.titleAm || '').toLowerCase().includes(q) ||
+          (n.titleOm || '').toLowerCase().includes(q)
+        );
+      }
+      return true;
+    });
+  }, [news, newsSearch, newsStatusFilter]);
+
+  const filteredAnnouncements = useMemo(() => {
+    return announcements.filter((a) => {
+      if (annStatusFilter === 'published' && !a.published) return false;
+      if (annStatusFilter === 'draft' && a.published) return false;
+      if (annSearch) {
+        const q = annSearch.toLowerCase();
+        return (
+          a.title.toLowerCase().includes(q) ||
+          (a.titleAm || '').toLowerCase().includes(q) ||
+          (a.titleOm || '').toLowerCase().includes(q)
+        );
+      }
+      return true;
+    });
+  }, [announcements, annSearch, annStatusFilter]);
+
+  const filteredDepartments = useMemo(() => {
+    return departments.filter((d) => {
+      if (deptSearch) {
+        const q = deptSearch.toLowerCase();
+        return (
+          d.name.toLowerCase().includes(q) ||
+          (d.head || '').toLowerCase().includes(q) ||
+          (d.email || '').toLowerCase().includes(q)
+        );
+      }
+      return true;
+    });
+  }, [departments, deptSearch]);
 
   const tabClasses = (tabName: Tab) =>
     `px-4 py-2 text-sm font-medium rounded-lg transition ${
@@ -389,7 +471,10 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     t, token, messages, setMessages, admins, setAdmins, news, setNews, announcements, setAnnouncements,
     projects, setProjects, departments, setDepartments, investments, setInvestments, heroSlides, setHeroSlides,
     siteSettings, setSiteSettings, loading, tab, setTab, formLang, setFormLang,
-    msgFilter, setMsgFilter, expandedMsg, setExpandedMsg,
+    msgFilter, setMsgFilter, msgSearch, setMsgSearch, expandedMsg, setExpandedMsg,
+    newsSearch, setNewsSearch, newsStatusFilter, setNewsStatusFilter, filteredNews,
+    annSearch, setAnnSearch, annStatusFilter, setAnnStatusFilter, filteredAnnouncements,
+    deptSearch, setDeptSearch, filteredDepartments,
     newsForm, setNewsForm, newsSubmitting, setNewsSubmitting,
     annForm, setAnnForm, annSubmitting, setAnnSubmitting,
     projForm, setProjForm, projSubmitting, setProjSubmitting,

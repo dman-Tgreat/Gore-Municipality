@@ -4,17 +4,24 @@ import React from 'react';
 import FileUpload from '@/component/FileUpload';
 import { useAdmin } from './admin-context';
 import { Spinner } from './spinner';
+import { SearchBar } from './search-bar';
 
 export function DepartmentsTab() {
-  const { t, departments, deptForm, setDeptForm, handleSaveDept, handleDeleteDept, badge, emptyDeptForm } = useAdmin();
+  const { t, departments, filteredDepartments, deptSearch, setDeptSearch, deptForm, setDeptForm, handleSaveDept, handleDeleteDept, badge, emptyDeptForm } = useAdmin();
   if (deptForm.editing) return DepartmentsForm();
   return (
     <>
-      <div className="flex justify-between items-center mb-4">
-        <p className="text-sm text-slate-500">{departments.length} department{departments.length !== 1 ? 's' : ''}</p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+        <SearchBar
+          value={deptSearch}
+          onChange={setDeptSearch}
+          placeholder={t.admin.searchDepartments}
+          className="flex-1 max-w-sm"
+        />
         <button onClick={() => setDeptForm({ editing: true, editingId: null, data: { ...emptyDeptForm } })}
-          className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
+          className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition whitespace-nowrap">{t.admin.createItem}</button>
       </div>
+      <p className="text-xs text-slate-400 mb-3">{filteredDepartments.length} of {departments.length} department{departments.length !== 1 ? 's' : ''}</p>
       {departments.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
           <div className="overflow-x-auto">
@@ -27,7 +34,7 @@ export function DepartmentsTab() {
                 <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
               </tr></thead>
               <tbody>
-                {departments.map((item) => (
+                {filteredDepartments.map((item) => (
                   <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
                     <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.name}</td>
                     <td className="p-4 text-sm text-slate-600 dark:text-slate-400">{item.head || '-'}</td>

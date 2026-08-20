@@ -31,10 +31,10 @@ async function seed() {
   console.log('Cleared existing seed data.\n');
 
   // ====== 1. Admins ======
-  const adminPassword = await bcrypt.hash('admin1234', 10);
+  const adminPassword = await bcrypt.hash('admin1236', 10);
   const adminResult = await conn.query(
     `INSERT INTO admins ("fullName", email, password, "isActive") VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING ; `,
-    ['Sys Admin', 'admin@gmail.com', adminPassword, true],
+    ['Sys Admin', 'admin2@gmail.com', adminPassword, true],
   );
   const isCreated = adminResult.rowCounts > 0;
   
