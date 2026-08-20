@@ -11,7 +11,7 @@ import { Newspaper, Megaphone } from 'lucide-react';
 
 type Tab = 'news' | 'announcements';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 function NewsContent() {
   const { locale, t } = useLocale();

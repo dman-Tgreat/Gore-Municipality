@@ -19,7 +19,7 @@ const categoryConfig: Record<string, { label: string; icon: React.ReactNode }> =
   'local-product': { label: 'Local Product', icon: <Package className="w-8 h-8" /> },
 };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 export default function InvestmentDetailPage() {
   const { locale, t } = useLocale();

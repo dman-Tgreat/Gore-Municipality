@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useLocale } from '@/context/LocaleContext';
 import { heroSlidesApi, type HeroSlide } from '@/lib/api';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 export default function Hero() {
   const { t } = useLocale();

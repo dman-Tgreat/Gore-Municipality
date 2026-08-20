@@ -17,7 +17,7 @@ const statusConfig: Record<string, { label: string; color: string; bg: string; p
   cancelled: { label: 'Cancelled', color: 'text-slate-500 dark:text-slate-400', bg: 'bg-slate-100 dark:bg-slate-700', progress: 'bg-slate-300 w-0' },
 };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 function Timeline({ startDate, endDate }: { startDate?: string; endDate?: string }) {
   if (!startDate && !endDate) return null;

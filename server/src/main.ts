@@ -12,15 +12,14 @@ async function bootstrap() {
   });
 
   app.enableCors({
-    origin: ['https://gore-municipality.vercel.app',/\.vercel\.app$/,],    
+    origin: [
+      'http://localhost:3000',
+      'https://gore-municipality.vercel.app',
+      /\.vercel\.app$/,
+    ],
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     credentials: true,
   });
-  // app.enableCors({
-  //   origin: 'http://localhost:3000',    
-  //   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-  //   credentials: true,
-  // });
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -28,6 +27,6 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3001);
 }
 bootstrap();

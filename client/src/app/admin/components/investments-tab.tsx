@@ -6,16 +6,38 @@ import { useAdmin } from './admin-context';
 import { Spinner } from './spinner';
 
 export function InvestmentsTab() {
-  const { t, investments, invForm, setInvForm, handleSaveInvestment, handleDeleteInvestment, handleToggleInvestment, badge, emptyInvestmentForm } = useAdmin();
+  const { t, investments, filteredInvestments, invSearch, setInvSearch, invStatusFilter, setInvStatusFilter, invCategoryFilter, setInvCategoryFilter, invForm, setInvForm, handleSaveInvestment, handleDeleteInvestment, handleToggleInvestment, badge, emptyInvestmentForm } = useAdmin();
   if (invForm.editing) return InvestmentsForm();
   return (
     <>
+      {/* Search & Filter */}
+      <div className="flex flex-col sm:flex-row gap-3 mb-4">
+        <input type="text" value={invSearch} onChange={(e) => setInvSearch(e.target.value)}
+          placeholder={t.admin.searchInvestments || t.admin.searchPlaceholder}
+          className="flex-1 px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none" />
+        <select value={invCategoryFilter} onChange={(e) => setInvCategoryFilter(e.target.value)}
+          className="px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none">
+          <option value="">All Categories</option>
+          <option value="opportunity">Opportunity</option>
+          <option value="attraction">Attraction</option>
+          <option value="incentive">Incentive</option>
+          <option value="accommodation">Accommodation</option>
+        </select>
+        <div className="flex gap-1">
+          {(['all', 'published', 'draft'] as const).map((f) => (
+            <button key={f} onClick={() => setInvStatusFilter(f)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition ${invStatusFilter === f ? 'bg-slate-800 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'}`}>
+              {f === 'all' ? t.admin.filterAll : f === 'published' ? t.admin.filterPublished : t.admin.filterDraft}
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="flex justify-between items-center mb-4">
-        <p className="text-sm text-slate-500">{investments.length} investment{investments.length !== 1 ? 's' : ''}</p>
+        <p className="text-sm text-slate-500">{filteredInvestments.length} of {investments.length} investment{investments.length !== 1 ? 's' : ''}</p>
         <button onClick={() => setInvForm({ editing: true, editingId: null, data: { ...emptyInvestmentForm } })}
           className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
       </div>
-      {investments.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
+      {filteredInvestments.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -27,7 +49,7 @@ export function InvestmentsTab() {
                 <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
               </tr></thead>
               <tbody>
-                {investments.map((item) => (
+                {filteredInvestments.map((item) => (
                   <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
                     <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.title}</td>
                     <td className="p-4"><button onClick={() => handleToggleInvestment(item)} className="hover:opacity-80">{badge(item.published)}</button></td>

@@ -5,15 +5,29 @@ import { useAdmin } from './admin-context';
 import { Spinner } from './spinner';
 
 export function AdminsTab() {
-  const { t, admins, showAdminModal, setShowAdminModal, adminForm, setAdminForm, handleCreateAdmin, handleToggleActive, handleDeleteAdmin, submitting, adminError, togglingId, confirmDelete, setConfirmDelete } = useAdmin();
+  const { t, admins, filteredAdmins, adminSearch, setAdminSearch, adminStatusFilter, setAdminStatusFilter, showAdminModal, setShowAdminModal, adminForm, setAdminForm, handleCreateAdmin, handleToggleActive, handleDeleteAdmin, submitting, adminError, togglingId, confirmDelete, setConfirmDelete } = useAdmin();
   return (
     <>
+      {/* Search & Filter */}
+      <div className="flex flex-col sm:flex-row gap-3 mb-4">
+        <input type="text" value={adminSearch} onChange={(e) => setAdminSearch(e.target.value)}
+          placeholder={t.admin.searchAdmins || t.admin.searchPlaceholder}
+          className="flex-1 px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none" />
+        <div className="flex gap-1">
+          {(['all', 'active', 'inactive'] as const).map((f) => (
+            <button key={f} onClick={() => setAdminStatusFilter(f)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition ${adminStatusFilter === f ? 'bg-slate-800 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'}`}>
+              {f === 'all' ? t.admin.filterAll : f === 'active' ? (t.admin.filterActive || 'Active') : (t.admin.filterInactive || 'Inactive')}
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="flex justify-between items-center mb-4">
-        <p className="text-sm text-slate-500">{admins.length} admin{admins.length !== 1 ? 's' : ''}</p>
+        <p className="text-sm text-slate-500">{filteredAdmins.length} of {admins.length} admin{admins.length !== 1 ? 's' : ''}</p>
         <button onClick={() => setShowAdminModal(true)}
           className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.addAdmin}</button>
       </div>
-      {admins.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
+      {filteredAdmins.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -25,7 +39,7 @@ export function AdminsTab() {
                 <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
               </tr></thead>
               <tbody>
-                {admins.map((item) => (
+                {filteredAdmins.map((item) => (
                   <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
                     <td className="p-4 font-medium text-slate-800 dark:text-white">{item.fullName}</td>
                     <td className="p-4 text-sm text-slate-600 dark:text-slate-400">{item.email}</td>

@@ -70,6 +70,24 @@ interface AdminContextType {
   deptSearch: string;
   setDeptSearch: React.Dispatch<React.SetStateAction<string>>;
   filteredDepartments: Department[];
+  projSearch: string;
+  setProjSearch: React.Dispatch<React.SetStateAction<string>>;
+  projStatusFilter: 'all' | 'planned' | 'ongoing' | 'completed';
+  setProjStatusFilter: React.Dispatch<React.SetStateAction<'all' | 'planned' | 'ongoing' | 'completed'>>;
+  filteredProjects: Project[];
+  invSearch: string;
+  setInvSearch: React.Dispatch<React.SetStateAction<string>>;
+  invStatusFilter: 'all' | 'published' | 'draft';
+  setInvStatusFilter: React.Dispatch<React.SetStateAction<'all' | 'published' | 'draft'>>;
+  invCategoryFilter: string;
+  setInvCategoryFilter: React.Dispatch<React.SetStateAction<string>>;
+  filteredInvestments: Investment[];
+  adminSearch: string;
+  setAdminSearch: React.Dispatch<React.SetStateAction<string>>;
+  adminStatusFilter: 'all' | 'active' | 'inactive';
+  setAdminStatusFilter: React.Dispatch<React.SetStateAction<'all' | 'active' | 'inactive'>>;
+  filteredAdmins: AdminUser[];
+  filteredHeroSlides: HeroSlide[];
   newsForm: CmsFormState<typeof emptyNewsForm>;
   setNewsForm: React.Dispatch<React.SetStateAction<CmsFormState<typeof emptyNewsForm>>>;
   newsSubmitting: boolean;
@@ -177,6 +195,14 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const [annSearch, setAnnSearch] = useState('');
   const [annStatusFilter, setAnnStatusFilter] = useState<'all' | 'published' | 'draft'>('all');
   const [deptSearch, setDeptSearch] = useState('');
+  const [projSearch, setProjSearch] = useState('');
+  const [projStatusFilter, setProjStatusFilter] = useState<'all' | 'planned' | 'ongoing' | 'completed'>('all');
+  const [invSearch, setInvSearch] = useState('');
+  const [invStatusFilter, setInvStatusFilter] = useState<'all' | 'published' | 'draft'>('all');
+  const [invCategoryFilter, setInvCategoryFilter] = useState('');
+  const [adminSearch, setAdminSearch] = useState('');
+  const [adminStatusFilter, setAdminStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
+
   const [newsForm, setNewsForm] = useState<CmsFormState<typeof emptyNewsForm>>({ editing: false, editingId: null, data: { ...emptyNewsForm } });
   const [newsSubmitting, setNewsSubmitting] = useState(false);
   const [annForm, setAnnForm] = useState<CmsFormState<typeof emptyAnnouncementForm>>({ editing: false, editingId: null, data: { ...emptyAnnouncementForm } });
@@ -457,6 +483,58 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     });
   }, [departments, deptSearch]);
 
+  const filteredProjects = useMemo(() => {
+    return projects.filter((p) => {
+      if (projStatusFilter !== 'all' && p.status !== projStatusFilter) return false;
+      if (projSearch) {
+        const q = projSearch.toLowerCase();
+        return (
+          p.name.toLowerCase().includes(q) ||
+          (p.nameAm || '').toLowerCase().includes(q) ||
+          (p.nameOm || '').toLowerCase().includes(q) ||
+          (p.location || '').toLowerCase().includes(q) ||
+          (p.contractor || '').toLowerCase().includes(q)
+        );
+      }
+      return true;
+    });
+  }, [projects, projSearch, projStatusFilter]);
+
+  const filteredInvestments = useMemo(() => {
+    return investments.filter((inv) => {
+      if (invStatusFilter === 'published' && !inv.published) return false;
+      if (invStatusFilter === 'draft' && inv.published) return false;
+      if (invCategoryFilter && inv.category !== invCategoryFilter) return false;
+      if (invSearch) {
+        const q = invSearch.toLowerCase();
+        return (
+          inv.title.toLowerCase().includes(q) ||
+          (inv.titleAm || '').toLowerCase().includes(q) ||
+          (inv.titleOm || '').toLowerCase().includes(q) ||
+          (inv.location || '').toLowerCase().includes(q)
+        );
+      }
+      return true;
+    });
+  }, [investments, invSearch, invStatusFilter, invCategoryFilter]);
+
+  const filteredAdmins = useMemo(() => {
+    return admins.filter((a) => {
+      if (adminStatusFilter === 'active' && !a.isActive) return false;
+      if (adminStatusFilter === 'inactive' && a.isActive) return false;
+      if (adminSearch) {
+        const q = adminSearch.toLowerCase();
+        return (
+          a.fullName.toLowerCase().includes(q) ||
+          a.email.toLowerCase().includes(q)
+        );
+      }
+      return true;
+    });
+  }, [admins, adminSearch, adminStatusFilter]);
+
+
+
   const tabClasses = (tabName: Tab) =>
     `px-4 py-2 text-sm font-medium rounded-lg transition ${
       tab === tabName ? 'bg-slate-800 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700'
@@ -475,6 +553,10 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     newsSearch, setNewsSearch, newsStatusFilter, setNewsStatusFilter, filteredNews,
     annSearch, setAnnSearch, annStatusFilter, setAnnStatusFilter, filteredAnnouncements,
     deptSearch, setDeptSearch, filteredDepartments,
+    projSearch, setProjSearch, projStatusFilter, setProjStatusFilter, filteredProjects,
+    invSearch, setInvSearch, invStatusFilter, setInvStatusFilter, invCategoryFilter, setInvCategoryFilter, filteredInvestments,
+    adminSearch, setAdminSearch, adminStatusFilter, setAdminStatusFilter, filteredAdmins,
+    filteredHeroSlides: heroSlides,
     newsForm, setNewsForm, newsSubmitting, setNewsSubmitting,
     annForm, setAnnForm, annSubmitting, setAnnSubmitting,
     projForm, setProjForm, projSubmitting, setProjSubmitting,

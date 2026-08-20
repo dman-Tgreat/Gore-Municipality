@@ -6,16 +6,30 @@ import { useAdmin } from './admin-context';
 import { Spinner } from './spinner';
 
 export function ProjectsTab() {
-  const { t, projects, projForm, setProjForm, handleSaveProject, handleDeleteProject, badge, emptyProjectForm } = useAdmin();
+  const { t, projects, filteredProjects, projSearch, setProjSearch, projStatusFilter, setProjStatusFilter, projForm, setProjForm, handleSaveProject, handleDeleteProject, badge, emptyProjectForm } = useAdmin();
   if (projForm.editing) return ProjectsForm();
   return (
     <>
+      {/* Search & Filter */}
+      <div className="flex flex-col sm:flex-row gap-3 mb-4">
+        <input type="text" value={projSearch} onChange={(e) => setProjSearch(e.target.value)}
+          placeholder={t.admin.searchProjects || t.admin.searchPlaceholder}
+          className="flex-1 px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none" />
+        <div className="flex gap-1">
+          {(['all', 'planned', 'ongoing', 'completed'] as const).map((f) => (
+            <button key={f} onClick={() => setProjStatusFilter(f)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition ${projStatusFilter === f ? 'bg-slate-800 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'}`}>
+              {f === 'all' ? t.admin.filterAll : f === 'planned' ? t.admin.filterPlanned : f === 'ongoing' ? t.admin.filterOngoing : t.admin.filterCompleted}
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="flex justify-between items-center mb-4">
-        <p className="text-sm text-slate-500">{projects.length} project{projects.length !== 1 ? 's' : ''}</p>
+        <p className="text-sm text-slate-500">{filteredProjects.length} of {projects.length} project{projects.length !== 1 ? 's' : ''}</p>
         <button onClick={() => setProjForm({ editing: true, editingId: null, data: { ...emptyProjectForm } })}
           className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
       </div>
-      {projects.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
+      {filteredProjects.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -27,7 +41,7 @@ export function ProjectsTab() {
                 <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
               </tr></thead>
               <tbody>
-                {projects.map((item) => (
+                {filteredProjects.map((item) => (
                   <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
                     <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.name}</td>
                     <td className="p-4">
