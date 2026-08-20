@@ -17,7 +17,7 @@ export function NewsTab() {
     setCurrentPage(1);
   }, [newsSearch, newsStatusFilter]);
 
-  if (newsForm.editing) return NewsForm();
+  if (newsForm.editing) return <NewsForm />;
 
   const totalPages = Math.ceil(filteredNews.length / limit);
   const paginatedNews = filteredNews.slice((currentPage - 1) * limit, currentPage * limit);

@@ -16,7 +16,7 @@ export function InvestmentsTab() {
     setCurrentPage(1);
   }, [invSearch, invStatusFilter, invCategoryFilter]);
 
-  if (invForm.editing) return InvestmentsForm();
+  if (invForm.editing) return <InvestmentsForm />;
 
   const totalPages = Math.ceil(filteredInvestments.length / limit);
   const paginatedInvestments = filteredInvestments.slice((currentPage - 1) * limit, currentPage * limit);

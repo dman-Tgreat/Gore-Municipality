@@ -17,7 +17,7 @@ export function DepartmentsTab() {
     setCurrentPage(1);
   }, [deptSearch]);
 
-  if (deptForm.editing) return DepartmentsForm();
+  if (deptForm.editing) return <DepartmentsForm />;
 
   const totalPages = Math.ceil(filteredDepartments.length / limit);
   const paginatedDepartments = filteredDepartments.slice((currentPage - 1) * limit, currentPage * limit);

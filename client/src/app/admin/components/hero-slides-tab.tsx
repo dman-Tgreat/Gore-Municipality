@@ -8,7 +8,7 @@ import { FormError } from './form-error';
 
 export function HeroSlidesTab() {
   const { t, heroSlides, slideForm, setSlideForm, handleSaveSlide, handleDeleteSlide, badge } = useAdmin();
-  if (slideForm.editing) return HeroSlidesForm();
+  if (slideForm.editing) return <HeroSlidesForm />;
   return (
     <>
       <div className="flex justify-between items-center mb-4">

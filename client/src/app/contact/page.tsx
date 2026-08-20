@@ -36,13 +36,26 @@ export default function ContactPage() {
       .catch(() => {});
   }, []);
 
-  const settingsEmailMain = siteSettings.contact_email_main || 'info@goreworeda.gov.et';
-  const settingsEmailSupport = siteSettings.contact_email_support || 'support@goreworeda.gov.et';
-  const settingsPhoneMain = siteSettings.contact_phone_main || t.contact.mainOffice;
-  const settingsPhonePR = siteSettings.contact_phone_pr || t.contact.publicRelations;
-  const settingsHoursWeekday = siteSettings.contact_hours_weekday || 'Mon–Fri: 8:00 AM – 5:00 PM';
-  const settingsHoursSaturday = siteSettings.contact_hours_saturday || 'Sat: 8:00 AM – 12:00 PM';
-  const settingsAddress = siteSettings.contact_address || `${t.contact.officeAddress1}\n${t.contact.officeAddress2}`;
+  const rawPhoneMain = siteSettings.contact_phone_main || '';
+  const rawPhonePR = siteSettings.contact_phone_pr || '';
+  const rawEmailMain = siteSettings.contact_email_main || '';
+  const rawEmailSupport = siteSettings.contact_email_support || '';
+  const rawHoursWeekday = siteSettings.contact_hours_weekday || '';
+  const rawHoursSaturday = siteSettings.contact_hours_saturday || '';
+  const rawAddress = siteSettings.contact_address || '';
+
+  // Build display strings with labels, falling back to i18n if setting is empty
+  const settingsPhoneMain = rawPhoneMain
+    ? rawPhoneMain
+    : t.contact.mainOffice.replace(/^[^:]+:\s*/, '');
+  const settingsPhonePR = rawPhonePR
+    ? rawPhonePR
+    : t.contact.publicRelations.replace(/^[^:]+:\s*/, '');
+  const settingsEmailMain = rawEmailMain || 'info@goreworeda.gov.et';
+  const settingsEmailSupport = rawEmailSupport || 'support@goreworeda.gov.et';
+  const settingsHoursWeekday = rawHoursWeekday || 'Mon–Fri: 8:00 AM – 5:00 PM';
+  const settingsHoursSaturday = rawHoursSaturday || 'Sat: 8:00 AM – 12:00 PM';
+  const settingsAddress = rawAddress || `${t.contact.officeAddress1} ${t.contact.officeAddress2}`;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,10 +108,10 @@ export default function ContactPage() {
                   let display = line;
                   if (line === 'officeAddress1') display = settingsAddress;
                   else if (line === 'officeAddress2') return null; // address is a single line now
-                  else if (line === 'mainOffice') display = settingsPhoneMain;
-                  else if (line === 'publicRelations') display = settingsPhonePR;
-                  else if (line === 'emailLine1') display = settingsEmailMain;
-                  else if (line === 'emailLine2') display = settingsEmailSupport;
+                  else if (line === 'mainOffice') display = t.contact.mainOffice.replace(/:\s*.*/, ': ') + settingsPhoneMain;
+                  else if (line === 'publicRelations') display = t.contact.publicRelations.replace(/:\s*.*/, ': ') + settingsPhonePR;
+                  else if (line === 'emailLine1') display = 'Main Email: ' + settingsEmailMain;
+                  else if (line === 'emailLine2') display = 'Support Email: ' + settingsEmailSupport;
                   else if (line === 'hoursLine1') display = settingsHoursWeekday;
                   else if (line === 'hoursLine2') display = settingsHoursSaturday;
                   return (
@@ -150,16 +163,16 @@ export default function ContactPage() {
                     <Phone className="w-5 h-5 shrink-0 mt-0.5 text-slate-500" />
                     <div>
                       <p className="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">{t.contact.phone}</p>
-                      <p className="text-sm font-medium text-slate-800 dark:text-white">{settingsPhoneMain}</p>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">{settingsPhonePR}</p>
+                      <p className="text-sm font-medium text-slate-800 dark:text-white">{t.contact.mainOffice.replace(/:\s*.*/, ': ')}{settingsPhoneMain}</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{t.contact.publicRelations.replace(/:\s*.*/, ': ')}{settingsPhonePR}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <Mail className="w-5 h-5 shrink-0 mt-0.5 text-slate-500" />
                     <div>
                       <p className="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">{t.contact.email}</p>
-                      <p className="text-sm font-medium text-slate-800 dark:text-white">{settingsEmailMain}</p>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">{settingsEmailSupport}</p>
+                      <p className="text-sm font-medium text-slate-800 dark:text-white">Main Email: {settingsEmailMain}</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">Support Email: {settingsEmailSupport}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">

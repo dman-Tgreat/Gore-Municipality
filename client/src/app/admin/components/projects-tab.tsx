@@ -16,7 +16,7 @@ export function ProjectsTab() {
     setCurrentPage(1);
   }, [projSearch, projStatusFilter]);
 
-  if (projForm.editing) return ProjectsForm();
+  if (projForm.editing) return <ProjectsForm />;
 
   const totalPages = Math.ceil(filteredProjects.length / limit);
   const paginatedProjects = filteredProjects.slice((currentPage - 1) * limit, currentPage * limit);

@@ -16,7 +16,7 @@ export function AnnouncementsTab() {
     setCurrentPage(1);
   }, [annSearch, annStatusFilter]);
 
-  if (annForm.editing) return AnnouncementsForm();
+  if (annForm.editing) return <AnnouncementsForm />;
 
   const totalPages = Math.ceil(filteredAnnouncements.length / limit);
   const paginatedAnnouncements = filteredAnnouncements.slice((currentPage - 1) * limit, currentPage * limit);
