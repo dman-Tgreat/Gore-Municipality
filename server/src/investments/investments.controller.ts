@@ -10,18 +10,31 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiQuery,
+  ApiParam,
+} from '@nestjs/swagger';
 
 import { InvestmentsService } from './investments.service';
 import { CreateInvestmentDto } from './dto/create-investment.dto';
 import { UpdateInvestmentDto } from './dto/update-investment.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
+@ApiTags('Investments')
 @Controller('investments')
 export class InvestmentsController {
   constructor(private readonly investmentsService: InvestmentsService) {}
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Post()
+  @ApiOperation({ summary: 'Create an investment opportunity' })
+  @ApiResponse({ status: 201, description: 'Investment created successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   create(
     @Req() req: any,
     @Body() dto: CreateInvestmentDto,
@@ -30,6 +43,12 @@ export class InvestmentsController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'List all investments' })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiQuery({ name: 'published', required: false, type: Boolean })
+  @ApiQuery({ name: 'category', required: false, type: String, description: 'Filter by category' })
+  @ApiResponse({ status: 200, description: 'Returns paginated or full list of investments' })
   findAll(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
@@ -45,18 +64,32 @@ export class InvestmentsController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get an investment by ID' })
+  @ApiParam({ name: 'id', type: Number })
+  @ApiResponse({ status: 200, description: 'Returns the investment' })
+  @ApiResponse({ status: 404, description: 'Investment not found' })
   findOne(@Param('id') id: string) {
     return this.investmentsService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Patch(':id')
+  @ApiOperation({ summary: 'Update an investment' })
+  @ApiParam({ name: 'id', type: Number })
+  @ApiResponse({ status: 200, description: 'Investment updated successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   update(@Param('id') id: string, @Body() dto: UpdateInvestmentDto) {
     return this.investmentsService.update(+id, dto);
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete an investment' })
+  @ApiParam({ name: 'id', type: Number })
+  @ApiResponse({ status: 200, description: 'Investment deleted successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   remove(@Param('id') id: string) {
     return this.investmentsService.remove(+id);
   }

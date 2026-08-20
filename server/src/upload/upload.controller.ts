@@ -2,7 +2,6 @@ import {
   Controller,
   Post,
   Delete,
-  Param,
   Query,
   UseGuards,
   UseInterceptors,
@@ -12,16 +11,27 @@ import {
   FileTypeValidator,
   ParseFilePipe,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiBody,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CloudinaryService } from './cloudinary.service';
 
+@ApiTags('Upload')
 @Controller('upload')
 export class UploadController {
   constructor(private readonly cloudinaryService: CloudinaryService) {}
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {
@@ -29,6 +39,24 @@ export class UploadController {
       limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
     }),
   )
+  @ApiOperation({ summary: 'Upload a file to Cloudinary' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'File to upload (jpg, jpeg, png, gif, webp, pdf, doc, docx, xls, xlsx). Max 10MB.',
+        },
+      },
+      required: ['file'],
+    },
+  })
+  @ApiResponse({ status: 201, description: 'File uploaded successfully, returns Cloudinary URL' })
+  @ApiResponse({ status: 400, description: 'Invalid file type or size' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async uploadFile(
     @UploadedFile(
       new ParseFilePipe({
@@ -68,7 +96,14 @@ export class UploadController {
    * Accepts a `publicId` query param (preferred) or falls back to extracting it from a URL.
    */
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete()
+  @ApiOperation({ summary: 'Delete a file from Cloudinary' })
+  @ApiQuery({ name: 'publicId', required: false, type: String, description: 'Cloudinary public ID' })
+  @ApiQuery({ name: 'url', required: false, type: String, description: 'Cloudinary URL (publicId will be extracted)' })
+  @ApiResponse({ status: 200, description: 'File deleted successfully' })
+  @ApiResponse({ status: 400, description: 'Provide either publicId or url query parameter' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async deleteFile(
     @Query('publicId') publicId?: string,
     @Query('url') url?: string,

@@ -65,6 +65,7 @@ describe('NewsService', () => {
       const result = await service.findAll();
 
       expect(newsRepo.find).toHaveBeenCalledWith({
+        where: {},
         relations: { createdBy: true },
         order: { createdAt: 'DESC' },
       });

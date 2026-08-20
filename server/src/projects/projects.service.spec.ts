@@ -62,6 +62,7 @@ describe('ProjectsService', () => {
       projectRepo.find.mockResolvedValue([mockProject]);
       const result = await service.findAll();
       expect(projectRepo.find).toHaveBeenCalledWith({
+        where: {},
         relations: { createdBy: true },
         order: { createdAt: 'DESC' },
       });
