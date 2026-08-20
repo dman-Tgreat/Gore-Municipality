@@ -345,6 +345,8 @@ const amMessages = {
       "ቀልጣፋ፣ ግልጽ የሲቪል ምዝገባ እና የንግድ ፈቃድ አገልግሎት ለሁሉም።",
     ],
     exploreServices: "አገልግሎቶችን ይመልከቱ",
+    pause: 'የተመሪካ ማሳ ማስቆም',
+    resume: 'የተመሪካ ማሳ መቀጠል',
   },
   stats: {
     title: "የወረዳው አመልካቾች",
@@ -437,6 +439,7 @@ const amMessages = {
     emailPlaceholder: "abebe@example.com",
     subjectPlaceholder: "ስለ ንግድ ፈቃድ ጥያቄ",
     messagePlaceholder: "ዝርዝር መልዕክትዎን እዚህ ይጻፉ...",
+    submitError: 'መልዕክት መላክ አልተሳካም። እባክዎን ከዚህ በኋላ ይሞክሩ።',
   },
   announcements: {
     title: "ማስታወቂያዎች እና የህዝብ መረጃዎች",
@@ -649,6 +652,14 @@ const amMessages = {
     investmentDesc: "በጎሬ ወረዳ የሚገኙ የኢንቨስትመንት አማራጮችን እና የቱሪስት መስህቦችን ያግኙ።",
     contactDesc: "ለጥያቄዎች እና ለድጋፍ ከጎሬ ወረዳ አስተዳደር ጋር ይገናኙ።",
   },
+  fileUpload: {
+    upload: 'ፋይል ያርዕሱ',
+    uploading: 'እየተየወለ ነው...',
+    clickOrDrag: 'ጠቅ ያድርጉ ወይም ወደ ላይ ጎልት ያድርጉ'
+  },
+  loading: {
+    news: 'ዜናዎች እና ማስታወቂያዎች እየተጫነ ነው...'
+  },
 };
 
 const omMessages: Messages = {
@@ -661,6 +672,8 @@ const omMessages: Messages = {
       "Tajaajila galmee bittaa fi hayyama si’aawaa fi iftoomina qabu dhuunfaaf kennuu.",
     ],
     exploreServices: "Tajaajiloota Sakatta’i",
+    pause: 'Sliidhoollii Dhaamsi',
+    resume: 'Sliidhoollii Icilchi',
   },
   stats: {
     title: "Agarsiistota Aanaa",
@@ -753,6 +766,7 @@ const omMessages: Messages = {
     emailPlaceholder: "abebe@example.com",
     subjectPlaceholder: "Gaaffii hayyama daldalaa ilaalchisee",
     messagePlaceholder: "Ergaa keessan dhimma dhimmaan asitti barreessaa...",
+    submitError: "Ergaa ergamuu hin dandeenye. Maaloo tuqi deebi'i.",
   },
   announcements: {
     title: "Beeksisoota & Hubachiisa Uummataa",
@@ -964,6 +978,14 @@ const omMessages: Messages = {
     projectsDesc: "Pirojektoota misoomaa deemaa jiranii fi xumuraman Aanaa Goree guutuu keessatti ilaali.",
     investmentDesc: "Carraalee investimintii fi hawwata turiizimii Aanaa Goree keessatti argaman sakatta’i.",
     contactDesc: "Gaaffii fi deeggarsaaf bulchiinsa Aanaa Goree quunnami.",
+  },
+  fileUpload: {
+    upload: 'Faayilii Fe\'i',
+    uploading: 'Fe\'aa jira...',
+    clickOrDrag: 'Clicii godhi ykn haafta godhi'
+  },
+  loading: {
+    news: 'Oduuwwan fi beeksisoota fe\'aa jira...'
   },
 };
 export const allMessages = {
