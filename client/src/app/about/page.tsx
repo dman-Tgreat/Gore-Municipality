@@ -52,7 +52,7 @@ export default function AboutPage() {
       settingsApi.getAll().catch(() => [] as SiteSetting[]),
     ])
       .then(([allNews, allDepts, allProjects, allSettings]) => {
-        setNews(allNews.filter((a) => a.published));
+        setNews(allNews.filter((a: NewsArticle) => a.published));
         setDepartments(allDepts);
         setProjects(allProjects);
         setSettings(allSettings);

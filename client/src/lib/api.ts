@@ -42,8 +42,23 @@ export interface NewsArticle {
   updatedAt: string;
 }
 
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export const newsApi = {
-  getAll: () => request<NewsArticle[]>('/news'),
+  getAll: (page?: number, limit?: number, published?: boolean) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    if (limit) params.append('limit', limit.toString());
+    if (published !== undefined) params.append('published', published.toString());
+    const query = params.toString() ? `?${params.toString()}` : '';
+    return request<any>(`/news${query}`);
+  },
   getOne: (id: number) => request<NewsArticle>(`/news/${id}`),
   create: (token: string, data: { title: string; slug?: string; summary: string; content: string; coverImage?: string; published?: boolean }) =>
     request<NewsArticle>('/news', { method: 'POST', headers: authHeaders(token), body: JSON.stringify(data) }),
@@ -71,7 +86,14 @@ export interface Announcement {
 }
 
 export const announcementsApi = {
-  getAll: () => request<Announcement[]>('/announcements'),
+  getAll: (page?: number, limit?: number, published?: boolean) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    if (limit) params.append('limit', limit.toString());
+    if (published !== undefined) params.append('published', published.toString());
+    const query = params.toString() ? `?${params.toString()}` : '';
+    return request<any>(`/announcements${query}`);
+  },
   getOne: (id: number) => request<Announcement>(`/announcements/${id}`),
   create: (token: string, data: { title: string; description: string; content: string; published?: boolean }) =>
     request<Announcement>('/announcements', { method: 'POST', headers: authHeaders(token), body: JSON.stringify(data) }),
@@ -99,7 +121,10 @@ export interface Department {
 }
 
 export const departmentsApi = {
-  getAll: () => request<Department[]>('/departments'),
+  getAll: (page?: number, limit?: number) => {
+    const query = page && limit ? `?page=${page}&limit=${limit}` : '';
+    return request<any>(`/departments${query}`);
+  },
   getOne: (id: number) => request<Department>(`/departments/${id}`),
   create: (token: string, data: { name: string; description: string; head: string; phone: string; email: string; office: string; image?: string }) =>
     request<Department>('/departments', { method: 'POST', headers: authHeaders(token), body: JSON.stringify(data) }),
@@ -132,7 +157,14 @@ export interface Project {
 }
 
 export const projectsApi = {
-  getAll: () => request<Project[]>('/projects'),
+  getAll: (page?: number, limit?: number, status?: string) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    if (limit) params.append('limit', limit.toString());
+    if (status) params.append('status', status);
+    const query = params.toString() ? `?${params.toString()}` : '';
+    return request<any>(`/projects${query}`);
+  },
   getOne: (id: number) => request<Project>(`/projects/${id}`),
   create: (token: string, data: { name: string; description: string; budget?: number; status?: string; startDate?: string; endDate?: string; location?: string; coverImage?: string; fundingSource?: string; contractor?: string; category?: string }) =>
     request<Project>('/projects', { method: 'POST', headers: authHeaders(token), body: JSON.stringify(data) }),
@@ -237,7 +269,15 @@ export interface Investment {
 }
 
 export const investmentsApi = {
-  getAll: () => request<Investment[]>('/investments'),
+  getAll: (page?: number, limit?: number, published?: boolean, category?: string) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    if (limit) params.append('limit', limit.toString());
+    if (published !== undefined) params.append('published', published.toString());
+    if (category) params.append('category', category);
+    const query = params.toString() ? `?${params.toString()}` : '';
+    return request<any>(`/investments${query}`);
+  },
   getOne: (id: number) => request<Investment>(`/investments/${id}`),
   create: (token: string, data: { title: string; description: string; content: string; category: string; coverImage?: string; location?: string; contactPhone?: string; contactEmail?: string; published?: boolean }) =>
     request<Investment>('/investments', { method: 'POST', headers: authHeaders(token), body: JSON.stringify(data) }),
@@ -292,8 +332,10 @@ export const settingsApi = {
 };
 
 export const contactAdminApi = {
-  getAll: (token: string) =>
-    request<ContactMessage[]>('/contact', { headers: authHeaders(token) }),
+  getAll: (token: string, page?: number, limit?: number) => {
+    const query = page && limit ? `?page=${page}&limit=${limit}` : '';
+    return request<any>(`/contact${query}`, { headers: authHeaders(token) });
+  },
   markRead: (token: string, id: number) =>
     request<ContactMessage>(`/contact/${id}`, {
       method: 'PATCH',

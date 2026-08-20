@@ -37,7 +37,7 @@ export default function Services() {
       projectsApi.getAll().catch(() => [] as Project[]),
     ])
       .then(([allNews, allDepts, allProjects]) => {
-        setNews(allNews.filter((a) => a.published).slice(0, 4));
+        setNews(allNews.filter((a: NewsArticle) => a.published).slice(0, 4));
         setDepartments(allDepts);
         setProjects(allProjects);
       })

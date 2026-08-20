@@ -9,6 +9,8 @@ import { tField } from '@/lib/locale';
 import { projectsApi, type Project } from '@/lib/api';
 import { ClipboardList } from 'lucide-react';
 
+import Pagination from '@/component/Pagination';
+
 const statusColors: Record<string, string> = {
   ongoing: 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200',
   completed: 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200',
@@ -16,24 +18,40 @@ const statusColors: Record<string, string> = {
   cancelled: 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200',
 };
 
+const statuses = ['all', 'planned', 'ongoing', 'completed', 'cancelled'];
+
 export default function ProjectsPage() {
   const { locale, t } = useLocale();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    projectsApi.getAll()
-      .then(setProjects)
-      .catch(() => setProjects([]))
+    // Reset page to 1 when status filter changes
+    setCurrentPage(1);
+  }, [statusFilter]);
+
+  useEffect(() => {
+    setLoading(true);
+    projectsApi.getAll(
+      currentPage,
+      6,
+      statusFilter === 'all' ? undefined : statusFilter
+    )
+      .then((res) => {
+        setProjects(res.data || []);
+        setTotalPages(res.totalPages || 1);
+      })
+      .catch(() => {
+        setProjects([]);
+        setTotalPages(1);
+      })
       .finally(() => setLoading(false));
-  }, []);
+  }, [currentPage, statusFilter]);
 
-  const filtered = statusFilter === 'all'
-    ? projects
-    : projects.filter((p) => p.status === statusFilter);
-
-  const statuses = ['all', ...new Set(projects.map((p) => p.status))];
+  const filtered = projects;
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans flex flex-col justify-between">
@@ -85,8 +103,9 @@ export default function ProjectsPage() {
               <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base">{t.projects.noProjects}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {filtered.map((project) => (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                {filtered.map((project) => (
                 <Link
                   key={project.id}
                   href={`/projects/${project.id}`}
@@ -151,6 +170,8 @@ export default function ProjectsPage() {
                 </Link>
               ))}
             </div>
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+          </>
           )}
         </main>
       </div>

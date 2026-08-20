@@ -1,13 +1,25 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import FileUpload from '@/component/FileUpload';
 import { useAdmin } from './admin-context';
 import { Spinner } from './spinner';
+import Pagination from '@/component/Pagination';
 
 export function ProjectsTab() {
-  const { t, projects, filteredProjects, projSearch, setProjSearch, projStatusFilter, setProjStatusFilter, projForm, setProjForm, handleSaveProject, handleDeleteProject, badge, emptyProjectForm } = useAdmin();
+  const { t, projects, filteredProjects, projSearch, setProjSearch, projStatusFilter, setProjStatusFilter, projForm, setProjForm, handleDeleteProject, emptyProjectForm } = useAdmin();
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [projSearch, projStatusFilter]);
+
   if (projForm.editing) return ProjectsForm();
+
+  const totalPages = Math.ceil(filteredProjects.length / limit);
+  const paginatedProjects = filteredProjects.slice((currentPage - 1) * limit, currentPage * limit);
+
   return (
     <>
       {/* Search & Filter */}
@@ -30,43 +42,48 @@ export function ProjectsTab() {
           className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
       </div>
       {filteredProjects.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead><tr className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
-                <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.nameField}</th>
-                <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.statusField}</th>
-                <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.budgetField}</th>
-                <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">Date</th>
-                <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
-              </tr></thead>
-              <tbody>
-                {filteredProjects.map((item) => (
-                  <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
-                    <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.name}</td>
-                    <td className="p-4">
-                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                        item.status === 'completed' ? 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200' :
-                        item.status === 'ongoing' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' :
-                        'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
-                      }`}>{item.status}</span>
-                    </td>
-                    <td className="p-4 text-slate-500 text-xs hidden md:table-cell dark:text-slate-400">{item.budget ? `ETB ${Number(item.budget).toLocaleString()}` : '-'}</td>
-                    <td className="p-4 text-slate-400 text-xs hidden md:table-cell dark:text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button onClick={() => setProjForm({ editing: true, editingId: item.id, data: { name: item.name, nameAm: item.nameAm || '', nameOm: item.nameOm || '', description: item.description, descriptionAm: item.descriptionAm || '', descriptionOm: item.descriptionOm || '', budget: Number(item.budget) || 0, status: item.status, startDate: item.startDate || '', endDate: item.endDate || '', location: item.location || '', coverImage: item.coverImage || '', fundingSource: item.fundingSource || '', contractor: item.contractor || '', category: item.category || '' } })}
-                          className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium">{t.admin.editItem}</button>
-                        <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteProject(item.id); }}
-                          className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition font-medium">{t.admin.deleteItem}</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <>
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead><tr className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.nameField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.statusField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.budgetField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">Date</th>
+                  <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
+                </tr></thead>
+                <tbody>
+                  {paginatedProjects.map((item) => (
+                    <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                      <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.name}</td>
+                      <td className="p-4">
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                          item.status === 'completed' ? 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200' :
+                          item.status === 'ongoing' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' :
+                          'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
+                        }`}>{item.status}</span>
+                      </td>
+                      <td className="p-4 text-slate-500 text-xs hidden md:table-cell dark:text-slate-400">{item.budget ? `ETB ${Number(item.budget).toLocaleString()}` : '-'}</td>
+                      <td className="p-4 text-slate-400 text-xs hidden md:table-cell dark:text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</td>
+                      <td className="p-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button onClick={() => setProjForm({ editing: true, editingId: item.id, data: { name: item.name, nameAm: item.nameAm || '', nameOm: item.nameOm || '', description: item.description, descriptionAm: item.descriptionAm || '', descriptionOm: item.descriptionOm || '', budget: Number(item.budget) || 0, status: item.status, startDate: item.startDate || '', endDate: item.endDate || '', location: item.location || '', coverImage: item.coverImage || '', fundingSource: item.fundingSource || '', contractor: item.contractor || '', category: item.category || '' } })}
+                            className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium">{t.admin.editItem}</button>
+                          <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteProject(item.id); }}
+                            className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition font-medium">{t.admin.deleteItem}</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+          <div className="mt-4 flex justify-center">
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+          </div>
+        </>
       )}
     </>
   );

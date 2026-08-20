@@ -19,12 +19,32 @@ export class DepartmentsService {
     return await this.departmentsRepository.save(department);
   }
 
-  async findAll() {
-    return await this.departmentsRepository.find({
+  async findAll(page?: number, limit?: number) {
+    if (page === undefined && limit === undefined) {
+      return await this.departmentsRepository.find({
+        order: {
+          createdAt: 'DESC',
+        },
+      });
+    }
+
+    const pageNum = page || 1;
+    const limitNum = limit || 10;
+    const [data, total] = await this.departmentsRepository.findAndCount({
       order: {
         createdAt: 'DESC',
       },
+      skip: (pageNum - 1) * limitNum,
+      take: limitNum,
     });
+
+    return {
+      data,
+      total,
+      page: pageNum,
+      limit: limitNum,
+      totalPages: Math.ceil(total / limitNum),
+    };
   }
 
   async findOne(id: number) {

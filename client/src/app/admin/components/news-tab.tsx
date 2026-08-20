@@ -1,14 +1,26 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import FileUpload from '@/component/FileUpload';
 import { useAdmin } from './admin-context';
 import { Spinner } from './spinner';
 import { SearchBar } from './search-bar';
+import Pagination from '@/component/Pagination';
 
 export function NewsTab() {
-  const { t, news, filteredNews, newsSearch, setNewsSearch, newsStatusFilter, setNewsStatusFilter, newsForm, setNewsForm, handleSaveNews, handleDeleteNews, handleToggleNews, badge, emptyNewsForm } = useAdmin();
+  const { t, news, filteredNews, newsSearch, setNewsSearch, newsStatusFilter, setNewsStatusFilter, newsForm, setNewsForm, handleDeleteNews, handleToggleNews, badge, emptyNewsForm } = useAdmin();
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [newsSearch, newsStatusFilter]);
+
   if (newsForm.editing) return NewsForm();
+
+  const totalPages = Math.ceil(filteredNews.length / limit);
+  const paginatedNews = filteredNews.slice((currentPage - 1) * limit, currentPage * limit);
+
   return (
     <>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
@@ -33,37 +45,42 @@ export function NewsTab() {
       </div>
       <p className="text-xs text-slate-400 mb-3">{filteredNews.length} of {news.length} article{news.length !== 1 ? 's' : ''}</p>
       {news.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead><tr className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
-                <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.titleField}</th>
-                <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.statusField}</th>
-                <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.authorField}</th>
-                <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.dateField}</th>
-                <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
-              </tr></thead>
-              <tbody>
-                {filteredNews.map((item) => (
-                  <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
-                    <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.title}</td>
-                    <td className="p-4"><button onClick={() => handleToggleNews(item)} className="hover:opacity-80">{badge(item.published)}</button></td>
-                    <td className="p-4 text-slate-500 text-xs hidden md:table-cell dark:text-slate-400">{item.createdBy?.fullName}</td>
-                    <td className="p-4 text-slate-400 text-xs hidden md:table-cell dark:text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button onClick={() => setNewsForm({ editing: true, editingId: item.id, data: { title: item.title, titleAm: item.titleAm || '', titleOm: item.titleOm || '', slug: item.slug, summary: item.summary, summaryAm: item.summaryAm || '', summaryOm: item.summaryOm || '', content: item.content, contentAm: item.contentAm || '', contentOm: item.contentOm || '', coverImage: item.coverImage || '', published: item.published } })}
-                          className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium">{t.admin.editItem}</button>
-                        <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteNews(item.id); }}
-                          className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition font-medium">{t.admin.deleteItem}</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <>
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead><tr className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.titleField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.statusField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.authorField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.dateField}</th>
+                  <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
+                </tr></thead>
+                <tbody>
+                  {paginatedNews.map((item) => (
+                    <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                      <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.title}</td>
+                      <td className="p-4"><button onClick={() => handleToggleNews(item)} className="hover:opacity-80">{badge(item.published)}</button></td>
+                      <td className="p-4 text-slate-500 text-xs hidden md:table-cell dark:text-slate-400">{item.createdBy?.fullName}</td>
+                      <td className="p-4 text-slate-400 text-xs hidden md:table-cell dark:text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</td>
+                      <td className="p-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button onClick={() => setNewsForm({ editing: true, editingId: item.id, data: { title: item.title, titleAm: item.titleAm || '', titleOm: item.titleOm || '', slug: item.slug, summary: item.summary, summaryAm: item.summaryAm || '', summaryOm: item.summaryOm || '', content: item.content, contentAm: item.contentAm || '', contentOm: item.contentOm || '', coverImage: item.coverImage || '', published: item.published } })}
+                            className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium">{t.admin.editItem}</button>
+                          <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteNews(item.id); }}
+                            className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition font-medium">{t.admin.deleteItem}</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+          <div className="mt-4 flex justify-center">
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+          </div>
+        </>
       )}
     </>
   );

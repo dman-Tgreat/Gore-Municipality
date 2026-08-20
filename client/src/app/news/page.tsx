@@ -8,6 +8,7 @@ import { useLocale } from '@/context/LocaleContext';
 import { tField } from '@/lib/locale';
 import { newsApi, announcementsApi, settingsApi, type NewsArticle, type Announcement, type SiteSetting } from '@/lib/api';
 import { Newspaper, Megaphone } from 'lucide-react';
+import Pagination from '@/component/Pagination';
 
 type Tab = 'news' | 'announcements';
 
@@ -26,23 +27,66 @@ function NewsContent() {
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
+  // Pagination states
+  const [newsPage, setNewsPage] = useState(1);
+  const [newsTotalPages, setNewsTotalPages] = useState(1);
+  const [newsTotal, setNewsTotal] = useState(0);
+
+  const [annPage, setAnnPage] = useState(1);
+  const [annTotalPages, setAnnTotalPages] = useState(1);
+  const [annTotal, setAnnTotal] = useState(0);
+
+  const limit = 5;
+
   // Helper to get a setting value by key, falling back to i18n default
   const getSetting = (key: string, fallback: string): string => {
     const found = settings.find((s) => s.settingKey === key);
     return found ? found.settingValue : fallback;
   };
 
+  // Fetch settings once
   useEffect(() => {
-    Promise.all([
-      newsApi.getAll().catch(() => [] as NewsArticle[]),
-      announcementsApi.getAll().catch(() => [] as Announcement[]),
-      settingsApi.getAll().catch(() => [] as SiteSetting[]),
-    ]).then(([allNews, allAnnouncements, allSettings]) => {
-      setArticles(allNews.filter((a) => a.published));
-      setAnnouncements(allAnnouncements.filter((a) => a.published));
-      setSettings(allSettings);
-    }).finally(() => setLoading(false));
+    settingsApi.getAll()
+      .then(setSettings)
+      .catch(() => {});
   }, []);
+
+  // Fetch news
+  useEffect(() => {
+    if (activeTab !== 'news') return;
+    setLoading(true);
+    newsApi.getAll(newsPage, limit, true)
+      .then((res) => {
+        // Handle case where we requested a page with no results due to deletion/updates
+        setArticles(res.data || []);
+        setNewsTotalPages(res.totalPages || 1);
+        setNewsTotal(res.total || 0);
+      })
+      .catch(() => {
+        setArticles([]);
+        setNewsTotalPages(1);
+        setNewsTotal(0);
+      })
+      .finally(() => setLoading(false));
+  }, [activeTab, newsPage]);
+
+  // Fetch announcements
+  useEffect(() => {
+    if (activeTab !== 'announcements') return;
+    setLoading(true);
+    announcementsApi.getAll(annPage, limit, true)
+      .then((res) => {
+        setAnnouncements(res.data || []);
+        setAnnTotalPages(res.totalPages || 1);
+        setAnnTotal(res.total || 0);
+      })
+      .catch(() => {
+        setAnnouncements([]);
+        setAnnTotalPages(1);
+        setAnnTotal(0);
+      })
+      .finally(() => setLoading(false));
+  }, [activeTab, annPage]);
 
   const imgSrc = (url: string | undefined) => {
     if (!url) return undefined;
@@ -96,14 +140,14 @@ function NewsContent() {
                 >
                   {tab.icon}
                   {tab.label}
-                  {tab.key === 'news' && articles.length > 0 && (
+                  {tab.key === 'news' && newsTotal > 0 && (
                     <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-full px-1.5 py-0.5 font-mono">
-                      {articles.length}
+                      {newsTotal}
                     </span>
                   )}
-                  {tab.key === 'announcements' && announcements.length > 0 && (
+                  {tab.key === 'announcements' && annTotal > 0 && (
                     <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-full px-1.5 py-0.5 font-mono">
-                      {announcements.length}
+                      {annTotal}
                     </span>
                   )}
                 </button>
@@ -144,35 +188,38 @@ function NewsContent() {
                     <p className="text-slate-500 dark:text-slate-400">{t.services.noUpdates}</p>
                   </div>
                 ) : (
-                  articles.map((article) => (
-                    <article key={article.id} className="bg-slate-100 dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
-                      {article.coverImage && (
-                        <img src={imgSrc(article.coverImage)} alt={article.title} className="w-full h-52 object-cover" />
-                      )}
-                      <div className="p-6 space-y-3">
-                        <div className="flex items-center gap-2 text-sm">
-                          <span className="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-2 py-0.5 rounded-full font-medium">
-                            {t.news.latestPress}
-                          </span>
-                          <span className="text-slate-400 dark:text-slate-500">
-                            {new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(article.createdAt))}
-                          </span>
+                  <>
+                    {articles.map((article) => (
+                      <article key={article.id} className="bg-slate-100 dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
+                        {article.coverImage && (
+                          <img src={imgSrc(article.coverImage)} alt={article.title} className="w-full h-52 object-cover" />
+                        )}
+                        <div className="p-6 space-y-3">
+                          <div className="flex items-center gap-2 text-sm">
+                            <span className="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-2 py-0.5 rounded-full font-medium">
+                              {t.news.latestPress}
+                            </span>
+                            <span className="text-slate-400 dark:text-slate-500">
+                              {new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(article.createdAt))}
+                            </span>
+                          </div>
+                          <h3 className="text-lg font-bold text-slate-800 dark:text-white hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer">
+                            {tField(article, 'title', locale)}
+                          </h3>
+                          <p className="text-slate-600 dark:text-slate-400 text-base leading-relaxed">
+                            {tField(article, 'summary', locale)}
+                          </p>
+                          <button className="text-slate-700 dark:text-slate-300 text-sm font-semibold hover:text-slate-800 dark:hover:text-white transition-colors inline-flex items-center gap-1">
+                            {t.announcements.readMore}
+                            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                            </svg>
+                          </button>
                         </div>
-                        <h3 className="text-lg font-bold text-slate-800 dark:text-white hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer">
-                          {tField(article, 'title', locale)}
-                        </h3>
-                        <p className="text-slate-600 dark:text-slate-400 text-base leading-relaxed">
-                          {tField(article, 'summary', locale)}
-                        </p>
-                        <button className="text-slate-700 dark:text-slate-300 text-sm font-semibold hover:text-slate-800 dark:hover:text-white transition-colors inline-flex items-center gap-1">
-                          {t.announcements.readMore}
-                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                          </svg>
-                        </button>
-                      </div>
-                    </article>
-                  ))
+                      </article>
+                    ))}
+                    <Pagination currentPage={newsPage} totalPages={newsTotalPages} onPageChange={setNewsPage} />
+                  </>
                 )}
               </div>
 
@@ -220,46 +267,49 @@ function NewsContent() {
                   <p className="text-slate-500 dark:text-slate-400 text-lg">{t.announcements.noAnnouncements}</p>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {announcements.map((announcement) => (
-                    <div key={announcement.id} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-md transition-all duration-200">
-                      <button
-                        onClick={() => setExpandedId(expandedId === announcement.id ? null : announcement.id)}
-                        className="w-full text-left p-6 flex justify-between items-start gap-4"
-                        aria-expanded={expandedId === announcement.id}
-                      >
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-2 flex-wrap">
-                            <span className="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider">
-                              {t.announcements.published}
-                            </span>
-                            <span className="text-slate-400 dark:text-slate-500 text-sm">
-                              {new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(announcement.createdAt))}
-                            </span>
+                <>
+                  <div className="space-y-4">
+                    {announcements.map((announcement) => (
+                      <div key={announcement.id} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-md transition-all duration-200">
+                        <button
+                          onClick={() => setExpandedId(expandedId === announcement.id ? null : announcement.id)}
+                          className="w-full text-left p-6 flex justify-between items-start gap-4"
+                          aria-expanded={expandedId === announcement.id}
+                        >
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-2 flex-wrap">
+                              <span className="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider">
+                                {t.announcements.published}
+                              </span>
+                              <span className="text-slate-400 dark:text-slate-500 text-sm">
+                                {new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(announcement.createdAt))}
+                              </span>
+                            </div>
+                            <h3 className="text-lg font-bold text-slate-800 dark:text-white">{tField(announcement, 'title', locale)}</h3>
+                            <p className="text-base text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">{tField(announcement, 'description', locale)}</p>
                           </div>
-                          <h3 className="text-lg font-bold text-slate-800 dark:text-white">{tField(announcement, 'title', locale)}</h3>
-                          <p className="text-base text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">{tField(announcement, 'description', locale)}</p>
-                        </div>
-                        <div className={`shrink-0 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center transition-all duration-200 ${
-                          expandedId === announcement.id ? 'rotate-180 bg-slate-200 dark:bg-slate-600 text-slate-700 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500'
-                        }`}>
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                          </svg>
-                        </div>
-                      </button>
-                      {expandedId === announcement.id && (
-                        <div className="px-6 pb-6 border-t border-slate-200 dark:border-slate-700 pt-4">
-                          <div className="p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
-                            <p className="text-slate-700 dark:text-slate-300 text-base leading-relaxed whitespace-pre-line">
-                              {tField(announcement, 'content', locale)}
-                            </p>
+                          <div className={`shrink-0 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center transition-all duration-200 ${
+                            expandedId === announcement.id ? 'rotate-180 bg-slate-200 dark:bg-slate-600 text-slate-700 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500'
+                          }`}>
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                            </svg>
                           </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                        </button>
+                        {expandedId === announcement.id && (
+                          <div className="px-6 pb-6 border-t border-slate-200 dark:border-slate-700 pt-4">
+                            <div className="p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                              <p className="text-slate-700 dark:text-slate-300 text-base leading-relaxed whitespace-pre-line">
+                                {tField(announcement, 'content', locale)}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <Pagination currentPage={annPage} totalPages={annTotalPages} onPageChange={setAnnPage} />
+                </>
               )}
             </div>
           )}

@@ -28,11 +28,40 @@ export class InvestmentsService {
     return await this.investmentRepository.save(investment);
   }
 
-  async findAll() {
-    return await this.investmentRepository.find({
+  async findAll(page?: number, limit?: number, published?: boolean, category?: string) {
+    const where: any = {};
+    if (published !== undefined) {
+      where.published = published;
+    }
+    if (category !== undefined) {
+      where.category = category;
+    }
+
+    if (page === undefined && limit === undefined) {
+      return await this.investmentRepository.find({
+        where,
+        relations: { createdBy: true },
+        order: { createdAt: 'DESC' },
+      });
+    }
+
+    const pageNum = page || 1;
+    const limitNum = limit || 10;
+    const [data, total] = await this.investmentRepository.findAndCount({
+      where,
       relations: { createdBy: true },
       order: { createdAt: 'DESC' },
+      skip: (pageNum - 1) * limitNum,
+      take: limitNum,
     });
+
+    return {
+      data,
+      total,
+      page: pageNum,
+      limit: limitNum,
+      totalPages: Math.ceil(total / limitNum),
+    };
   }
 
   async findOne(id: number) {

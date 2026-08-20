@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -21,13 +22,26 @@ export class InvestmentsController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Req() req: any, @Body() dto: CreateInvestmentDto) {
+  create(
+    @Req() req: any,
+    @Body() dto: CreateInvestmentDto,
+  ) {
     return this.investmentsService.create(dto, req.user.id);
   }
 
   @Get()
-  findAll() {
-    return this.investmentsService.findAll();
+  findAll(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('published') published?: string,
+    @Query('category') category?: string,
+  ) {
+    return this.investmentsService.findAll(
+      page ? parseInt(page, 10) : undefined,
+      limit ? parseInt(limit, 10) : undefined,
+      published === 'true' ? true : undefined,
+      category || undefined,
+    );
   }
 
   @Get(':id')

@@ -1,13 +1,25 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import FileUpload from '@/component/FileUpload';
 import { useAdmin } from './admin-context';
 import { Spinner } from './spinner';
+import Pagination from '@/component/Pagination';
 
 export function InvestmentsTab() {
   const { t, investments, filteredInvestments, invSearch, setInvSearch, invStatusFilter, setInvStatusFilter, invCategoryFilter, setInvCategoryFilter, invForm, setInvForm, handleSaveInvestment, handleDeleteInvestment, handleToggleInvestment, badge, emptyInvestmentForm } = useAdmin();
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [invSearch, invStatusFilter, invCategoryFilter]);
+
   if (invForm.editing) return InvestmentsForm();
+
+  const totalPages = Math.ceil(filteredInvestments.length / limit);
+  const paginatedInvestments = filteredInvestments.slice((currentPage - 1) * limit, currentPage * limit);
+
   return (
     <>
       {/* Search & Filter */}
@@ -38,6 +50,7 @@ export function InvestmentsTab() {
           className="bg-slate-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-700 transition">{t.admin.createItem}</button>
       </div>
       {filteredInvestments.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
+        <>
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -49,7 +62,7 @@ export function InvestmentsTab() {
                 <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
               </tr></thead>
               <tbody>
-                {filteredInvestments.map((item) => (
+                {paginatedInvestments.map((item) => (
                   <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
                     <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.title}</td>
                     <td className="p-4"><button onClick={() => handleToggleInvestment(item)} className="hover:opacity-80">{badge(item.published)}</button></td>
@@ -69,6 +82,10 @@ export function InvestmentsTab() {
             </table>
           </div>
         </div>
+        <div className="mt-4 flex justify-center">
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+        </div>
+        </>
       )}
     </>
   );

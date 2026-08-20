@@ -1,14 +1,26 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import FileUpload from '@/component/FileUpload';
 import { useAdmin } from './admin-context';
 import { Spinner } from './spinner';
 import { SearchBar } from './search-bar';
+import Pagination from '@/component/Pagination';
 
 export function DepartmentsTab() {
-  const { t, departments, filteredDepartments, deptSearch, setDeptSearch, deptForm, setDeptForm, handleSaveDept, handleDeleteDept, badge, emptyDeptForm } = useAdmin();
+  const { t, departments, filteredDepartments, deptSearch, setDeptSearch, deptForm, setDeptForm, handleDeleteDept, badge, emptyDeptForm } = useAdmin();
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [deptSearch]);
+
   if (deptForm.editing) return DepartmentsForm();
+
+  const totalPages = Math.ceil(filteredDepartments.length / limit);
+  const paginatedDepartments = filteredDepartments.slice((currentPage - 1) * limit, currentPage * limit);
+
   return (
     <>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
@@ -23,37 +35,42 @@ export function DepartmentsTab() {
       </div>
       <p className="text-xs text-slate-400 mb-3">{filteredDepartments.length} of {departments.length} department{departments.length !== 1 ? 's' : ''}</p>
       {departments.length === 0 ? <p className="text-center text-slate-500 py-12">{t.admin.noItems}</p> : (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead><tr className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
-                <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.nameField}</th>
-                <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">Head</th>
-                <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">Contact</th>
-                <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.dateField}</th>
-                <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
-              </tr></thead>
-              <tbody>
-                {filteredDepartments.map((item) => (
-                  <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
-                    <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.name}</td>
-                    <td className="p-4 text-sm text-slate-600 dark:text-slate-400">{item.head || '-'}</td>
-                    <td className="p-4 text-xs text-slate-500 hidden md:table-cell dark:text-slate-400">{item.email || item.phone || '-'}</td>
-                    <td className="p-4 text-slate-400 text-xs hidden md:table-cell dark:text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</td>
-                    <td className="p-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button onClick={() => setDeptForm({ editing: true, editingId: item.id, data: { name: item.name, nameAm: item.nameAm || '', nameOm: item.nameOm || '', description: item.description, descriptionAm: item.descriptionAm || '', descriptionOm: item.descriptionOm || '', head: item.head || '', phone: item.phone || '', email: item.email || '', office: item.office || '', image: item.image || '' } })}
-                          className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium">{t.admin.editItem}</button>
-                        <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteDept(item.id); }}
-                          className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition font-medium">{t.admin.deleteItem}</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <>
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead><tr className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.nameField}</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400">Head</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">Contact</th>
+                  <th className="text-left p-4 font-semibold text-slate-600 dark:text-slate-400 hidden md:table-cell">{t.admin.dateField}</th>
+                  <th className="text-right p-4 font-semibold text-slate-600 dark:text-slate-400">{t.admin.editItem}</th>
+                </tr></thead>
+                <tbody>
+                  {paginatedDepartments.map((item) => (
+                    <tr key={item.id} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+                      <td className="p-4 font-medium text-slate-800 dark:text-white max-w-xs truncate">{item.name}</td>
+                      <td className="p-4 text-sm text-slate-600 dark:text-slate-400">{item.head || '-'}</td>
+                      <td className="p-4 text-xs text-slate-500 hidden md:table-cell dark:text-slate-400">{item.email || item.phone || '-'}</td>
+                      <td className="p-4 text-slate-400 text-xs hidden md:table-cell dark:text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</td>
+                      <td className="p-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button onClick={() => setDeptForm({ editing: true, editingId: item.id, data: { name: item.name, nameAm: item.nameAm || '', nameOm: item.nameOm || '', description: item.description, descriptionAm: item.descriptionAm || '', descriptionOm: item.descriptionOm || '', head: item.head || '', phone: item.phone || '', email: item.email || '', office: item.office || '', image: item.image || '' } })}
+                            className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium">{t.admin.editItem}</button>
+                          <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteDept(item.id); }}
+                            className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition font-medium">{t.admin.deleteItem}</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+          <div className="mt-4 flex justify-center">
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+          </div>
+        </>
       )}
     </>
   );

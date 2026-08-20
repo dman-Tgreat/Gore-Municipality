@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ContactService } from './contact.service';
@@ -24,8 +25,14 @@ export class ContactController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.contactService.findAll();
+  findAll(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.contactService.findAll(
+      page ? parseInt(page, 10) : undefined,
+      limit ? parseInt(limit, 10) : undefined,
+    );
   }
 
   @UseGuards(JwtAuthGuard)

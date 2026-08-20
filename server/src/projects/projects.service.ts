@@ -37,15 +37,45 @@ export class ProjectsService {
     return await this.projectsRepository.save(project);
   }
 
-  async findAll() {
-    return await this.projectsRepository.find({
+  async findAll(page?: number, limit?: number, status?: string) {
+    const where: any = {};
+    if (status !== undefined) {
+      where.status = status;
+    }
+
+    if (page === undefined && limit === undefined) {
+      return await this.projectsRepository.find({
+        where,
+        relations: {
+          createdBy: true,
+        },
+        order: {
+          createdAt: 'DESC',
+        },
+      });
+    }
+
+    const pageNum = page || 1;
+    const limitNum = limit || 10;
+    const [data, total] = await this.projectsRepository.findAndCount({
+      where,
       relations: {
         createdBy: true,
       },
       order: {
         createdAt: 'DESC',
       },
+      skip: (pageNum - 1) * limitNum,
+      take: limitNum,
     });
+
+    return {
+      data,
+      total,
+      page: pageNum,
+      limit: limitNum,
+      totalPages: Math.ceil(total / limitNum),
+    };
   }
 
   async findOne(id: number) {

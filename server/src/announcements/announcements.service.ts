@@ -37,15 +37,45 @@ export class AnnouncementsService {
     return await this.announcementsRepository.save(announcement);
   }
 
-  async findAll() {
-    return await this.announcementsRepository.find({
+  async findAll(page?: number, limit?: number, published?: boolean) {
+    const where: any = {};
+    if (published !== undefined) {
+      where.published = published;
+    }
+
+    if (page === undefined && limit === undefined) {
+      return await this.announcementsRepository.find({
+        where,
+        relations: {
+          createdBy: true,
+        },
+        order: {
+          createdAt: 'DESC',
+        },
+      });
+    }
+
+    const pageNum = page || 1;
+    const limitNum = limit || 10;
+    const [data, total] = await this.announcementsRepository.findAndCount({
+      where,
       relations: {
         createdBy: true,
       },
       order: {
         createdAt: 'DESC',
       },
+      skip: (pageNum - 1) * limitNum,
+      take: limitNum,
     });
+
+    return {
+      data,
+      total,
+      page: pageNum,
+      limit: limitNum,
+      totalPages: Math.ceil(total / limitNum),
+    };
   }
 
   async findOne(id: number) {
