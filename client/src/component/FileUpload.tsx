@@ -44,12 +44,13 @@ export default function FileUpload({
       // Read JWT token from localStorage (set by admin login)
       const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null;
 
-      // IMPORTANT: Do NOT pass a headers object at all when using FormData.
-      // The browser MUST auto-set Content-Type: multipart/form-data; boundary=...
-      // Passing any custom headers object can prevent this in some environments.
+      // NOTE: Do NOT set Content-Type manually — the browser must auto-set it to
+      // "multipart/form-data; boundary=..." when using FormData.
+      // Adding only the Authorization header is perfectly safe.
       const res = await fetch(`${API_BASE}/upload`, {
         method: 'POST',
         body: formData,
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
 
       if (!res.ok) {
@@ -90,7 +91,17 @@ export default function FileUpload({
     if (inputRef.current) inputRef.current.value = '';
   };
 
-  const isImage = preview && (preview.startsWith('/uploads/') || preview.startsWith('data:image'));
+  const isImage =
+    preview &&
+    (preview.startsWith('data:image') ||
+      preview.includes('res.cloudinary.com') ||
+      preview.startsWith('/uploads/') || // legacy fallback
+      /\.(jpg|jpeg|png|gif|webp)(\?|$)/i.test(preview));
+
+  // Build the display URL (Cloudinary returns full https URLs; legacy paths need the base)
+  const displayUrl = preview.startsWith('/uploads/')
+    ? `${API_BASE}${preview}`
+    : preview;
 
   return (
     <div>
@@ -98,7 +109,7 @@ export default function FileUpload({
         <div className="relative group">
           {isImage ? (
             <img
-              src={preview.startsWith('/uploads/') ? `${API_BASE}${preview}` : preview}
+              src={displayUrl}
               alt="Preview"
               className="w-full h-32 object-cover rounded-lg border border-gray-200"
             />

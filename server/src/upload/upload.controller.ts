@@ -3,39 +3,33 @@ import {
   Post,
   Delete,
   Param,
+  Query,
   UseGuards,
   UseInterceptors,
   UploadedFile,
   BadRequestException,
-  NotFoundException,
   MaxFileSizeValidator,
   FileTypeValidator,
   ParseFilePipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
-import { extname, join, basename } from 'path';
-import { existsSync, mkdirSync, writeFileSync, unlinkSync } from 'fs';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-
-const UPLOADS_DIR = join(__dirname, '..', '..', 'uploads');
-
-// Ensure uploads directory exists
-if (!existsSync(UPLOADS_DIR)) {
-  mkdirSync(UPLOADS_DIR, { recursive: true });
-}
+import { CloudinaryService } from './cloudinary.service';
 
 @Controller('upload')
 export class UploadController {
+  constructor(private readonly cloudinaryService: CloudinaryService) {}
+
   @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(), // Use memoryStorage so file.buffer is available for validation
+      storage: memoryStorage(),
       limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
     }),
   )
-  uploadFile(
+  async uploadFile(
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -47,48 +41,49 @@ export class UploadController {
     )
     file: Express.Multer.File,
   ) {
-    // Generate unique filename
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    const ext = extname(file.originalname);
-    const filename = `${uniqueSuffix}${ext}`;
-    const filePath = join(UPLOADS_DIR, filename);
+    // Determine resource type for Cloudinary
+    const isImage = file.mimetype.startsWith('image/');
+    const resourceType: 'image' | 'raw' | 'auto' = isImage ? 'image' : 'raw';
 
-    // Write the buffer to disk manually
-    try {
-      writeFileSync(filePath, file.buffer);
-    } catch (error) {
-      throw new BadRequestException(`Failed to save file: ${error.message}`);
-    }
+    const result = await this.cloudinaryService.uploadBuffer(
+      file.buffer,
+      'gore-municipality',
+      resourceType,
+    );
 
-    const url = `/uploads/${filename}`;
     return {
       success: true,
-      url,
-      filename,
+      url: result.secure_url,
+      publicId: result.public_id,
       originalName: file.originalname,
       size: file.size,
       mimetype: file.mimetype,
+      width: result.width,
+      height: result.height,
     };
   }
 
+  /**
+   * Delete a file from Cloudinary.
+   * Accepts a `publicId` query param (preferred) or falls back to extracting it from a URL.
+   */
   @UseGuards(JwtAuthGuard)
-  @Delete(':filename')
-  deleteFile(@Param('filename') filename: string) {
-    const safeFilename = basename(filename);
-    const filePath = join(UPLOADS_DIR, safeFilename);
+  @Delete()
+  async deleteFile(
+    @Query('publicId') publicId?: string,
+    @Query('url') url?: string,
+  ) {
+    let id = publicId;
 
-    if (!existsSync(filePath)) {
-      throw new NotFoundException(`File "${filename}" not found`);
+    if (!id && url) {
+      id = this.cloudinaryService.extractPublicId(url) ?? undefined;
     }
 
-    try {
-      unlinkSync(filePath);
-      return {
-        success: true,
-        message: `File "${filename}" deleted successfully`,
-      };
-    } catch (error) {
-      throw new BadRequestException(`Failed to delete file "${filename}": ${error.message}`);
+    if (!id) {
+      throw new BadRequestException('Provide either a `publicId` or `url` query parameter');
     }
+
+    await this.cloudinaryService.deleteByPublicId(id);
+    return { success: true, message: `File "${id}" deleted from Cloudinary` };
   }
 }
