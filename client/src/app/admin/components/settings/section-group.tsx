@@ -10,9 +10,11 @@ interface Props {
   onChange: (key: string, value: string) => void;
   icon: React.ReactNode;
   colorClass: string;
+  errors?: Record<string, string>;
+  onValidate?: (key: string, error: string) => void;
 }
 
-export function SettingsGroupSection({ group, settingsForm, onChange, icon, colorClass }: Props) {
+export function SettingsGroupSection({ group, settingsForm, onChange, icon, colorClass, errors, onValidate }: Props) {
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-5">
       <div className="flex items-start gap-3 pb-2 border-b border-slate-100 dark:border-slate-700">
@@ -28,7 +30,14 @@ export function SettingsGroupSection({ group, settingsForm, onChange, icon, colo
       </div>
       <div className="grid gap-4">
         {group.fields.map((field) => (
-          <SettingsField key={field.key} field={field} value={settingsForm[field.key] || ''} onChange={onChange} />
+          <SettingsField
+            key={field.key}
+            field={field}
+            value={settingsForm[field.key] || ''}
+            onChange={onChange}
+            error={errors?.[field.key]}
+            onValidate={onValidate}
+          />
         ))}
       </div>
     </div>
