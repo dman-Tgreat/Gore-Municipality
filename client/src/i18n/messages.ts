@@ -221,6 +221,8 @@ const enMessages = {
     filterCompleted: 'Completed',
     filterActive: 'Active',
     filterInactive: 'Inactive',
+    dateFrom: 'From',
+    dateTo: 'To',
   },
   footer: {
     copyright: 'Gore Woreda Administration. All rights reserved.',
@@ -543,6 +545,8 @@ const amMessages = {
     filterCompleted: 'የተጠናቀቀ',
     filterActive: 'ንቁ',
     filterInactive: 'ንቁ ያልሆነ',
+    dateFrom: 'ከ',
+    dateTo: 'እስከ',
   },
   footer: {
     copyright: "የጎሬ ወረዳ አስተዳደር። መብቱ በህግ የተጠበቀ ነው።",
@@ -857,6 +861,8 @@ const omMessages: Messages = {
     filterCompleted: 'Xumurame',
     filterActive: 'Wanti',
     filterInactive: 'Wanti hin atoiin',
+    dateFrom: 'Ijjoo',
+    dateTo: 'Hamma',
   },
   footer: {
     copyright: "Bulchiinsa Aanaa Goree. Mirgi Hundu Keeggamaadha.",

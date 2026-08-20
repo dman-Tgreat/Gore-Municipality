@@ -5,24 +5,44 @@ import { useAdmin } from './admin-context';
 import { SearchBar } from './search-bar';
 
 export function MessagesTab() {
-  const { t, msgFilter, setMsgFilter, msgSearch, setMsgSearch, filteredMessages, unreadCount, expandedMsg, setExpandedMsg, handleMarkRead, handleDeleteMsg } = useAdmin();
+  const { t, msgFilter, setMsgFilter, msgSearch, setMsgSearch, msgDateFrom, setMsgDateFrom, msgDateTo, setMsgDateTo, filteredMessages, unreadCount, expandedMsg, setExpandedMsg, handleMarkRead, handleDeleteMsg } = useAdmin();
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row gap-3 mb-4">
-        <SearchBar
-          value={msgSearch}
-          onChange={setMsgSearch}
-          placeholder={t.admin.searchMessages}
-          className="flex-1"
-        />
-        <div className="flex gap-2 flex-wrap">
-          {(['all', 'unread', 'read'] as const).map((f) => (
-            <button key={f} onClick={() => setMsgFilter(f)}
-              className={`text-xs px-3 py-1.5 rounded-full transition font-medium ${msgFilter === f ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700'}`}>
-              {f === 'all' ? t.admin.allMessages : f === 'unread' ? `${t.admin.unread} (${unreadCount})` : t.admin.read}
+      <div className="flex flex-col gap-3 mb-4">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <SearchBar
+            value={msgSearch}
+            onChange={setMsgSearch}
+            placeholder={t.admin.searchMessages}
+            className="flex-1"
+          />
+          <div className="flex gap-2 flex-wrap">
+            {(['all', 'unread', 'read'] as const).map((f) => (
+              <button key={f} onClick={() => setMsgFilter(f)}
+                className={`text-xs px-3 py-1.5 rounded-full transition font-medium ${msgFilter === f ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700'}`}>
+                {f === 'all' ? t.admin.allMessages : f === 'unread' ? `${t.admin.unread} (${unreadCount})` : t.admin.read}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-3 items-end">
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-slate-500 dark:text-slate-400">{t.admin.dateFrom || 'From'}</label>
+            <input type="date" value={msgDateFrom} onChange={(e) => setMsgDateFrom(e.target.value)}
+              className="px-3 py-1.5 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none" />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-slate-500 dark:text-slate-400">{t.admin.dateTo || 'To'}</label>
+            <input type="date" value={msgDateTo} onChange={(e) => setMsgDateTo(e.target.value)}
+              className="px-3 py-1.5 text-sm border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-slate-600 outline-none" />
+          </div>
+          {(msgDateFrom || msgDateTo) && (
+            <button onClick={() => { setMsgDateFrom(''); setMsgDateTo(''); }}
+              className="text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition font-medium">
+              Clear dates
             </button>
-          ))}
+          )}
         </div>
       </div>
       {filteredMessages.length === 0 ? (

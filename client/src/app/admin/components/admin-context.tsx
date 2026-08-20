@@ -55,6 +55,10 @@ interface AdminContextType {
   setMsgFilter: React.Dispatch<React.SetStateAction<'all' | 'unread' | 'read'>>;
   msgSearch: string;
   setMsgSearch: React.Dispatch<React.SetStateAction<string>>;
+  msgDateFrom: string;
+  setMsgDateFrom: React.Dispatch<React.SetStateAction<string>>;
+  msgDateTo: string;
+  setMsgDateTo: React.Dispatch<React.SetStateAction<string>>;
   expandedMsg: number | null;
   setExpandedMsg: React.Dispatch<React.SetStateAction<number | null>>;
   newsSearch: string;
@@ -189,6 +193,8 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const [formLang, setFormLang] = useState<'en' | 'am' | 'om'>('en');
   const [msgFilter, setMsgFilter] = useState<'all' | 'unread' | 'read'>('all');
   const [msgSearch, setMsgSearch] = useState('');
+  const [msgDateFrom, setMsgDateFrom] = useState('');
+  const [msgDateTo, setMsgDateTo] = useState('');
   const [expandedMsg, setExpandedMsg] = useState<number | null>(null);
   const [newsSearch, setNewsSearch] = useState('');
   const [newsStatusFilter, setNewsStatusFilter] = useState<'all' | 'published' | 'draft'>('all');
@@ -424,6 +430,16 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     return messages.filter((m) => {
       if (msgFilter === 'unread' && m.isRead) return false;
       if (msgFilter === 'read' && !m.isRead) return false;
+      if (msgDateFrom) {
+        const from = new Date(msgDateFrom);
+        from.setHours(0, 0, 0, 0);
+        if (new Date(m.createdAt) < from) return false;
+      }
+      if (msgDateTo) {
+        const to = new Date(msgDateTo);
+        to.setHours(23, 59, 59, 999);
+        if (new Date(m.createdAt) > to) return false;
+      }
       if (msgSearch) {
         const q = msgSearch.toLowerCase();
         return (
@@ -435,7 +451,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       }
       return true;
     });
-  }, [messages, msgFilter, msgSearch]);
+  }, [messages, msgFilter, msgSearch, msgDateFrom, msgDateTo]);
 
   const filteredNews = useMemo(() => {
     return news.filter((n) => {
@@ -549,7 +565,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     t, token, messages, setMessages, admins, setAdmins, news, setNews, announcements, setAnnouncements,
     projects, setProjects, departments, setDepartments, investments, setInvestments, heroSlides, setHeroSlides,
     siteSettings, setSiteSettings, loading, tab, setTab, formLang, setFormLang,
-    msgFilter, setMsgFilter, msgSearch, setMsgSearch, expandedMsg, setExpandedMsg,
+    msgFilter, setMsgFilter, msgSearch, setMsgSearch, msgDateFrom, setMsgDateFrom, msgDateTo, setMsgDateTo, expandedMsg, setExpandedMsg,
     newsSearch, setNewsSearch, newsStatusFilter, setNewsStatusFilter, filteredNews,
     annSearch, setAnnSearch, annStatusFilter, setAnnStatusFilter, filteredAnnouncements,
     deptSearch, setDeptSearch, filteredDepartments,
