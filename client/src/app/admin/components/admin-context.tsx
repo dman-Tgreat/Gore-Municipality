@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useLocale } from '@/context/LocaleContext';
 import { type Messages } from '@/i18n/messages';
 import {
-  contactAdminApi, adminApi, newsApi, announcementsApi, projectsApi, departmentsApi, investmentsApi,
+  contactAdminApi, adminApi, authApi, newsApi, announcementsApi, projectsApi, departmentsApi, investmentsApi,
   heroSlidesApi, settingsApi,
   type ContactMessage, type AdminUser, type NewsArticle, type Announcement, type Project, type Department, type Investment,
   type HeroSlide, type SiteSetting,
@@ -191,7 +191,10 @@ export function useAdmin() {
 export function AdminProvider({ children }: { children: React.ReactNode }) {
   const { t } = useLocale();
   const router = useRouter();
-  const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null;
+  // Cookie-based auth: the httpOnly cookie is sent automatically with requests.
+  // We keep a non-null sentinel so existing `authHeaders(token)` calls still compile.
+  // The actual JWT validation happens server-side via the cookie.
+  const [token] = useState<string | null>(() => '__cookie__');
 
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [admins, setAdmins] = useState<AdminUser[]>([]);
@@ -266,7 +269,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         (sets as SiteSetting[]).forEach((s) => { formMap[s.settingKey] = s.settingValue; });
         setSettingsForm(formMap);
       })
-      .catch(() => { localStorage.removeItem('admin_token'); router.push('/admin/login'); })
+      .catch(() => { authApi.logout().catch(() => {}); router.push('/admin/login'); })
       .finally(() => setLoading(false));
   }, [token, router]);
 
@@ -277,7 +280,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener('keydown', h);
   }, []);
 
-  const handleLogout = () => { localStorage.removeItem('admin_token'); router.push('/admin/login'); };
+  const handleLogout = () => { authApi.logout().catch(() => {}); router.push('/admin/login'); };
 
   const handleMarkRead = async (id: number) => {
     if (!token) return;

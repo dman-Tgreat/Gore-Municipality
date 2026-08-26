@@ -3,6 +3,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     cache: 'no-store',
+    credentials: 'include',
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -227,6 +228,10 @@ export const authApi = {
     request<LoginResponse>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
+    }),
+  logout: () =>
+    request<{ success: boolean; message: string }>('/auth/logout', {
+      method: 'POST',
     }),
 };
 

@@ -41,16 +41,11 @@ export default function FileUpload({
       const formData = new FormData();
       formData.append('file', file);
 
-      // Read JWT token from localStorage (set by admin login)
-      const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null;
-
-      // NOTE: Do NOT set Content-Type manually — the browser must auto-set it to
-      // "multipart/form-data; boundary=..." when using FormData.
-      // Adding only the Authorization header is perfectly safe.
+      // Auth is handled via httpOnly cookie (sent automatically with credentials: 'include')
       const res = await fetch(`${API_BASE}/upload`, {
         method: 'POST',
         body: formData,
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        credentials: 'include',
       });
 
       if (!res.ok) {
