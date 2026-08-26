@@ -114,7 +114,7 @@ export default function InvestmentTourismPage() {
         <Header />
 
         {/* Banner */}
-        <section className="relative bg-green-700 text-white py-10 sm:py-16 text-center overflow-hidden">
+        <section className="relative bg-green-700 text-white py-8 sm:py-12 text-center overflow-hidden">
           <div className="absolute inset-0 opacity-10" style={{
             backgroundImage: `radial-gradient(circle at 30% 20%, rgba(255,255,255,0.2) 0%, transparent 50%),
                               radial-gradient(circle at 70% 80%, rgba(255,255,255,0.15) 0%, transparent 50%)`,
@@ -127,7 +127,7 @@ export default function InvestmentTourismPage() {
         </section>
 
         {/* Investment Section */}
-        <section className="py-12 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+        <section className="py-8 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
           <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
               <div className="flex items-start sm:items-center gap-3 sm:gap-4 mb-8">
@@ -226,7 +226,7 @@ export default function InvestmentTourismPage() {
         </section>
 
         {/* Tourism Section */}
-        <section className="py-12 bg-slate-50 dark:bg-slate-800/30">
+        <section className="py-8 bg-slate-50 dark:bg-slate-800/30">
           <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
               <div className="flex items-start sm:items-center gap-3 sm:gap-4 mb-8">

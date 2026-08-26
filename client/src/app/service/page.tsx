@@ -35,9 +35,9 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-6xl">
+        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-6xl">
           {loading ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="bg-white dark:bg-slate-800 rounded-xl shadow-md border border-slate-200 dark:border-slate-700 animate-pulse p-6 space-y-4">
                   <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded w-3/4" />
@@ -47,7 +47,7 @@ export default function ServicesPage() {
               ))}
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {departments.map((dept, idx) => (
                 <Link
                   key={dept.id}

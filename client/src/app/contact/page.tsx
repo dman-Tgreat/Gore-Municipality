@@ -126,8 +126,8 @@ export default function ContactPage() {
         </section>
 
         {/* ── Main Content: Form + Info ── */}
-        <main id="main" className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-6xl">
-          <div className="grid lg:grid-cols-5 gap-10">
+        <main id="main" className="container mx-auto px-4 sm:px-6 py-4 sm:py-6 max-w-6xl">
+          <div className="grid lg:grid-cols-5 gap-8">
             {/* Left — Map & Office Info */}
             <div className="lg:col-span-2 space-y-6">
               <div>

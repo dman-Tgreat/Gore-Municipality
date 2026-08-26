@@ -48,7 +48,7 @@ export default function Services() {
   const deptCount = departments.length;
 
   return (
-    <section id="services" className="py-12 bg-slate-100 dark:bg-slate-900">
+    <section id="services" className="py-8 bg-slate-100 dark:bg-slate-900">
       <div className="container mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="section-badge mb-4 mx-auto">
@@ -57,11 +57,11 @@ export default function Services() {
         </div>
         
         {/* Service Cards Container */}
-        <div className="grid grid-cols-1 gap-6 lg:gap-8 max-w-9xl mx-auto">
+        <div className="grid grid-cols-1 gap-4 lg:gap-6 max-w-9xl mx-auto">
           
           {/* ── Card 1: Latest News ── */}
           <div className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 sm:p-8 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:-translate-y-0.5">
-            <div className="grid md:grid-cols-2 gap-6 sm:gap-8 items-center"> 
+            <div className="grid md:grid-cols-2 gap-4 sm:gap-6 items-center"> 
               
               {/* Text Area */}
               <div>
@@ -123,7 +123,7 @@ export default function Services() {
           {/* ── Card 2: Municipal Services ── */}
           <div className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 sm:p-8 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:-translate-y-0.5">
             {/* Added a responsive 2-column grid container identical to Card 1 */}
-            <div className="grid md:grid-cols-2 gap-6 sm:gap-8 items-center">
+            <div className="grid md:grid-cols-2 gap-4 sm:gap-6 items-center">
               
               {/* Text Area */}
               <div>

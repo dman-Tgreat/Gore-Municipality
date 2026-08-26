@@ -145,8 +145,8 @@ export default function ProjectDetailPage() {
         </div>
       </section>
 
-      <main className="container mx-auto px-6 py-10 max-w-5xl">
-        <div className="grid lg:grid-cols-3 gap-8">
+      <main className="container mx-auto px-6 py-6 max-w-5xl">
+        <div className="grid lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
             {/* Description */}

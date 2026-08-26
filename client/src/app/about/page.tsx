@@ -67,7 +67,7 @@ export default function AboutPage() {
       <Header />
       {/* ── Hero ── */}
       <section className="relative bg-green-700 text-white overflow-hidden">
-        <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 relative z-10">
+        <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 relative z-10">
           <div className="max-w-4xl">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight">{t.about.title}</h1>
             <p className="text-lg md:text-xl text-gray-200 max-w-3xl leading-relaxed">{t.about.subtitle}</p>
@@ -95,7 +95,7 @@ export default function AboutPage() {
       </div>
 
       {/* ── History ── */}
-      <section className="relative w-full overflow-hidden py-16 sm:py-28 my-8 shadow-2xl">
+      <section className="relative w-full overflow-hidden py-10 sm:py-16 my-4 shadow-2xl">
         {/* Full-bleed Historical Background Image matching website aesthetic */}
         <div 
           className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 hover:scale-105"
@@ -122,9 +122,9 @@ export default function AboutPage() {
       </section>
 
       {/* ── Geography ── */}
-      <section className="py-12 sm:py-16 bg-slate-50 dark:bg-slate-800/40">
+      <section className="py-8 sm:py-12 bg-slate-50 dark:bg-slate-800/40">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-6 lg:gap-8 items-center">
             {/* Left Card: Location Map complementing geography text */}
             <div className="relative order-2 md:order-1">
               <div className="rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden group">
@@ -179,9 +179,9 @@ export default function AboutPage() {
       </section>
 
       {/* ── Leadership ── */}
-      <section className="py-12 sm:py-16">
+      <section className="py-8 sm:py-12">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-12">
+          <div className="text-center max-w-3xl mx-auto mb-8">
             <h2 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white mb-3 tracking-tight">
               {t.about.leadershipTitle}
             </h2>
@@ -189,7 +189,7 @@ export default function AboutPage() {
           </div>
 
           {/* Mayor & Vice Mayor */}
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-16">
+          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto mb-10">
             {/* Mayor Card */}
             <div className="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-emerald-500/40 p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl text-center">
               <div className="w-24 h-24 rounded-full bg-emerald-50 dark:bg-slate-700 mx-auto mb-5 flex items-center justify-center border-2 border-emerald-200 dark:border-slate-600 group-hover:border-emerald-500 transition-colors">
@@ -213,7 +213,7 @@ export default function AboutPage() {
 
           {/* Council Members */}
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-10">
+            <div className="text-center mb-6">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 mx-auto mb-4 border border-emerald-200 dark:border-slate-700 shadow-sm">
                 {councilIcon}
               </div>
@@ -244,17 +244,17 @@ export default function AboutPage() {
       </section>
 
       {/* ── Vision & Mission ── */}
-      <section className="py-12 sm:py-16 bg-slate-50 dark:bg-slate-800/40">
+      <section className="py-8 sm:py-12 bg-slate-50 dark:bg-slate-800/40">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
+            <div className="text-center mb-8">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 mx-auto mb-4 border border-emerald-200 dark:border-slate-700 shadow-sm">
                 {visionIcon}
               </div>
               <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">{t.about.visionTitle}</h2>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8 shadow-sm">
                 <div className="flex items-center gap-3 mb-4">
                   <Crosshair className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
@@ -275,7 +275,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="py-12 sm:py-16 bg-gradient-to-r from-green-900 via-green-800 to-green-950 text-white">
+      <section className="py-8 sm:py-12 bg-gradient-to-r from-green-900 via-green-800 to-green-950 text-white">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-black mb-4">{t.about.ctaTitle}</h2>
           <p className="text-emerald-100/90 text-lg max-w-2xl mx-auto mb-8">

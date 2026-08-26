@@ -24,7 +24,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
   }
 
   return (
-    <div className="flex justify-center items-center gap-1 mt-8 sm:mt-12 select-none">
+    <div className="flex justify-center items-center gap-1 mt-6 sm:mt-8 select-none">
       {/* Previous Button */}
       <button
         onClick={() => onPageChange(currentPage - 1)}

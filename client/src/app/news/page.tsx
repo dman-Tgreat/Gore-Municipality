@@ -166,7 +166,7 @@ function NewsContent() {
             </div>
           ) : activeTab === 'news' ? (
             /* === NEWS TAB === */
-            <div className="grid md:grid-cols-3 gap-10">
+            <div className="grid md:grid-cols-3 gap-6">
               {/* Main Feed */}
               <div className="md:col-span-2 space-y-6">
                 <div className="flex items-center gap-3 mb-6">

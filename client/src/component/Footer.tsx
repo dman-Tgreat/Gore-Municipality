@@ -48,8 +48,8 @@ export default function Footer() {
       </div>
 
       {/* Main Footer */}
-      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-10 lg:py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-8">
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 lg:py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-6">
           {/* Brand & About - spans 4 cols */}
           <div className="lg:col-span-4">
             <Link href="/" className="inline-flex bg-primary-dark items-center gap-2 sm:gap-3 mb-4">

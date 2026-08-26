@@ -116,8 +116,8 @@ export default function InvestmentDetailPage() {
         </div>
       </section>
 
-      <main className="container mx-auto px-4 sm:px-6 py-8 sm:py-10 max-w-5xl">
-        <div className="grid lg:grid-cols-3 gap-8">
+      <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-5xl">
+        <div className="grid lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
             {/* Description */}

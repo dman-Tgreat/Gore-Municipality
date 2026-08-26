@@ -65,7 +65,7 @@ export default function ProjectsPage() {
           </div>
         </section>
 
-        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 lg:py-12 max-w-6xl">
+        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-6xl">
           {/* Status Filter */}
           <div className="flex gap-2 mb-4 sm:mb-8 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide snap-x">
             {statuses.map((status) => (
@@ -94,7 +94,7 @@ export default function ProjectsPage() {
               ))}
             </div>
           ) : filtered.length === 0 ? (
-            <div className="text-center py-12 sm:py-16">
+            <div className="text-center py-8 sm:py-12">
               <ClipboardList className="w-12 h-12 mx-auto mb-3 text-slate-400" />
               <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base">{t.projects.noProjects}</p>
             </div>
