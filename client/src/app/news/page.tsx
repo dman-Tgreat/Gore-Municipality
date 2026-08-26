@@ -55,7 +55,7 @@ function NewsContent() {
   useEffect(() => {
     if (activeTab !== 'news') return;
     setLoading(true);
-    newsApi.getAll(newsPage, limit, true)
+    newsApi.getAll(undefined, newsPage, limit, true)
       .then((res) => {
         // Handle case where we requested a page with no results due to deletion/updates
         setArticles(res.data || []);
@@ -74,7 +74,7 @@ function NewsContent() {
   useEffect(() => {
     if (activeTab !== 'announcements') return;
     setLoading(true);
-    announcementsApi.getAll(annPage, limit, true)
+    announcementsApi.getAll(undefined, annPage, limit, true)
       .then((res) => {
         setAnnouncements(res.data || []);
         setAnnTotalPages(res.totalPages || 1);

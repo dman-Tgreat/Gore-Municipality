@@ -48,20 +48,37 @@ describe('NewsController', () => {
   });
 
   describe('findAll', () => {
-    it('should return all news', async () => {
+    it('should default to published-only for anonymous requests', async () => {
       jest.spyOn(service, 'findAll').mockResolvedValue([mockNews] as any);
 
-      const result = await controller.findAll({});
+      const result = await controller.findAll({ user: undefined } as any, {});
+      expect(service.findAll).toHaveBeenCalledWith(undefined, undefined, true);
+      expect(result).toEqual([mockNews]);
+    });
+
+    it('should allow admins to list all articles regardless of published status', async () => {
+      jest.spyOn(service, 'findAll').mockResolvedValue([mockNews] as any);
+
+      const result = await controller.findAll({ user: { id: 1 } } as any, {});
+      expect(service.findAll).toHaveBeenCalledWith(undefined, undefined, undefined);
       expect(result).toEqual([mockNews]);
     });
   });
 
   describe('findOne', () => {
-    it('should return news by id', async () => {
+    it('should hide drafts from anonymous visitors', async () => {
       jest.spyOn(service, 'findOne').mockResolvedValue(mockNews as any);
 
-      const result = await controller.findOne('1');
-      expect(service.findOne).toHaveBeenCalledWith(1);
+      const result = await controller.findOne({ user: undefined } as any, '1');
+      expect(service.findOne).toHaveBeenCalledWith(1, true);
+      expect(result).toEqual(mockNews);
+    });
+
+    it('should show drafts to authenticated admins', async () => {
+      jest.spyOn(service, 'findOne').mockResolvedValue(mockNews as any);
+
+      const result = await controller.findOne({ user: { id: 1 } } as any, '1');
+      expect(service.findOne).toHaveBeenCalledWith(1, false);
       expect(result).toEqual(mockNews);
     });
   });

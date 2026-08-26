@@ -197,15 +197,6 @@ export default function InvestmentDetailPage() {
                     </div>
                   </div>
                 )}
-                {investment.location && (
-                  <div className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 shrink-0 text-slate-400" />
-                    <div>
-                      <p className="text-xs text-slate-400 dark:text-slate-500">Location</p>
-                      <p className="text-sm font-medium text-slate-800 dark:text-white">{investment.location}</p>
-                    </div>
-                  </div>
-                )}
               </div>
               <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
                 <Link
@@ -243,12 +234,6 @@ export default function InvestmentDetailPage() {
                 Quick Info
               </h3>
               <div className="space-y-3">
-                <div className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">Category</span>
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200">
-                    {cfg.label}
-                  </span>
-                </div>
                 <div className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700">
                   <span className="text-xs text-slate-500 dark:text-slate-400">Status</span>
                   <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${investment.published ? 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200' : 'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400'}`}>

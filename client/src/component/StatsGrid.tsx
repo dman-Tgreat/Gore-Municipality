@@ -125,12 +125,12 @@ export default function StatsGrid() {
                 </p>
 
                 {/* Label */}
-                <p className="text-[11px] sm:text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1 sm:mb-1.5">
+                <p className="text-[10px] sm:text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1 sm:mb-1.5">
                   {stat.label}
                 </p>
 
                 {/* Detail */}
-                <p className="text-xs sm:text-base text-slate-700 dark:text-slate-400 leading-relaxed font-light">
+                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-400 leading-relaxed font-light">
                   {stat.detail}
                 </p>
               </div>

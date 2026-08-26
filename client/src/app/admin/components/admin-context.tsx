@@ -256,8 +256,8 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const fetchData = useCallback(() => {
     if (!token) { router.push('/admin/login'); return; }
     Promise.all([
-      contactAdminApi.getAll(token), adminApi.getAll(token), newsApi.getAll(), announcementsApi.getAll(),
-      projectsApi.getAll(), departmentsApi.getAll(), investmentsApi.getAll(), heroSlidesApi.getAll(), settingsApi.getAll(),
+      contactAdminApi.getAll(token), adminApi.getAll(token), newsApi.getAll(token), announcementsApi.getAll(token),
+      projectsApi.getAll(), departmentsApi.getAll(), investmentsApi.getAll(token), heroSlidesApi.getAll(), settingsApi.getAll(),
     ])
       .then(([msgs, adms, n, a, p, d, i, slides, sets]) => {
         setMessages(msgs); setAdmins(adms); setNews(n); setAnnouncements(a); setProjects(p); setDepartments(d); setInvestments(i);

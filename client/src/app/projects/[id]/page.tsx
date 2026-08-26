@@ -228,24 +228,6 @@ export default function ProjectDetailPage() {
                 Project Details
               </h3>
               <div className="space-y-4">
-                <div className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">Status</span>
-                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${cfg.bg} ${cfg.color}`}>
-                    {cfg.label}
-                  </span>
-                </div>
-                {project.budget && (
-                  <div className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700">
-                    <span className="text-xs text-slate-500 dark:text-slate-400">{t.projects.budget}</span>
-                    <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">ETB {project.budget.toLocaleString()}</span>
-                  </div>
-                )}
-                {project.location && (
-                  <div className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700">
-                    <span className="text-xs text-slate-500 dark:text-slate-400">{t.projects.location}</span>
-                    <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">{project.location}</span>
-                  </div>
-                )}
                 {project.fundingSource && (
                   <div className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700">
                     <span className="text-xs text-slate-500 dark:text-slate-400">Funding Source</span>

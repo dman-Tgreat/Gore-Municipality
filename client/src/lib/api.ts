@@ -56,13 +56,14 @@ export interface PaginatedResponse<T> {
 }
 
 export const newsApi = {
-  getAll: (page?: number, limit?: number, published?: boolean) => {
+  // Pass `token` to include unpublished (draft) articles — admin use only.
+  getAll: (token?: string, page?: number, limit?: number, published?: boolean) => {
     const params = new URLSearchParams();
     if (page) params.append('page', page.toString());
     if (limit) params.append('limit', limit.toString());
     if (published !== undefined) params.append('published', published.toString());
     const query = params.toString() ? `?${params.toString()}` : '';
-    return request<any>(`/news${query}`);
+    return request<any>(`/news${query}`, token ? { headers: authHeaders(token) } : undefined);
   },
   getOne: (id: number) => request<NewsArticle>(`/news/${id}`),
   create: (token: string, data: { title: string; slug?: string; summary: string; content: string; coverImage?: string; published?: boolean }) =>
@@ -91,13 +92,14 @@ export interface Announcement {
 }
 
 export const announcementsApi = {
-  getAll: (page?: number, limit?: number, published?: boolean) => {
+  // Pass `token` to include unpublished (draft) items — admin use only.
+  getAll: (token?: string, page?: number, limit?: number, published?: boolean) => {
     const params = new URLSearchParams();
     if (page) params.append('page', page.toString());
     if (limit) params.append('limit', limit.toString());
     if (published !== undefined) params.append('published', published.toString());
     const query = params.toString() ? `?${params.toString()}` : '';
-    return request<any>(`/announcements${query}`);
+    return request<any>(`/announcements${query}`, token ? { headers: authHeaders(token) } : undefined);
   },
   getOne: (id: number) => request<Announcement>(`/announcements/${id}`),
   create: (token: string, data: { title: string; description: string; content: string; published?: boolean }) =>
@@ -274,14 +276,15 @@ export interface Investment {
 }
 
 export const investmentsApi = {
-  getAll: (page?: number, limit?: number, published?: boolean, category?: string) => {
+  // Pass `token` to include unpublished (draft) items — admin use only.
+  getAll: (token?: string, page?: number, limit?: number, published?: boolean, category?: string) => {
     const params = new URLSearchParams();
     if (page) params.append('page', page.toString());
     if (limit) params.append('limit', limit.toString());
     if (published !== undefined) params.append('published', published.toString());
     if (category) params.append('category', category);
     const query = params.toString() ? `?${params.toString()}` : '';
-    return request<any>(`/investments${query}`);
+    return request<any>(`/investments${query}`, token ? { headers: authHeaders(token) } : undefined);
   },
   getOne: (id: number) => request<Investment>(`/investments/${id}`),
   create: (token: string, data: { title: string; description: string; content: string; category: string; coverImage?: string; location?: string; contactPhone?: string; contactEmail?: string; published?: boolean }) =>

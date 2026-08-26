@@ -22,6 +22,7 @@ import { AnnouncementsService } from './announcements.service';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto';
 import { UpdateAnnouncementDto } from './dto/update-announcement.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @ApiTags('Announcements')
@@ -42,6 +43,7 @@ export class AnnouncementsController {
     return this.announcementsService.create(createAnnouncementDto, req.user.id);
   }
 
+  @UseGuards(OptionalJwtAuthGuard)
   @Get()
   @ApiOperation({ summary: 'List all announcements' })
   @ApiQuery({ name: 'page', required: false, type: Number })
@@ -49,22 +51,30 @@ export class AnnouncementsController {
   @ApiQuery({ name: 'published', required: false, type: Boolean })
   @ApiResponse({ status: 200, description: 'Returns paginated or full list of announcements' })
   findAll(
+    @Req() req: any,
     @Query() query: PaginationQueryDto & { published?: string },
   ) {
-    return this.announcementsService.findAll(
-      query.page,
-      query.limit,
-      query.published === 'true' ? true : undefined,
-    );
+    // Anonymous visitors only ever see published announcements.
+    const published = req.user
+      ? query.published === 'true'
+        ? true
+        : query.published === 'false'
+          ? false
+          : undefined
+      : true;
+
+    return this.announcementsService.findAll(query.page, query.limit, published);
   }
 
+  @UseGuards(OptionalJwtAuthGuard)
   @Get(':id')
   @ApiOperation({ summary: 'Get an announcement by ID' })
   @ApiParam({ name: 'id', type: Number })
   @ApiResponse({ status: 200, description: 'Returns the announcement' })
   @ApiResponse({ status: 404, description: 'Announcement not found' })
-  findOne(@Param('id') id: string) {
-    return this.announcementsService.findOne(+id);
+  findOne(@Req() req: any, @Param('id') id: string) {
+    // Drafts are hidden from anonymous visitors.
+    return this.announcementsService.findOne(+id, !req.user);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -57,14 +57,14 @@ body.dark {
 
 html {
   scroll-behavior: smooth;
-  font-size: 16px;
+  font-size: 17px;
   overflow-x: hidden;
   max-width: 100%;
 }
 
 @media (min-width: 768px) {
   html {
-    font-size: 17px;
+    font-size: 18px;
   }
 }
 

@@ -84,6 +84,7 @@ const enMessages = {
     notFound: 'Department Not Found',
     notFoundDesc: 'The department you are looking for does not exist.',
     backToServices: 'Back to Services',
+    relatedServices: 'Related Services',
   },
   contact: {
     title: 'Contact Our Administration',
@@ -412,6 +413,7 @@ const amMessages = {
     notFound: "የስራ ክፍሉ አልተገኘም",
     notFoundDesc: "የሚፈልጉት የስራ ክፍል አልተገኘም ወይም የለም።",
     backToServices: "ወደ አገልግሎቶች ተመለስ",
+    relatedServices: "ተያያዥ አገልግሎቶች",
   },
   contact: {
     title: "አስተዳደራችንን ያግኙ",
@@ -740,6 +742,7 @@ const omMessages: Messages = {
     notFound: "Waajjirri Hin Argamne",
     notFoundDesc: "Waajjirri ati barbaadaa jirtu hin jiru.",
     backToServices: "Gara Tajaajilaatti Deebi’i",
+    relatedServices: "Tajaajila Waliigalaa",
   },
   contact: {
     title: "Bulchiinsa Keenya Quunnami",

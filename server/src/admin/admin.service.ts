@@ -15,8 +15,16 @@ export class AdminService {
   ) {}
 
   async findByEmail(email: string): Promise<Admin | null> {
+    // password is `select: false`, so it must be requested explicitly
     return this.adminRepository.findOne({
       where: { email },
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        password: true,
+        isActive: true,
+      },
     });
   }
 
@@ -28,7 +36,10 @@ export class AdminService {
       password: hashedPassword,
     });
 
-    return this.adminRepository.save(admin);
+    const saved = await this.adminRepository.save(admin);
+
+    // Return without the password hash (`password` is select: false)
+    return this.findOne(saved.id);
   }
 
   async findAll(): Promise<Admin[]> {

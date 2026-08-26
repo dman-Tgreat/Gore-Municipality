@@ -78,7 +78,7 @@ export class AnnouncementsService {
     };
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, requirePublished = false) {
     const announcement = await this.announcementsRepository.findOne({
       where: { id },
       relations: {
@@ -86,7 +86,7 @@ export class AnnouncementsService {
       },
     });
 
-    if (!announcement) {
+    if (!announcement || (requirePublished && !announcement.published)) {
       throw new NotFoundException('Announcement not found');
     }
 

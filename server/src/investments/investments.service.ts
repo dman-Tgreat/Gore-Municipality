@@ -64,13 +64,15 @@ export class InvestmentsService {
     };
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, requirePublished = false) {
     const investment = await this.investmentRepository.findOne({
       where: { id },
       relations: { createdBy: true },
     });
 
-    if (!investment) throw new NotFoundException('Investment not found');
+    if (!investment || (requirePublished && !investment.published)) {
+      throw new NotFoundException('Investment not found');
+    }
     return investment;
   }
 

@@ -8,8 +8,8 @@ import {
   UploadedFile,
   BadRequestException,
   MaxFileSizeValidator,
-  FileTypeValidator,
   ParseFilePipe,
+  FileValidator,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -24,6 +24,34 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CloudinaryService } from './cloudinary.service';
+
+/**
+ * Whitelist of allowed MIME types (matches jpg, jpeg, png, gif, webp,
+ * pdf, doc, docx, xls, xlsx). Unlike FileTypeValidator with a filename
+ * regex, this correctly handles Office document mimetypes such as
+ * `application/vnd.openxmlformats-officedocument.wordprocessingml.document`.
+ */
+const ALLOWED_MIME_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/webp',
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+];
+
+class MimeTypeWhitelistValidator extends FileValidator<{ allowedMimeTypes: string[] }> {
+  isValid(file?: any): boolean {
+    return !!file && this.validationOptions.allowedMimeTypes.includes(file.mimetype);
+  }
+
+  buildErrorMessage(): string {
+    return `File type not allowed. Allowed types: ${this.validationOptions.allowedMimeTypes.join(', ')}`;
+  }
+}
 
 @ApiTags('Upload')
 @Controller('upload')
@@ -62,7 +90,7 @@ export class UploadController {
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({ maxSize: 10 * 1024 * 1024 }),
-          new FileTypeValidator({ fileType: /(jpg|jpeg|png|gif|webp|pdf|doc|docx|xls|xlsx)$/ }),
+          new MimeTypeWhitelistValidator({ allowedMimeTypes: ALLOWED_MIME_TYPES }),
         ],
         fileIsRequired: true,
       }),

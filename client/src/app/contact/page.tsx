@@ -128,61 +128,70 @@ export default function ContactPage() {
         {/* ── Main Content: Form + Info ── */}
         <main id="main" className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-6xl">
           <div className="grid lg:grid-cols-5 gap-10">
-            {/* Left — Get In Touch & Map */}
-            <div className="lg:col-span-2 space-y-8">
+            {/* Left — Map & Office Info */}
+            <div className="lg:col-span-2 space-y-6">
               <div>
                 <h2 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white mb-3 tracking-tight">{t.contact.getInTouch}</h2>
                 <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{t.contact.description}</p>
               </div>
 
-              {/* Decorative Map / Location Illustration */}
-              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-200 dark:border-slate-700 overflow-hidden">
-                <div className="bg-slate-700 p-6 text-white relative overflow-hidden">
-                  <div className="absolute inset-0 opacity-[0.08]" style={{
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-                  }} />
-                  <div className="relative flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-3xl shadow-lg shrink-0">
-                      <MapPin className="w-6 h-6" />
+              {/* Map Card */}
+              <div className="rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden group">
+                <div className="relative aspect-[4/3] w-full bg-slate-100 dark:bg-slate-900">
+                  <iframe
+                    title="Gore Office Location Map"
+                    width="100%"
+                    height="100%"
+                    className="w-full h-full border-0 grayscale-[15%] contrast-[105%] dark:invert-[90%] dark:hue-rotate-180 transition-all duration-300 group-hover:grayscale-0"
+                    loading="lazy"
+                    allowFullScreen
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=35.4800%2C8.1000%2C35.5900%2C8.2000&layer=mapnik&marker=8.1527%2C35.5368"
+                  />
+                  {/* Map Header Overlay */}
+                  <div className="absolute top-3 left-3 right-3 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-md flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-xs font-bold text-slate-800 dark:text-white">
+                      <MapPin className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 animate-bounce" />
+                      <span>{t.contact.officeLocation}</span>
                     </div>
-                    <div>
-                      <h3 className="font-bold text-base">{t.contact.officeLocation}</h3>
-                      <p className="text-slate-300 text-xs mt-0.5">{settingsAddress}</p>
-                    </div>
+                    <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">8.15° N, 35.53° E</span>
                   </div>
                 </div>
-                <div className="p-5 space-y-4">
-                  <div className="flex items-start gap-3">
-                    <Phone className="w-5 h-5 shrink-0 mt-0.5 text-slate-500" />
-                    <div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">{t.contact.phone}</p>
-                      <p className="text-sm font-medium text-slate-800 dark:text-white">{t.contact.mainOffice.replace(/:\s*.*/, ': ')}{settingsPhoneMain}</p>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">{t.contact.publicRelations.replace(/:\s*.*/, ': ')}{settingsPhonePR}</p>
-                    </div>
+                {/* Map Footer */}
+                <div className="p-4 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-700">
+                  <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 mb-3">
+                    <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                    </svg>
+                    <span className="font-semibold text-slate-700 dark:text-slate-300">Illubabor Zone, Oromia, Ethiopia</span>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <Mail className="w-5 h-5 shrink-0 mt-0.5 text-slate-500" />
-                    <div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">{t.contact.email}</p>
-                      <p className="text-sm font-medium text-slate-800 dark:text-white">Main Email: {settingsEmailMain}</p>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">Support Email: {settingsEmailSupport}</p>
-                    </div>
+                  <a
+                    href="https://www.google.com/maps/place/Gore,+Ethiopia"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-emerald-600 dark:text-emerald-400 text-xs font-bold hover:underline flex items-center gap-1"
+                  >
+                    View Larger Map &rarr;
+                  </a>
+                </div>
+              </div>
+
+              {/* Office Hours Card */}
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-200 dark:border-slate-700 p-5">
+                <div className="flex items-center gap-2 text-sm mb-3">
+                  <span className="w-2 h-2 bg-slate-500 rounded-full animate-pulse" />
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">{t.contact.openNow}</span>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2.5 text-xs text-slate-500 dark:text-slate-400">
+                    <Clock className="w-4 h-4 shrink-0" />
+                    <span>{settingsHoursWeekday}</span>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <Clock className="w-5 h-5 shrink-0 mt-0.5 text-slate-500" />
-                    <div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">{t.footer.workingHours}</p>
-                      <p className="text-sm font-medium text-slate-800 dark:text-white">{settingsHoursWeekday}</p>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">{settingsHoursSaturday}</p>
-                    </div>
-                  </div>                    
-                  <div className="pt-2 border-t border-slate-200 dark:border-slate-700">
-                    <div className="flex items-center gap-2 text-xs">
-                      <span className="w-2 h-2 bg-slate-500 rounded-full animate-pulse" />
-                      <span className="font-semibold text-slate-700 dark:text-slate-300">{t.contact.openNow} — {t.contact.weAreHereToHelp}</span>
-                    </div>
+                  <div className="flex items-center gap-2.5 text-xs text-slate-500 dark:text-slate-400">
+                    <Clock className="w-4 h-4 shrink-0" />
+                    <span>{settingsHoursSaturday}</span>
                   </div>
                 </div>
+                <p className="text-xs text-slate-400 dark:text-slate-500 mt-3 pt-3 border-t border-slate-100 dark:border-slate-700">{t.contact.weAreHereToHelp}</p>
               </div>
             </div>
 

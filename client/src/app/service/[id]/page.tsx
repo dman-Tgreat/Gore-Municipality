@@ -8,7 +8,7 @@ import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
 import { tField } from '@/lib/locale';
 import { departmentsApi, type Department } from '@/lib/api';
-import { ClipboardList, Sprout, Building, HeartPulse, Wrench, BookOpen, Landmark, Scale, Search, User, Phone, Mail, MapPin } from 'lucide-react';
+import { ClipboardList, Sprout, Building, HeartPulse, Wrench, BookOpen, Landmark, Scale, Search, User, Phone, Mail, MapPin, ExternalLink } from 'lucide-react';
 
 const deptIconList = [ClipboardList, Sprout, Building, HeartPulse, Wrench, BookOpen, Landmark, Scale];
 
@@ -20,6 +20,7 @@ export default function ServiceDetailPage() {
   const [error, setError] = useState(false);
 
   const id = Number(params.id);
+  const [relatedDepts, setRelatedDepts] = useState<Department[]>([]);
 
   useEffect(() => {
     if (!id) return;
@@ -27,6 +28,12 @@ export default function ServiceDetailPage() {
       .then(setDept)
       .catch(() => setError(true))
       .finally(() => setLoading(false));
+  }, [id]);
+
+  useEffect(() => {
+    departmentsApi.getAll()
+      .then((all) => setRelatedDepts(all.filter((d: Department) => d.id !== id)))
+      .catch(() => {});
   }, [id]);
 
   if (loading) {
@@ -112,105 +119,115 @@ export default function ServiceDetailPage() {
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{tField(dept, 'description', locale)}</p>
             </div>
 
-            {/* Department Stats — derived from API data */}
-            <div className="grid sm:grid-cols-3 gap-4">
-              {[
-                { label: t.servicesPage.deptHead, value: dept.head || '—', icon: <User className="w-5 h-5" /> },
-                { label: t.servicesPage.contact, value: dept.phone || dept.email || '—', icon: <Phone className="w-5 h-5" /> },
-                { label: t.servicesPage.office, value: dept.office || '—', icon: <MapPin className="w-5 h-5" /> },
-              ].map((stat, i) => (
-                <div key={i} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5 text-center hover:shadow-md transition">
-                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-lg mb-3">
-                    {stat.icon}
+            {/* Department Details Card */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8">
+              <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-5 flex items-center gap-2">
+                <span className="w-1.5 h-6 bg-slate-500 rounded-full" />
+                {t.servicesPage.contactInfo}
+              </h2>
+              <div className="space-y-4">
+                {dept.head && (
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center shrink-0">
+                      <User className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wider">{t.servicesPage.deptHead}</p>
+                      <p className="text-sm font-semibold text-slate-800 dark:text-white">{dept.head}</p>
+                    </div>
                   </div>
-                  <p className="text-xs sm:text-sm md:text-base lg:text-lg font-bold text-slate-800 dark:text-white break-all" title={stat.value}>{stat.value}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{stat.label}</p>
-                </div>
-              ))}
+                )}
+                {dept.phone && (
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center shrink-0">
+                      <Phone className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wider">{t.servicesPage.contact}</p>
+                      <p className="text-sm font-semibold text-slate-800 dark:text-white">{dept.phone}</p>
+                    </div>
+                  </div>
+                )}
+                {dept.email && (
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center shrink-0">
+                      <Mail className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wider">{t.contact.email}</p>
+                      <p className="text-sm font-semibold text-slate-800 dark:text-white">{dept.email}</p>
+                    </div>
+                  </div>
+                )}
+                {dept.office && (
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center shrink-0">
+                      <MapPin className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wider">{t.servicesPage.office}</p>
+                      <p className="text-sm font-semibold text-slate-800 dark:text-white">{dept.office}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Contact Card */}
-            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-5 sm:p-6">
-              <h3 className="font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
-                <span className="w-1 h-5 bg-slate-500 rounded-full" />
-                {t.servicesPage.contactInfo}
-              </h3>
-              <div className="space-y-4">
-                {dept.head && (
-                  <div className="flex items-start gap-3">
-                    <User className="w-5 h-5 shrink-0 text-slate-400" />
-                    <div>
-                      <p className="text-xs text-slate-400 dark:text-slate-500">{t.admin.headField}</p>
-                      <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{dept.head}</p>
-                    </div>
-                  </div>
-                )}
-                {dept.phone && (
-                  <div className="flex items-start gap-3">
-                    <Phone className="w-5 h-5 shrink-0 text-slate-400" />
-                    <div>
-                      <p className="text-xs text-slate-400 dark:text-slate-500">{t.admin.phoneField}</p>
-                      <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{dept.phone}</p>
-                    </div>
-                  </div>
-                )}
-                {dept.email && (
-                  <div className="flex items-start gap-3">
-                    <Mail className="w-5 h-5 shrink-0 text-slate-400" />
-                    <div>
-                      <p className="text-xs text-slate-400 dark:text-slate-500">{t.contact.email}</p>
-                      <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{dept.email}</p>
-                    </div>
-                  </div>
-                )}
-                {dept.office && (
-                  <div className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 shrink-0 text-slate-400" />
-                    <div>
-                      <p className="text-xs text-slate-400 dark:text-slate-500">{t.admin.officeField}</p>
-                      <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{dept.office}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700">
-                <Link
-                  href="/contact"
-                  className="w-full inline-flex items-center justify-center gap-2 bg-slate-700 dark:bg-slate-600 hover:bg-slate-600 dark:hover:bg-slate-500 text-white text-sm font-semibold px-5 py-3 rounded-xl transition-all"
-                >
-                  {t.contact.sendMessage}
-                </Link>
-              </div>
-            </div>
-
-            {/* Quick Stats — data-driven from API */}
+            {/* Quick Stats — registration date */}
             <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
               <h3 className="font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
                 <span className="w-1 h-5 bg-slate-500 rounded-full" />
                 {t.servicesPage.deptInfo}
               </h3>
               <div className="space-y-3">
-                <div className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700">
+                <div className="flex justify-between items-center py-2">
                   <span className="text-xs text-slate-500 dark:text-slate-400">{t.servicesPage.registered}</span>
                   <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">{new Date(dept.createdAt).toLocaleDateString()}</span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">{t.admin.headField}</span>
-                  <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">{dept.head}</span>
-                </div>
-                <div className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">{t.contact.email}</span>
-                  <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 truncate max-w-[140px]" title={dept.email}>{dept.email}</span>
-                </div>
-                <div className="flex justify-between items-center py-2">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">{t.admin.phoneField}</span>
-                  <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">{dept.phone}</span>
-                </div>
               </div>
             </div>
+
+            {/* Send Message CTA */}
+            <Link
+              href="/contact"
+              className="block bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 text-center hover:shadow-md transition-all"
+            >
+              <span className="inline-flex items-center justify-center gap-2 bg-slate-700 dark:bg-slate-600 hover:bg-slate-600 dark:hover:bg-slate-500 text-white text-sm font-semibold px-6 py-3 rounded-xl transition-all w-full">
+                {t.contact.sendMessage}
+              </span>
+            </Link>
+
+            {/* Related Services */}
+            {relatedDepts.length > 0 && (
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+                <h3 className="font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
+                  <span className="w-1 h-5 bg-slate-500 rounded-full" />
+                  {t.servicesPage.relatedServices}
+                </h3>
+                <div className="space-y-2">
+                  {relatedDepts.slice(0, 5).map((rd) => {
+                    const rIdx = (rd.id % deptIconList.length + deptIconList.length) % deptIconList.length;
+                    const RIcon = deptIconList[rIdx];
+                    return (
+                      <Link
+                        key={rd.id}
+                        href={`/service/${rd.id}`}
+                        className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition group"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center shrink-0">
+                          <RIcon className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+                        </div>
+                        <span className="text-sm text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white truncate flex-1">{tField(rd, 'name', locale)}</span>
+                        <ExternalLink className="w-3 h-3 text-slate-400 opacity-0 group-hover:opacity-100 transition shrink-0" />
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </main>

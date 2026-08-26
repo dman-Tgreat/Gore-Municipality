@@ -55,12 +55,21 @@ describe('AdminService', () => {
   });
 
   describe('findByEmail', () => {
-    it('should find admin by email', async () => {
+    it('should find admin by email, explicitly selecting the password column', async () => {
       repository.findOne.mockResolvedValue(mockAdmin);
 
       const result = await service.findByEmail('admin@gore.gov.et');
 
-      expect(repository.findOne).toHaveBeenCalledWith({ where: { email: 'admin@gore.gov.et' } });
+      expect(repository.findOne).toHaveBeenCalledWith({
+        where: { email: 'admin@gore.gov.et' },
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+          password: true,
+          isActive: true,
+        },
+      });
       expect(result).toEqual(mockAdmin);
     });
 
@@ -74,9 +83,11 @@ describe('AdminService', () => {
   });
 
   describe('create', () => {
-    it('should hash password and create admin', async () => {
+    it('should hash password and create admin without returning the hash', async () => {
       repository.create.mockReturnValue(mockAdmin);
       repository.save.mockResolvedValue(mockAdmin);
+      // create() re-fetches via findOne() to strip the password hash
+      repository.findOne.mockResolvedValue(mockAdmin);
 
       const result = await service.create(createDto);
 

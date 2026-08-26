@@ -92,7 +92,7 @@ export class NewsService {
     };
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, requirePublished = false) {
     const news = await this.newsRepository.findOne({
       where: { id },
       relations: {
@@ -100,7 +100,7 @@ export class NewsService {
       },
     });
 
-    if (!news) {
+    if (!news || (requirePublished && !news.published)) {
       throw new NotFoundException('News not found');
     }
 

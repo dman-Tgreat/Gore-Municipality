@@ -23,6 +23,7 @@ import { InvestmentsService } from './investments.service';
 import { CreateInvestmentDto } from './dto/create-investment.dto';
 import { UpdateInvestmentDto } from './dto/update-investment.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @ApiTags('Investments')
@@ -43,6 +44,7 @@ export class InvestmentsController {
     return this.investmentsService.create(dto, req.user.id);
   }
 
+  @UseGuards(OptionalJwtAuthGuard)
   @Get()
   @ApiOperation({ summary: 'List all investments' })
   @ApiQuery({ name: 'page', required: false, type: Number })
@@ -51,23 +53,35 @@ export class InvestmentsController {
   @ApiQuery({ name: 'category', required: false, type: String, description: 'Filter by category' })
   @ApiResponse({ status: 200, description: 'Returns paginated or full list of investments' })
   findAll(
+    @Req() req: any,
     @Query() query: PaginationQueryDto & { published?: string; category?: string },
   ) {
+    // Anonymous visitors only ever see published investments.
+    const published = req.user
+      ? query.published === 'true'
+        ? true
+        : query.published === 'false'
+          ? false
+          : undefined
+      : true;
+
     return this.investmentsService.findAll(
       query.page,
       query.limit,
-      query.published === 'true' ? true : undefined,
+      published,
       query.category || undefined,
     );
   }
 
+  @UseGuards(OptionalJwtAuthGuard)
   @Get(':id')
   @ApiOperation({ summary: 'Get an investment by ID' })
   @ApiParam({ name: 'id', type: Number })
   @ApiResponse({ status: 200, description: 'Returns the investment' })
   @ApiResponse({ status: 404, description: 'Investment not found' })
-  findOne(@Param('id') id: string) {
-    return this.investmentsService.findOne(+id);
+  findOne(@Req() req: any, @Param('id') id: string) {
+    // Drafts are hidden from anonymous visitors.
+    return this.investmentsService.findOne(+id, !req.user);
   }
 
   @UseGuards(JwtAuthGuard)
