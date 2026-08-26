@@ -902,7 +902,7 @@ const omMessages: Messages = {
   },
   language: { label: "Afaan" },
   investmentTourism: {
-    title: "Investimintii & Turiizimii",
+    title: "Investimintii",
     subtitle: "Carraalee investimintii fi hawwata turiizimii Aanaa Goree keessatti argaman bari",
     investmentTitle: "Carraalee Investimintii",
     investmentDesc: "Aanaan Goree qonna, agroofrooseesiingii fi tajaajila keessatti carraalee investimintii adda addaa dhiyeessa. Baddaa baddee gabbataa, dhaaba shaayii hundeeffame fi Godina Illuu Abbaa Boor keessatti iddoo israteejikaa qabaachuu isaatiin, invesiteroonni gabaa guddachaa jiranii fi jajjabeessitoota mootummaan deeggaraman argachuu danda’u.",

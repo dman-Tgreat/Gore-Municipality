@@ -80,7 +80,7 @@ function NavDropdown({ items, label, href, isActive, isOpen, onMouseEnter, onMou
           }
         }}
         onFocus={onMouseEnter}
-        className={`inline-flex items-center gap-1.5 hover:bg-primary hover:text-white dark:hover:bg-slate-700 dark:hover:text-white rounded lg transition font-medium text-[18px] whitespace-nowrap px-1.5 py-1 ${
+        className={`inline-flex items-center gap-0.5 xl:gap-1 hover:bg-primary hover:text-white dark:hover:bg-slate-700 dark:hover:text-white rounded-lg transition font-medium text-xs xl:text-sm 2xl:text-base whitespace-nowrap px-1.5 py-1 xl:px-2 2xl:px-3 ${
           isActive
             ? 'text-white bg-primary dark:text-white dark:bg-slate-700'
             : 'text-slate-700 dark:text-slate-300'
@@ -173,7 +173,7 @@ export default function Header() {
 
   const linkStyle = (path: string) => {
     const active = pathname === path;
-    return `transition font-medium text-[18px] hover:bg-primary hover:text-white dark:hover:bg-slate-700 dark:hover:text-white rounded lg whitespace-nowrap px-1.5 py-1 ${
+    return `transition font-medium text-xs xl:text-sm 2xl:text-base hover:bg-primary hover:text-white dark:hover:bg-slate-700 dark:hover:text-white rounded-lg whitespace-nowrap px-1.5 py-1 xl:px-2 2xl:px-3 ${
       active
         ? 'text-white bg-primary dark:bg-slate-700 dark:text-white'
         : 'text-slate-700 dark:text-slate-300'
@@ -236,7 +236,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-7">
+          <nav className="hidden xl:flex items-center gap-1.5 2xl:gap-4">
             <Link href="/" className={linkStyle('/')}>{t.header.home}</Link>
             <Link href="/about" className={linkStyle('/about')}>{t.header.about}</Link>
 
@@ -352,7 +352,7 @@ export default function Header() {
           </nav>
 
           {/* Mobile Controls */}
-          <div className="flex items-center gap-2 lg:hidden">
+          <div className="flex items-center gap-2 xl:hidden">
             <button
               onClick={toggleTheme}
               className="flex items-center justify-center w-9 h-9 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition"
@@ -382,7 +382,7 @@ export default function Header() {
                 <div role="listbox" className="absolute right-0 mt-1 w-36 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50">
                   {locales.map((lang) => (
                     <button
-                      key={lang.code}
+                       key={lang.code}
                       role="option"
                       aria-selected={locale === lang.code}
                       onClick={() => handleLanguageChange({ code: lang.code })}
@@ -417,7 +417,7 @@ export default function Header() {
 
       {/* Mobile Navigation */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <div className="xl:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
           <div className="container mx-auto px-6 py-4 space-y-1 max-h-[70vh] overflow-y-auto">
             <MobileNavLink href="/" label={t.header.home} pathname={pathname} onClick={() => setMobileOpen(false)} />
             <MobileNavLink href="/about" label={t.header.about} pathname={pathname} onClick={() => setMobileOpen(false)} />

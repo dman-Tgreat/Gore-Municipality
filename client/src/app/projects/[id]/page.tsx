@@ -111,22 +111,22 @@ export default function ProjectDetailPage() {
       <Header />
 
       {/* Hero Banner with Cover Image */}
-      <section className="relative h-64 lg:h-80 overflow-hidden bg-green-900 dark:bg-green-950">
+      <section className="relative min-h-[260px] md:h-80 py-8 md:py-0 overflow-hidden bg-green-900 dark:bg-green-950 flex items-center">
         {imgSrc ? (
-          <img src={imgSrc} alt={project.name} className="w-full h-full object-cover" />
+          <img src={imgSrc} alt={project.name} className="absolute inset-0 w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-green-900 via-green-800 to-green-950" />
+          <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-green-900 via-green-800 to-green-950" />
         )}
         <div className="absolute inset-0 bg-gradient-to-r from-green-950/90 via-green-900/60 to-transparent" />
-        <div className="absolute inset-0 flex flex-col justify-center">
+        <div className="relative z-10 w-full">
           <div className="container mx-auto px-6">
             <Link href="/projects" className="inline-flex items-center gap-1 text-slate-300 hover:text-white text-sm mb-4 transition-colors">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l-7.5 7.5M3 12H3" />
               </svg>
               {t.projects.title}
             </Link>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-3">{tField(project, 'name', locale)}</h1>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-3 leading-tight">{tField(project, 'name', locale)}</h1>
             <div className="flex flex-wrap items-center gap-3">
               <span className={`text-xs px-3 py-1 rounded-full font-semibold ${cfg.bg} ${cfg.color}`}>
                 {cfg.label}

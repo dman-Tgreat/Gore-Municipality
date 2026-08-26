@@ -60,8 +60,8 @@ export default function Services() {
         <div className="grid grid-cols-1 gap-6 lg:gap-8 max-w-9xl mx-auto">
           
           {/* ── Card 1: Latest News ── */}
-          <div className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:-translate-y-0.5">
-            <div className="grid md:grid-cols-2 gap-8 items-center"> 
+          <div className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 sm:p-8 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:-translate-y-0.5">
+            <div className="grid md:grid-cols-2 gap-6 sm:gap-8 items-center"> 
               
               {/* Text Area */}
               <div>
@@ -113,7 +113,7 @@ export default function Services() {
               </div>
 
               {/* Image Area */}
-              <div className="md:order-last w-full h-full min-h-[250px]">
+              <div className="order-last w-full h-48 md:h-full min-h-[200px] md:min-h-[250px]">
                 <img src="news.webp" alt="news paper" className="w-full max-w-[500px] mx-auto h-full object-cover rounded-xl" />
               </div>
 
@@ -121,9 +121,9 @@ export default function Services() {
           </div>
 
           {/* ── Card 2: Municipal Services ── */}
-          <div className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:-translate-y-0.5">
+          <div className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 sm:p-8 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300 hover:-translate-y-0.5">
             {/* Added a responsive 2-column grid container identical to Card 1 */}
-            <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div className="grid md:grid-cols-2 gap-6 sm:gap-8 items-center">
               
               {/* Text Area */}
               <div>
@@ -153,7 +153,7 @@ export default function Services() {
                           >
                             <span className="w-5 h-5 rounded bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 flex items-center justify-center text-[10px] font-bold shrink-0">
                               {dept.name.charAt(0)}
-                        </span>
+                            </span>
                             <span className="truncate">{dept.name}</span>
                           </Link>
                         </li>
@@ -180,7 +180,7 @@ export default function Services() {
                 </Link>
               </div>
 
-              <div className="md:order-last w-full h-full min-h-[250px]">
+              <div className="order-last w-full h-48 md:h-full min-h-[200px] md:min-h-[250px]">
                 <img src="services.jpg" alt="municipal services" className="w-full max-w-[500px] mx-auto h-full object-cover rounded-xl" />
               </div>
 

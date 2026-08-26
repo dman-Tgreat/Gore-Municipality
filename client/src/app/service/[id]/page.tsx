@@ -123,7 +123,7 @@ export default function ServiceDetailPage() {
                   <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-lg mb-3">
                     {stat.icon}
                   </div>
-                  <p className="text-2xl font-black text-slate-800 dark:text-white truncate" title={stat.value}>{stat.value}</p>
+                  <p className="text-xs sm:text-sm md:text-base lg:text-lg font-bold text-slate-800 dark:text-white break-all" title={stat.value}>{stat.value}</p>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{stat.label}</p>
                 </div>
               ))}

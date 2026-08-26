@@ -120,108 +120,103 @@ export default function InvestmentTourismPage() {
                               radial-gradient(circle at 70% 80%, rgba(255,255,255,0.15) 0%, transparent 50%)`,
           }} />
           <div className="relative container mx-auto px-4 sm:px-6">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-              <span className="w-1.5 h-1.5 bg-white/60 rounded-full animate-pulse" />
-              {t.investmentTourism.title}
-            </div>
             <h1 className="text-3xl md:text-5xl font-black tracking-tight mb-4">
               {t.investmentTourism.title}
             </h1>
-            <p className="text-slate-300 max-w-2xl mx-auto text-sm md:text-base">
-              {t.investmentTourism.subtitle}
-            </p>
           </div>
         </section>
 
         {/* Investment Section */}
-        <section className="py-8 sm:py-10 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-          <div className="container mx-auto px-4 sm:px-6">
-            <div className="max-w-5xl mx-auto">
-              <div className="flex items-start sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <section className="py-12 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+          <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex items-start sm:items-center gap-3 sm:gap-4 mb-8">
                 <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-slate-700 flex items-center justify-center text-green-500 shadow-lg shrink-0">
                   {investmentIcon}
                 </div>
                 <div>
-                  <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 dark:text-white">{t.investmentTourism.investmentTitle}</h2>
-                  <p className="text-slate-500 dark:text-slate-700 text-sm sm:text-base mt-1">{t.investmentTourism.investmentDesc}</p>
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white">{t.investmentTourism.investmentTitle}</h2>
+                  <p className="text-slate-500 dark:text-slate-400 text-base mt-1">{t.investmentTourism.investmentDesc}</p>
                 </div>
               </div>
 
-              {/* Sub-section cards with dynamic investment items */}
-              <div className="grid md:grid-cols-2 gap-5">
+              {/* Sub-section cards with dynamic investment items layout in 3-columns */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {sections.slice(0, 3).map((section) => {
                   const cat = sectionToCategory[section.key];
                   const catInvestments = groupedByCategory[cat] || [];
                   return (
-                    <div key={section.key} className="flex flex-col gap-3">
-                      {/* Category header card */}
-                      <Link
-                        href={section.href}
-                        className="group flex items-start gap-4 p-5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:-translate-y-0.5 transition-all duration-200 hover:shadow-md"
-                      >
-                        <div className="shrink-0 w-11 h-11 rounded-xl bg-slate-200 dark:bg-slate-700 text-green-800 dark:text-slate-300 flex items-center justify-center group-hover:scale-110 transition-transform">
-                          {section.icon}
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-lg text-slate-700 dark:text-slate-300 mb-1">
-                            {t.investmentTourism[section.key as keyof typeof t.investmentTourism] as unknown as string}
-                          </h3>
-                          <p className="text-slate-600 dark:text-slate-400 text-base leading-relaxed">
-                            {t.investmentTourism[`${section.key}Desc` as keyof typeof t.investmentTourism] as unknown as string}
-                          </p>
-                        </div>
-                      </Link>
+                    <div key={section.key} className="flex flex-col gap-3 h-full justify-between">
+                      <div className="flex flex-col gap-3 h-full">
+                        {/* Category header card styled to dynamically stretch to match neighbors */}
+                        <Link
+                          href={section.href}
+                          className="group flex flex-col sm:flex-row items-start gap-4 p-5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:-translate-y-0.5 transition-all duration-200 hover:shadow-md flex-1 min-h-[140px]"
+                        >
+                          <div className="shrink-0 w-11 h-11 rounded-xl bg-slate-200 dark:bg-slate-700 text-green-800 dark:text-slate-300 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            {section.icon}
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-lg text-slate-700 dark:text-slate-300 mb-1">
+                              {t.investmentTourism[section.key as keyof typeof t.investmentTourism] as unknown as string}
+                            </h3>
+                            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                              {t.investmentTourism[`${section.key}Desc` as keyof typeof t.investmentTourism] as unknown as string}
+                            </p>
+                          </div>
+                        </Link>
 
-                      {/* Dynamic investment cards for this category */}
-                      {catInvestments.length > 0 ? (
-                        <div className="space-y-2 pl-1">
-                          {catInvestments.slice(0, 3).map((inv) => (
-                            <Link
-                              key={inv.id}
-                              href={`/investment-tourism/${inv.id}`}
-                              className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group/card"
-                            >
-                              {inv.coverImage && (
-                                <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0">
-                                  <img
-                                    src={inv.coverImage.startsWith('/uploads/') ? `${API_BASE}${inv.coverImage}` : inv.coverImage}
-                                    alt={inv.title}
-                                    className="w-full h-full object-cover"
-                                  />
-                                </div>
-                              )}
-                              <div className="min-w-0 flex-1">
-                                <h4 className="text-base font-semibold text-slate-800 dark:text-white truncate group-hover/card:text-slate-700 dark:group-hover/card:text-slate-300 transition-colors">
-                                  {inv.title}
-                                </h4>
-                                <p className="text-[16px] text-slate-500 dark:text-slate-400 line-clamp-1">{inv.description}</p>
-                                {inv.location && (
-                                  <p className="text-[12px] text-slate-400 dark:text-slate-500 mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" /> {inv.location}</p>
+                        {/* Dynamic investment cards for this category */}
+                        {catInvestments.length > 0 ? (
+                          <div className="space-y-2 pl-1 mt-1">
+                            {catInvestments.slice(0, 3).map((inv) => (
+                              <Link
+                                key={inv.id}
+                                href={`/investment-tourism/${inv.id}`}
+                                className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group/card"
+                              >
+                                {inv.coverImage && (
+                                  <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0">
+                                    <img
+                                      src={inv.coverImage.startsWith('/uploads/') ? `${API_BASE}${inv.coverImage}` : inv.coverImage}
+                                      alt={inv.title}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  </div>
                                 )}
-                              </div>
-                              <svg className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 shrink-0 group-hover/card:text-slate-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                              </svg>
-                            </Link>
-                          ))}
-                          {catInvestments.length > 3 && (
-                            <Link
-                              href={section.href}
-                              className="text-[16px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors inline-flex items-center gap-1 mt-0.5"
-                            >
-                              {t.projects.viewDetails} ({catInvestments.length}) →
-                            </Link>
-                          )}
-                        </div>
-                      ) : !invLoading ? (
-                        <p className="text-[13px] text-slate-400 dark:text-slate-500 italic pl-1">{t.services.noUpdates}</p>
-                      ) : (
-                        <div className="space-y-2 pl-1">
-                          {[1, 2].map((s) => (
-                            <div key={s} className="h-12 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse" />
-                          ))}
-                        </div>
-                      )}
+                                <div className="min-w-0 flex-1">
+                                  <h4 className="text-base font-semibold text-slate-800 dark:text-white truncate group-hover/card:text-slate-700 dark:group-hover/card:text-slate-300 transition-colors">
+                                    {inv.title}
+                                  </h4>
+                                  <p className="text-[14px] text-slate-500 dark:text-slate-400 line-clamp-1">{inv.description}</p>
+                                  {inv.location && (
+                                    <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" /> {inv.location}</p>
+                                  )}
+                                </div>
+                                <svg className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 shrink-0 group-hover/card:text-slate-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                              </Link>
+                            ))}
+                            {catInvestments.length > 3 && (
+                              <Link
+                                href={section.href}
+                                className="text-[14px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors inline-flex items-center gap-1 mt-0.5"
+                              >
+                                {t.projects.viewDetails} ({catInvestments.length}) →
+                              </Link>
+                            )}
+                          </div>
+                        ) : !invLoading ? (
+                          <p className="text-[13px] text-slate-400 dark:text-slate-500 italic pl-1">{t.services.noUpdates}</p>
+                        ) : (
+                          <div className="space-y-2 pl-1">
+                            {[1, 2].map((s) => (
+                              <div key={s} className="h-12 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse" />
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   );
                 })}
@@ -231,94 +226,96 @@ export default function InvestmentTourismPage() {
         </section>
 
         {/* Tourism Section */}
-        <section className="py-8 sm:py-10 bg-slate-100 dark:bg-slate-900">
-          <div className="container mx-auto px-4 sm:px-6">
-            <div className="max-w-5xl mx-auto">
-              <div className="flex items-start sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <section className="py-12 bg-slate-50 dark:bg-slate-800/30">
+          <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex items-start sm:items-center gap-3 sm:gap-4 mb-8">
                 <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-slate-700 flex items-center justify-center text-white shadow-lg shrink-0">
                   {tourismIcon}
                 </div>
                 <div>
-                  <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 dark:text-white">{t.investmentTourism.tourismTitle}</h2>
-                  <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base mt-1">{t.investmentTourism.tourismDesc}</p>
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white">{t.investmentTourism.tourismTitle}</h2>
+                  <p className="text-slate-500 dark:text-slate-400 text-base mt-1">{t.investmentTourism.tourismDesc}</p>
                 </div>
               </div>
 
-              {/* Sub-section cards with dynamic investment items */}
-              <div className="grid md:grid-cols-2 gap-5">
+              {/* Sub-section cards with dynamic tourism items layout in 3-columns */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {sections.slice(3).map((section) => {
                   const cat = sectionToCategory[section.key];
                   const catInvestments = groupedByCategory[cat] || [];
                   return (
-                    <div key={section.key} className="flex flex-col gap-3">
-                      {/* Category header card */}
-                      <Link
-                        href={section.href}
-                        className="group flex items-start gap-4 p-5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:-translate-y-0.5 transition-all duration-200 hover:shadow-md"
-                      >
-                        <div className="shrink-0 w-11 h-11 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center group-hover:scale-110 transition-transform">
-                          {section.icon}
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-lg text-slate-700 dark:text-slate-300 mb-1">
-                            {t.investmentTourism[section.key as keyof typeof t.investmentTourism] as unknown as string}
-                          </h3>
-                          <p className="text-slate-600 dark:text-slate-400 text-base leading-relaxed">
-                            {t.investmentTourism[`${section.key}Desc` as keyof typeof t.investmentTourism] as unknown as string}
-                          </p>
-                        </div>
-                      </Link>
+                    <div key={section.key} className="flex flex-col gap-3 h-full justify-between">
+                      <div className="flex flex-col gap-3 h-full">
+                        {/* Category header card styled to dynamically stretch to match neighbors */}
+                        <Link
+                          href={section.href}
+                          className="group flex flex-col sm:flex-row items-start gap-4 p-5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:-translate-y-0.5 transition-all duration-200 hover:shadow-md flex-1 min-h-[140px]"
+                        >
+                          <div className="shrink-0 w-11 h-11 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            {section.icon}
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-lg text-slate-700 dark:text-slate-300 mb-1">
+                              {t.investmentTourism[section.key as keyof typeof t.investmentTourism] as unknown as string}
+                            </h3>
+                            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                              {t.investmentTourism[`${section.key}Desc` as keyof typeof t.investmentTourism] as unknown as string}
+                            </p>
+                          </div>
+                        </Link>
 
-                      {/* Dynamic investment cards for this category */}
-                      {catInvestments.length > 0 ? (
-                        <div className="space-y-2 pl-1">
-                          {catInvestments.slice(0, 3).map((inv) => (
-                            <Link
-                              key={inv.id}
-                              href={`/investment-tourism/${inv.id}`}
-                              className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group/card"
-                            >
-                              {inv.coverImage && (
-                                <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0">
-                                  <img
-                                    src={inv.coverImage.startsWith('/uploads/') ? `${API_BASE}${inv.coverImage}` : inv.coverImage}
-                                    alt={inv.title}
-                                    className="w-full h-full object-cover"
-                                  />
-                                </div>
-                              )}
-                              <div className="min-w-0 flex-1">
-                                <h4 className="text-base font-semibold text-slate-800 dark:text-white truncate group-hover/card:text-slate-700 dark:group-hover/card:text-slate-300 transition-colors">
-                                  {inv.title}
-                                </h4>
-                                <p className="text-[16px] text-slate-500 dark:text-slate-400 line-clamp-1">{inv.description}</p>
-                                {inv.location && (
-                                  <p className="text-[12px] text-slate-400 dark:text-slate-500 mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" /> {inv.location}</p>
+                        {/* Dynamic investment cards for this category */}
+                        {catInvestments.length > 0 ? (
+                          <div className="space-y-2 pl-1 mt-1">
+                            {catInvestments.slice(0, 3).map((inv) => (
+                              <Link
+                                key={inv.id}
+                                href={`/investment-tourism/${inv.id}`}
+                                className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group/card"
+                              >
+                                {inv.coverImage && (
+                                  <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0">
+                                    <img
+                                      src={inv.coverImage.startsWith('/uploads/') ? `${API_BASE}${inv.coverImage}` : inv.coverImage}
+                                      alt={inv.title}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  </div>
                                 )}
-                              </div>
-                              <svg className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 shrink-0 group-hover/card:text-slate-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                              </svg>
-                            </Link>
-                          ))}
-                          {catInvestments.length > 3 && (
-                            <Link
-                              href={section.href}
-                              className="text-[16px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors inline-flex items-center gap-1 mt-0.5"
-                            >
-                              {t.projects.viewDetails} ({catInvestments.length}) →
-                            </Link>
-                          )}
-                        </div>
-                      ) : !invLoading ? (
-                        <p className="text-[16px] text-slate-400 dark:text-slate-500 italic pl-1">{t.services.noUpdates}</p>
-                      ) : (
-                        <div className="space-y-2 pl-1">
-                          {[1, 2].map((s) => (
-                            <div key={s} className="h-12 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse" />
-                          ))}
-                        </div>
-                      )}
+                                <div className="min-w-0 flex-1">
+                                  <h4 className="text-base font-semibold text-slate-800 dark:text-white truncate group-hover/card:text-slate-700 dark:group-hover/card:text-slate-300 transition-colors">
+                                    {inv.title}
+                                  </h4>
+                                  <p className="text-[14px] text-slate-500 dark:text-slate-400 line-clamp-1">{inv.description}</p>
+                                  {inv.location && (
+                                    <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" /> {inv.location}</p>
+                                  )}
+                                </div>
+                                <svg className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 shrink-0 group-hover/card:text-slate-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                              </Link>
+                            ))}
+                            {catInvestments.length > 3 && (
+                              <Link
+                                href={section.href}
+                                className="text-[14px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors inline-flex items-center gap-1 mt-0.5"
+                              >
+                                {t.projects.viewDetails} ({catInvestments.length}) →
+                              </Link>
+                            )}
+                          </div>
+                        ) : !invLoading ? (
+                          <p className="text-[14px] text-slate-400 dark:text-slate-500 italic pl-1">{t.services.noUpdates}</p>
+                        ) : (
+                          <div className="space-y-2 pl-1">
+                            {[1, 2].map((s) => (
+                              <div key={s} className="h-12 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse" />
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   );
                 })}

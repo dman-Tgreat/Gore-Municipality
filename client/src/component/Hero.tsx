@@ -101,13 +101,13 @@ export default function Hero() {
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-primary-dark to-transparent" />
 
           {/* Content */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-6">
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4 sm:px-6">
             {/* Main Title */}
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4 tracking-tight leading-[1.1]">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-2 sm:mb-4 tracking-tight leading-[1.1] max-w-[90%]">
               {t.hero.welcome}
             </h1>
             {/* Description from API */}
-            <p className="text-base md:text-lg max-w-2xl mx-auto font-light text-slate-200/90 mb-8 min-h-[1.5rem]">
+            <p className="text-sm sm:text-base md:text-lg max-w-[90%] sm:max-w-2xl mx-auto font-light text-slate-200/90 mb-4 sm:mb-8 min-h-[1.5rem] line-clamp-3 sm:line-clamp-none">
               {slide.description}
             </p>
           </div>

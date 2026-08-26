@@ -109,10 +109,6 @@ export default function AboutPage() {
         {/* History Text Container aligned inside standard max-w-7xl grid */}
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 bg-emerald-500/20 backdrop-blur-md text-emerald-300 border border-emerald-500/30 text-xs sm:text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5 shadow-sm">
-              <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-              {t.about.historyTitle}
-            </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 tracking-tight drop-shadow-md">
               {t.about.historyTitle}
             </h2>
@@ -171,10 +167,6 @@ export default function AboutPage() {
 
             {/* Right Side: Geography & Demographics Text */}
             <div className="order-1 md:order-2">
-              <div className="inline-flex items-center gap-2 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 text-xs sm:text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4 border border-emerald-200 dark:border-emerald-800/50">
-                <span className="w-2 h-2 bg-emerald-500 rounded-full" />
-                {t.about.geographyTitle}
-              </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-800 dark:text-white mb-6 tracking-tight">
                 {t.about.geographyTitle}
               </h2>
