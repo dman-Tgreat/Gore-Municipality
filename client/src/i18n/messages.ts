@@ -365,7 +365,7 @@ const amMessages = {
     noUpdates: "በቅርብ ጊዜ የወጣ አዲስ መረጃ የለም",
     municipalServices: "የማዘጋጃ ቤት አገልግሎቶች",
     municipalServicesDesc: "ለስልጠና፣ ለልደት ምስክር ወረቀት፣ ለንግድ ፈቃድ እና ለሌሎች መመሪያዎች በኢንተርኔት ያመልክቱ።",
-    viewAllServices: "ሁሉንም አገልግሎቶች ይመልከቱ",
+    viewAllService: "ሁሉንም አገልግሎቶች ይመልከቱ",
     viewAllNews: "ሁሉንም ዜናዎች እና ማስታወቂያዎች ይመልከቱ",
     aboutGore: "ስለ ጎሬ",
     aboutGoreDesc: "የታሪካዊው ወረዳችንን የበለጸገ ታሪክ እና የተፈጥሮ ውበት ይረዱ።",
