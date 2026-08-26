@@ -161,7 +161,7 @@ export default function Header() {
 
   useEffect(() => {
     departmentsApi.getAll().then(setDepartments).catch(() => {});
-    projectsApi.getAll().then(setProjects).catch(() => {});
+    projectsApi.getAll().then((res) => setProjects(res.data || []) ).catch(() => {});
   }, []);
 
   const handleLanguageChange = (lang: { code: LocaleCode }) => {

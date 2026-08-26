@@ -22,6 +22,9 @@ export default function AdminLoginPage() {
     try {
       const res = await authApi.login(email, password);
       if (res.success && res.accessToken) {
+        // SECURITY NOTE: localStorage is vulnerable to XSS attacks.
+        // TODO: Backend should set an httpOnly cookie instead of returning
+        // the token in the response body. Migrate to cookie-based auth.
         localStorage.setItem('admin_token', res.accessToken);
         router.push('/admin');
       } else {

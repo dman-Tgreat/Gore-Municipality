@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { LocaleProvider } from "@/context/LocaleContext";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { SettingsProvider } from "@/context/SettingsContext";
 import "./globals.css";
 import Script from "next/script";
 
@@ -67,7 +68,9 @@ export default async function RootLayout({children,}: Readonly<{
       <body className="min-h-full flex flex-col bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
         <a href="#main" className="sr-only focus:not-sr-only p-2">Skip to main content</a>
         <ThemeProvider>
-          <LocaleProvider>{children}</LocaleProvider>
+          <SettingsProvider>
+            <LocaleProvider>{children}</LocaleProvider>
+          </SettingsProvider>
         </ThemeProvider>
       </body>
     </html>

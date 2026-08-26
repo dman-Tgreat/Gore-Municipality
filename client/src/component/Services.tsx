@@ -32,14 +32,14 @@ export default function Services() {
 
   useEffect(() => {
     Promise.all([
-      newsApi.getAll().catch(() => [] as NewsArticle[]),
+      newsApi.getAll().catch(() => ({ data: [] as NewsArticle[], total: 0, page: 1, limit: 0, totalPages: 0 })),
       departmentsApi.getAll().catch(() => [] as Department[]),
-      projectsApi.getAll().catch(() => [] as Project[]),
+      projectsApi.getAll().catch(() => ({ data: [] as Project[], total: 0, page: 1, limit: 0, totalPages: 0 })),
     ])
       .then(([allNews, allDepts, allProjects]) => {
-        setNews(allNews.filter((a: NewsArticle) => a.published).slice(0, 4));
+        setNews((allNews.data || []).filter((a: NewsArticle) => a.published).slice(0, 4));
         setDepartments(allDepts);
-        setProjects(allProjects);
+        setProjects(allProjects.data || []);
       })
       .finally(() => setLoading(false));
   }, []);

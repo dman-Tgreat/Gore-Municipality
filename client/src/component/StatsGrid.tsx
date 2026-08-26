@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocale } from '@/context/LocaleContext';
-import { settingsApi, type SiteSetting } from '@/lib/api';
+import { useSettings } from '@/context/SettingsContext';
 import { Newspaper, Landmark, Construction, BarChart3 } from 'lucide-react';
 
 interface StatsItem {
@@ -60,20 +60,14 @@ function AnimatedCounter({ value, duration = 1500 }: { value: string; duration?:
 
 export default function StatsGrid() {
   const { t } = useLocale();
-  const [settings, setSettings] = useState<SiteSetting[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { rawSettings: settings, loading } = useSettings();
 
   const getSetting = (key: string, fallback: string): string => {
     const found = settings.find((s) => s.settingKey === key);
     return found ? found.settingValue : fallback;
   };
 
-  useEffect(() => {
-    settingsApi.getAll()
-      .then((sets) => setSettings(sets as SiteSetting[]))
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
+
 
   const stats: StatsItem[] = [
     {

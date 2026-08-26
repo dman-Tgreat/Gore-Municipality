@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, useState, Suspense, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Header from '@/component/Header';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
 import { tField } from '@/lib/locale';
-import { newsApi, announcementsApi, settingsApi, type NewsArticle, type Announcement, type SiteSetting } from '@/lib/api';
-import { Newspaper, Megaphone } from 'lucide-react';
+import { newsApi, announcementsApi, type NewsArticle, type Announcement } from '@/lib/api';
+import { useSettings } from '@/context/SettingsContext';
+import { Newspaper, Megaphone, Search } from 'lucide-react';
 import Pagination from '@/component/Pagination';
 
 type Tab = 'news' | 'announcements';
@@ -23,9 +24,10 @@ function NewsContent() {
   });
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
-  const [settings, setSettings] = useState<SiteSetting[]>([]);
+  const { rawSettings: settings } = useSettings();
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Pagination states
   const [newsPage, setNewsPage] = useState(1);
@@ -43,13 +45,6 @@ function NewsContent() {
     const found = settings.find((s) => s.settingKey === key);
     return found ? found.settingValue : fallback;
   };
-
-  // Fetch settings once
-  useEffect(() => {
-    settingsApi.getAll()
-      .then(setSettings)
-      .catch(() => {});
-  }, []);
 
   // Fetch news
   useEffect(() => {
@@ -93,6 +88,26 @@ function NewsContent() {
     if (url.startsWith('/uploads/')) return `${API_BASE}${url}`;
     return url;
   };
+
+  // Client-side search filter for news articles
+  const filteredArticles = useMemo(() => {
+    if (!searchQuery.trim()) return articles;
+    const q = searchQuery.toLowerCase();
+    return articles.filter((a) =>
+      tField(a, 'title', locale).toLowerCase().includes(q) ||
+      tField(a, 'summary', locale).toLowerCase().includes(q)
+    );
+  }, [articles, searchQuery, locale]);
+
+  // Client-side search filter for announcements
+  const filteredAnnouncements = useMemo(() => {
+    if (!searchQuery.trim()) return announcements;
+    const q = searchQuery.toLowerCase();
+    return announcements.filter((a) =>
+      tField(a, 'title', locale).toLowerCase().includes(q) ||
+      tField(a, 'description', locale).toLowerCase().includes(q)
+    );
+  }, [announcements, searchQuery, locale]);
 
   const tabs: { key: Tab; label: string; icon: React.ReactNode }[] = [
     { key: 'news', label: t.header.news, icon: <Newspaper className="w-4 h-4" /> },
@@ -152,12 +167,38 @@ function NewsContent() {
           </div>
         </div>
 
+        {/* Search Bar */}
+        <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+          <div className="container mx-auto px-4 sm:px-6 py-3">
+            <div className="relative max-w-md">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={activeTab === 'news' ? t.admin.searchNews : t.admin.searchAnnouncements}
+                className="w-full pl-10 pr-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-800 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-[#1a7a3a] focus:border-transparent outline-none transition"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
         {/* Content */}
         <main id="main" className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-6xl">
           {loading ? (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-slate-150 dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 animate-pulse space-y-3">
+                <div key={i} className="bg-slate-100 dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 animate-pulse space-y-3">
                   <div className="h-4 bg-gray-200 rounded w-20" />
                   <div className="h-5 bg-gray-200 rounded w-3/4" />
                   <div className="h-4 bg-gray-200 rounded w-full" />
@@ -183,9 +224,14 @@ function NewsContent() {
                     <Newspaper className="w-12 h-12 mx-auto mb-3 text-slate-400" />
                     <p className="text-slate-500 dark:text-slate-400">{t.services.noUpdates}</p>
                   </div>
+                ) : filteredArticles.length === 0 ? (
+                  <div className="text-center py-16 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <Search className="w-12 h-12 mx-auto mb-3 text-slate-400" />
+                    <p className="text-slate-500 dark:text-slate-400">No results for "{searchQuery}"</p>
+                  </div>
                 ) : (
                   <>
-                    {articles.map((article) => (
+                    {filteredArticles.map((article) => (
                       <article key={article.id} className="bg-slate-100 dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
                         {article.coverImage && (
                           <img src={imgSrc(article.coverImage)} alt={article.title} className="w-full h-52 object-cover" />
@@ -262,10 +308,15 @@ function NewsContent() {
                   <Megaphone className="w-12 h-12 mx-auto mb-3 text-slate-400" />
                   <p className="text-slate-500 dark:text-slate-400 text-lg">{t.announcements.noAnnouncements}</p>
                 </div>
+              ) : filteredAnnouncements.length === 0 ? (
+                <div className="text-center py-16 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                  <Search className="w-12 h-12 mx-auto mb-3 text-slate-400" />
+                  <p className="text-slate-500 dark:text-slate-400 text-lg">No results for "{searchQuery}"</p>
+                </div>
               ) : (
                 <>
                   <div className="space-y-4">
-                    {announcements.map((announcement) => (
+                    {filteredAnnouncements.map((announcement) => (
                       <div key={announcement.id} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-md transition-all duration-200">
                         <button
                           onClick={() => setExpandedId(expandedId === announcement.id ? null : announcement.id)}

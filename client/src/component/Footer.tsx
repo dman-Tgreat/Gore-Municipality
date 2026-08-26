@@ -1,24 +1,14 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { useLocale } from '@/context/LocaleContext';
-import { settingsApi, type SiteSetting } from '@/lib/api';
+import { useSettings } from '@/context/SettingsContext';
 
 export default function Footer() {
   const { t } = useLocale();
   const year = new Date().getFullYear();
-  const [settings, setSettings] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    settingsApi.getAll()
-      .then((data) => {
-        const map: Record<string, string> = {};
-        data.forEach((s: SiteSetting) => { map[s.settingKey] = s.settingValue; });
-        setSettings(map);
-      })
-      .catch(() => {});
-  }, []);
+  const { settings } = useSettings();
 
   const phone = settings.contact_phone_main || t.footer.phone;
   const email = settings.contact_email_main || t.footer.email;

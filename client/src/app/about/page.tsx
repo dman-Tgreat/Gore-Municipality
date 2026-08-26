@@ -5,7 +5,8 @@ import Link from 'next/link';
 import Header from '@/component/Header';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
-import { newsApi, departmentsApi, projectsApi, settingsApi, type NewsArticle, type Department, type Project, type SiteSetting } from '@/lib/api';
+import { newsApi, departmentsApi, projectsApi, type NewsArticle, type Department, type Project } from '@/lib/api';
+import { useSettings } from '@/context/SettingsContext';
 import { Newspaper, Landmark, Construction, MapPin, ScrollText, Globe, User, Crosshair, Zap, Briefcase } from 'lucide-react';
 
 const councilIcon = (
@@ -26,7 +27,7 @@ export default function AboutPage() {
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
-  const [settings, setSettings] = useState<SiteSetting[]>([]);
+  const { rawSettings: settings } = useSettings();
   const [loading, setLoading] = useState(true);
 
   // Helper to get a setting value by key, falling back to a default
@@ -46,16 +47,14 @@ export default function AboutPage() {
 
   useEffect(() => {
     Promise.all([
-      newsApi.getAll().catch(() => [] as NewsArticle[]),
+      newsApi.getAll().catch(() => ({ data: [] as NewsArticle[], total: 0, page: 1, limit: 0, totalPages: 0 })),
       departmentsApi.getAll().catch(() => [] as Department[]),
-      projectsApi.getAll().catch(() => [] as Project[]),
-      settingsApi.getAll().catch(() => [] as SiteSetting[]),
+      projectsApi.getAll().catch(() => ({ data: [] as Project[], total: 0, page: 1, limit: 0, totalPages: 0 })),
     ])
-      .then(([allNews, allDepts, allProjects, allSettings]) => {
-        setNews(allNews.filter((a: NewsArticle) => a.published));
+      .then(([allNews, allDepts, allProjects]) => {
+        setNews((allNews.data || []).filter((a: NewsArticle) => a.published));
         setDepartments(allDepts);
-        setProjects(allProjects);
-        setSettings(allSettings);
+        setProjects(allProjects.data || []);
       })
       .finally(() => setLoading(false));
   }, []);

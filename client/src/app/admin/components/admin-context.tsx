@@ -260,7 +260,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       projectsApi.getAll(), departmentsApi.getAll(), investmentsApi.getAll(token), heroSlidesApi.getAll(), settingsApi.getAll(),
     ])
       .then(([msgs, adms, n, a, p, d, i, slides, sets]) => {
-        setMessages(msgs); setAdmins(adms); setNews(n); setAnnouncements(a); setProjects(p); setDepartments(d); setInvestments(i);
+        setMessages(msgs.data); setAdmins(adms); setNews(n.data); setAnnouncements(a.data); setProjects(p.data); setDepartments(d); setInvestments(i.data);
         setHeroSlides(slides); setSiteSettings(sets);
         const formMap: Record<string, string> = {};
         (sets as SiteSetting[]).forEach((s) => { formMap[s.settingKey] = s.settingValue; });

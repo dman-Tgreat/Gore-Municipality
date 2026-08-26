@@ -26,6 +26,18 @@ function authHeaders(token: string): Record<string, string> {
   return { Authorization: `Bearer ${token}` };
 }
 
+/**
+ * Fetch and normalize API responses that may return either a plain array or a paginated object.
+ * Always returns PaginatedResponse<T> so consumers have a consistent shape.
+ */
+async function requestPaginated<T>(path: string, options?: RequestInit): Promise<PaginatedResponse<T>> {
+  const res = await request<PaginatedResponse<T> | T[]>(path, options);
+  if (Array.isArray(res)) {
+    return { data: res, total: res.length, page: 1, limit: res.length, totalPages: 1 };
+  }
+  return res;
+}
+
 // --- Public endpoints ---
 
 export interface NewsArticle {
@@ -63,7 +75,7 @@ export const newsApi = {
     if (limit) params.append('limit', limit.toString());
     if (published !== undefined) params.append('published', published.toString());
     const query = params.toString() ? `?${params.toString()}` : '';
-    return request<any>(`/news${query}`, token ? { headers: authHeaders(token) } : undefined);
+    return requestPaginated<NewsArticle>(`/news${query}`, token ? { headers: authHeaders(token) } : undefined);
   },
   getOne: (id: number) => request<NewsArticle>(`/news/${id}`),
   create: (token: string, data: { title: string; slug?: string; summary: string; content: string; coverImage?: string; published?: boolean }) =>
@@ -99,7 +111,7 @@ export const announcementsApi = {
     if (limit) params.append('limit', limit.toString());
     if (published !== undefined) params.append('published', published.toString());
     const query = params.toString() ? `?${params.toString()}` : '';
-    return request<any>(`/announcements${query}`, token ? { headers: authHeaders(token) } : undefined);
+    return requestPaginated<Announcement>(`/announcements${query}`, token ? { headers: authHeaders(token) } : undefined);
   },
   getOne: (id: number) => request<Announcement>(`/announcements/${id}`),
   create: (token: string, data: { title: string; description: string; content: string; published?: boolean }) =>
@@ -130,7 +142,7 @@ export interface Department {
 export const departmentsApi = {
   getAll: (page?: number, limit?: number) => {
     const query = page && limit ? `?page=${page}&limit=${limit}` : '';
-    return request<any>(`/departments${query}`);
+    return request<Department[]>(`/departments${query}`);
   },
   getOne: (id: number) => request<Department>(`/departments/${id}`),
   create: (token: string, data: { name: string; description: string; head: string; phone: string; email: string; office: string; image?: string }) =>
@@ -170,7 +182,7 @@ export const projectsApi = {
     if (limit) params.append('limit', limit.toString());
     if (status) params.append('status', status);
     const query = params.toString() ? `?${params.toString()}` : '';
-    return request<any>(`/projects${query}`);
+    return requestPaginated<Project>(`/projects${query}`);
   },
   getOne: (id: number) => request<Project>(`/projects/${id}`),
   create: (token: string, data: { name: string; description: string; budget?: number; status?: string; startDate?: string; endDate?: string; location?: string; coverImage?: string; fundingSource?: string; contractor?: string; category?: string }) =>
@@ -284,7 +296,7 @@ export const investmentsApi = {
     if (published !== undefined) params.append('published', published.toString());
     if (category) params.append('category', category);
     const query = params.toString() ? `?${params.toString()}` : '';
-    return request<any>(`/investments${query}`, token ? { headers: authHeaders(token) } : undefined);
+    return requestPaginated<Investment>(`/investments${query}`, token ? { headers: authHeaders(token) } : undefined);
   },
   getOne: (id: number) => request<Investment>(`/investments/${id}`),
   create: (token: string, data: { title: string; description: string; content: string; category: string; coverImage?: string; location?: string; contactPhone?: string; contactEmail?: string; published?: boolean }) =>
@@ -342,7 +354,7 @@ export const settingsApi = {
 export const contactAdminApi = {
   getAll: (token: string, page?: number, limit?: number) => {
     const query = page && limit ? `?page=${page}&limit=${limit}` : '';
-    return request<any>(`/contact${query}`, { headers: authHeaders(token) });
+    return requestPaginated<ContactMessage>(`/contact${query}`, { headers: authHeaders(token) });
   },
   markRead: (token: string, id: number) =>
     request<ContactMessage>(`/contact/${id}`, {

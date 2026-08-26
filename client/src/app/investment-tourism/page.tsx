@@ -96,7 +96,7 @@ export default function InvestmentTourismPage() {
 
   useEffect(() => {
     investmentsApi.getAll()
-      .then(setInvestments)
+      .then((res) => setInvestments(res.data || []))
       .catch(() => setInvestments([]))
       .finally(() => setInvLoading(false));
   }, []);

@@ -4,8 +4,9 @@ import React, { useState, useEffect } from 'react';
 import Header from '@/component/Header';
 import Footer from '@/component/Footer';
 import { useLocale } from '@/context/LocaleContext';
-import { contactApi, settingsApi, type SiteSetting } from '@/lib/api';
+import { contactApi } from '@/lib/api';
 import { MapPin, Phone, Mail, Clock, User, ClipboardList, MessageSquare } from 'lucide-react';
+import { useSettings } from '@/context/SettingsContext';
 
 const contactChannels = [
   { key: 'address', icon: <MapPin className="w-5 h-5" />, lines: ['officeAddress1', 'officeAddress2'], gradient: 'from-red-600 to-red-400' },
@@ -24,16 +25,32 @@ export default function ContactPage() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [formError, setFormError] = useState('');
-  const [siteSettings, setSiteSettings] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const { settings: siteSettings } = useSettings();
+  const [isOpenNow, setIsOpenNow] = useState(false);
 
+  // Calculate whether the office is currently open
   useEffect(() => {
-    settingsApi.getAll()
-      .then((data) => {
-        const map: Record<string, string> = {};
-        data.forEach((s: SiteSetting) => { map[s.settingKey] = s.settingValue; });
-        setSiteSettings(map);
-      })
-      .catch(() => {});
+    const checkOpen = () => {
+      const now = new Date();
+      const day = now.getDay(); // 0=Sun, 1=Mon...6=Sat
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const timeInMinutes = hours * 60 + minutes;
+
+      if (day >= 1 && day <= 5) {
+        // Mon-Fri: 8:00 AM – 5:00 PM
+        setIsOpenNow(timeInMinutes >= 480 && timeInMinutes < 1020);
+      } else if (day === 6) {
+        // Sat: 8:00 AM – 12:00 PM
+        setIsOpenNow(timeInMinutes >= 480 && timeInMinutes < 720);
+      } else {
+        setIsOpenNow(false);
+      }
+    };
+    checkOpen();
+    const interval = setInterval(checkOpen, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   const rawPhoneMain = siteSettings.contact_phone_main || '';
@@ -59,6 +76,7 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitting(true);
     try {
       await contactApi.submit(formData);
       setSubmitted(true);
@@ -67,6 +85,8 @@ export default function ContactPage() {
     } catch (err) {
       console.error('Contact submit error:', err);
       setFormError(t.contact.submitError || 'Failed to submit. Please try again later.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -107,17 +127,17 @@ export default function ContactPage() {
                   else if (line === 'officeAddress2') return null; // address is a single line now
                   else if (line === 'mainOffice') display = t.contact.mainOffice.replace(/:\s*.*/, ': ') + settingsPhoneMain;
                   else if (line === 'publicRelations') display = t.contact.publicRelations.replace(/:\s*.*/, ': ') + settingsPhonePR;
-                  else if (line === 'emailLine1') display = 'Main Email: ' + settingsEmailMain;
-                  else if (line === 'emailLine2') display = 'Support Email: ' + settingsEmailSupport;
+                  else if (line === 'emailLine1') display = `${t.contact.mainOffice.replace(/:.*/, '')}: ${settingsEmailMain}`;
+                  else if (line === 'emailLine2') display = `${t.contact.publicRelations.replace(/:.*/, '')}: ${settingsEmailSupport}`;
                   else if (line === 'hoursLine1') display = settingsHoursWeekday;
                   else if (line === 'hoursLine2') display = settingsHoursSaturday;
                   return (
                     <p key={i} className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">{display}</p>                  );
                     })}
                     {channel.key === 'hours' && (
-                  <div className="flex items-center gap-1.5 mt-3 text-[10px] text-slate-600 dark:text-slate-400 font-semibold">
-                    <span className="w-1.5 h-1.5 bg-slate-500 rounded-full animate-pulse" />
-                    {t.contact.openNow}
+                  <div className={`flex items-center gap-1.5 mt-3 text-[10px] font-semibold ${isOpenNow ? 'text-green-600 dark:text-green-400' : 'text-slate-500 dark:text-slate-500'}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${isOpenNow ? 'bg-green-500 animate-pulse' : 'bg-slate-400'}`} />
+                    {isOpenNow ? t.contact.openNow : t.footer.workingHours}
                   </div>
                 )}
               </div>
@@ -178,8 +198,8 @@ export default function ContactPage() {
               {/* Office Hours Card */}
               <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-200 dark:border-slate-700 p-5">
                 <div className="flex items-center gap-2 text-sm mb-3">
-                  <span className="w-2 h-2 bg-slate-500 rounded-full animate-pulse" />
-                  <span className="font-semibold text-slate-700 dark:text-slate-300">{t.contact.openNow}</span>
+                  <span className={`w-2 h-2 rounded-full ${isOpenNow ? 'bg-green-500 animate-pulse' : 'bg-slate-400'}`} />
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">{isOpenNow ? t.contact.openNow : t.footer.workingHours}</span>
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2.5 text-xs text-slate-500 dark:text-slate-400">
@@ -292,12 +312,20 @@ export default function ContactPage() {
                       <div className="flex items-center gap-4 pt-2">
                         <button
                           type="submit"
-                          className="inline-flex items-center gap-2 bg-[#1a7a3a] hover:bg-[#14632f] text-white font-semibold py-3.5 px-8 rounded-xl transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-green-900/20"
+                          disabled={submitting}
+                          className="inline-flex items-center gap-2 bg-[#1a7a3a] hover:bg-[#14632f] text-white font-semibold py-3.5 px-8 rounded-xl transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-green-900/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                         >
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                          </svg>
-                          {t.contact.submit}
+                          {submitting ? (
+                            <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                            </svg>
+                          ) : (
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                            </svg>
+                          )}
+                          {submitting ? t.admin.saving : t.contact.submit}
                         </button>
                         <p className="text-[11px] text-slate-500 dark:text-slate-400">{t.contact.privacyLabel}</p>
                       </div>
