@@ -69,10 +69,6 @@ export default function AboutPage() {
       <section className="relative bg-green-700 text-white overflow-hidden">
         <div className="container mx-auto px-6 py-12 md:py-16 relative z-10">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 bg-white/10 text-white/70 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4 backdrop-blur-sm border border-white/10">
-              <span className="w-1.5 h-1.5 bg-white/60 rounded-full" />
-              {t.header.about}
-            </div>
             <h1 className="text-4xl md:text-5xl font-black mb-4 tracking-tight">{t.about.title}</h1>
             <p className="text-lg text-gray-300 max-w-2xl">{t.about.subtitle}</p>
           </div>
@@ -150,10 +146,6 @@ export default function AboutPage() {
       <section className="py-8 sm:py-12">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-base font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-              <span className="w-1.5 h-1.5 bg-slate-600 dark:bg-slate-400 rounded-full" />
-              {t.about.leadershipTitle}
-            </div>
             <h2 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white mb-3 tracking-tight">
               {t.about.leadershipTitle}
             </h2>

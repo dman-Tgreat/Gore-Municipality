@@ -275,8 +275,7 @@ export default function ProjectDetailPage() {
               </h3>
               <div className="space-y-4">
                 {[
-                  { label: 'Planning & Design', pct: project.status === 'completed' ? 100 : project.status === 'ongoing' ? 100 : project.status === 'planned' ? 60 : 0, color: 'bg-slate-500' },
-                  { label: 'Procurement', pct: project.status === 'completed' ? 100 : project.status === 'ongoing' ? 85 : project.status === 'planned' ? 20 : 0, color: 'bg-slate-400' },
+                  { label: 'Planning & Design', pct: project.status === 'completed' ? 100 : project.status === 'ongoing' ? 100 : project.status === 'planned' ? 70 : 0, color: 'bg-slate-500' },
                   { label: 'Implementation', pct: project.status === 'completed' ? 100 : project.status === 'ongoing' ? 55 : 0, color: 'bg-slate-600' },
                   { label: 'Completion', pct: project.status === 'completed' ? 100 : project.status === 'ongoing' ? 10 : 0, color: 'bg-slate-500' },
                 ].map((phase, i) => (

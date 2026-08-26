@@ -111,10 +111,6 @@ function NewsContent() {
                               radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)`,
           }} />
           <div className="relative container mx-auto px-6">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-              <span className="w-1.5 h-1.5 bg-emerald-300/80 rounded-full animate-pulse" />
-              {t.header.home}
-            </div>
             <h1 className="text-3xl md:text-4xl font-black tracking-tight">
               {activeTab === 'news' ? t.news.title : t.announcements.title}
             </h1>

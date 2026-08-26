@@ -83,9 +83,6 @@ export default function ContactPage() {
                               radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 60%)`,
           }} />
           <div className="relative container mx-auto px-6">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">                  <span className="w-1.5 h-1.5 bg-white/60 rounded-full animate-pulse" />
-              {t.header.contact}
-            </div>
             <h1 className="text-3xl md:text-5xl font-black tracking-tight mb-4">{t.contact.title}</h1>
             <p className="text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">{t.contact.subtitle}</p>
           </div>
@@ -134,10 +131,6 @@ export default function ContactPage() {
             {/* Left — Get In Touch & Map */}
             <div className="lg:col-span-2 space-y-8">
               <div>
-                <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4">
-                  <span className="w-1.5 h-1.5 bg-slate-600 dark:bg-slate-400 rounded-full" />
-                  {t.contact.getInTouch}
-                </div>
                 <h2 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white mb-3 tracking-tight">{t.contact.getInTouch}</h2>
                 <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{t.contact.description}</p>
               </div>
@@ -182,7 +175,8 @@ export default function ContactPage() {
                       <p className="text-sm font-medium text-slate-800 dark:text-white">{settingsHoursWeekday}</p>
                       <p className="text-sm text-slate-600 dark:text-slate-400">{settingsHoursSaturday}</p>
                     </div>
-                  </div>                    <div className="pt-2 border-t border-slate-200 dark:border-slate-700">
+                  </div>                    
+                  <div className="pt-2 border-t border-slate-200 dark:border-slate-700">
                     <div className="flex items-center gap-2 text-xs">
                       <span className="w-2 h-2 bg-slate-500 rounded-full animate-pulse" />
                       <span className="font-semibold text-slate-700 dark:text-slate-300">{t.contact.openNow} — {t.contact.weAreHereToHelp}</span>

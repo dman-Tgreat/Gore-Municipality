@@ -105,7 +105,7 @@ export default function Services() {
                   href="/news"
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-800 dark:text-white hover:gap-2.5 transition-all group/link"
                 >
-                  {t.services.viewAll} ({publishedNewsCount})
+                  {t.services.viewAllNews} ({publishedNewsCount})
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>
@@ -173,7 +173,7 @@ export default function Services() {
                   href="/service"
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-800 dark:text-white hover:gap-2.5 transition-all group/link"
                 >
-                  {t.services.viewAll}
+                  {t.services.viewAllService}
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>
@@ -186,15 +186,7 @@ export default function Services() {
 
             </div>
           </div>
-
         </div> 
-
-        {/* Bottom decorative element */}
-        <div className="flex items-center justify-center gap-3 mt-12 text-slate-400 dark:text-slate-500">
-          <div className="h-px w-12 bg-gradient-to-r from-transparent via-slate-300 dark:via-slate-600 to-transparent" />
-          <span className="text-[10px] uppercase tracking-[0.2em] font-semibold">{t.services.goreWoredaTagline}</span>
-          <div className="h-px w-12 bg-gradient-to-r from-transparent via-slate-300 dark:via-slate-600 to-transparent" />
-        </div>
       </div>
     </section>
   );
