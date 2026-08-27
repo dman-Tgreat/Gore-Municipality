@@ -95,10 +95,10 @@ export default function Hero() {
             className="w-full h-full object-cover object-center"
           />
 
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-dark/90 via-primary/60 to-primary-dark/30" />
-          <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/60 via-transparent to-primary/20" />
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-primary-dark to-transparent" />
+          {/* Gradient Overlay — subtle green tint to help text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-primary-dark/50 via-primary/15 to-primary-dark/10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/35 via-transparent to-primary/10" />
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-primary-dark/15 to-transparent" />
 
           {/* Content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4 sm:px-6">

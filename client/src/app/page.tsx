@@ -15,6 +15,7 @@ export default function Home() {
       <Hero />
       <StatsGrid />
       <Services />
+      <QuickLinks page='home'/>
       <Footer />
     </div>
   );
