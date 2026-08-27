@@ -130,7 +130,7 @@ export default function AdminLoginPage() {
               <div className="w-2 h-2 rounded-full bg-[#c0392b]" />
             </div>
             <p className="text-center text-[11px] text-slate-400 dark:text-slate-500 mt-3">
-              © {new Date().getFullYear()} Gore Woreda Administration
+              © 2025 Gore Woreda Administration
             </p>
           </div>
         </div>

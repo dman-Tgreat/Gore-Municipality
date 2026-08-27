@@ -1,14 +1,18 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLocale } from '@/context/LocaleContext';
 import { useSettings } from '@/context/SettingsContext';
 
 export default function Footer() {
   const { t } = useLocale();
-  const year = new Date().getFullYear();
+  const [year, setYear] = useState(new Date().getFullYear());
   const { settings } = useSettings();
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
 
   const phone = settings.contact_phone_main || t.footer.phone;
   const email = settings.contact_email_main || t.footer.email;

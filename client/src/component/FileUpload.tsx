@@ -90,13 +90,10 @@ export default function FileUpload({
     preview &&
     (preview.startsWith('data:image') ||
       preview.includes('res.cloudinary.com') ||
-      preview.startsWith('/uploads/') || // legacy fallback
       /\.(jpg|jpeg|png|gif|webp)(\?|$)/i.test(preview));
 
-  // Build the display URL (Cloudinary returns full https URLs; legacy paths need the base)
-  const displayUrl = preview.startsWith('/uploads/')
-    ? `${API_BASE}${preview}`
-    : preview;
+  // Cloudinary returns full https URLs — use directly
+  const displayUrl = preview;
 
   return (
     <div>

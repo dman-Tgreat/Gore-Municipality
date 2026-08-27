@@ -20,13 +20,21 @@ const statusConfig: Record<string, { label: string; color: string; bg: string; p
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 function Timeline({ startDate, endDate }: { startDate?: string; endDate?: string }) {
+  const [pct, setPct] = useState(0);
+
+  useEffect(() => {
+    if (!startDate && !endDate) return;
+    const start = startDate ? new Date(startDate) : null;
+    const end = endDate ? new Date(endDate) : null;
+    const now = new Date();
+    const total = end && start ? (end.getTime() - start.getTime()) : 365 * 24 * 60 * 60 * 1000;
+    const elapsed = start ? (now.getTime() - start.getTime()) : 0;
+    setPct(Math.min(Math.max(Math.round((elapsed / total) * 100), 0), 100));
+  }, [startDate, endDate]);
+
   if (!startDate && !endDate) return null;
   const start = startDate ? new Date(startDate) : null;
   const end = endDate ? new Date(endDate) : null;
-  const now = new Date();
-  const total = end && start ? (end.getTime() - start.getTime()) : 365 * 24 * 60 * 60 * 1000;
-  const elapsed = start ? (now.getTime() - start.getTime()) : 0;
-  const pct = Math.min(Math.max(Math.round((elapsed / total) * 100), 0), 100);
 
   return (
     <div className="space-y-3">

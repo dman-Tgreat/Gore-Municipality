@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { allMessages, type LocaleCode, type Messages } from '@/i18n/messages';
 
 type LocaleContextType = {
@@ -11,24 +11,25 @@ type LocaleContextType = {
 
 const LocaleContext = createContext<LocaleContextType | null>(null);
 
-function getInitialLocale(): LocaleCode {
-  if (typeof window !== 'undefined') {
-    // 1. Check user's explicit choice from a previous visit
-    const stored = localStorage.getItem('locale') as LocaleCode | null;
-    if (stored && ['en', 'am', 'om'].includes(stored)) return stored;
-
-    // 2. Detect from browser language (free, automatic)
-    const browserLang = navigator.language?.split('-')[0];
-    if (browserLang === 'am') return 'am';
-    if (browserLang === 'om') return 'om';
-  }
-  return 'en';
-}
-
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<LocaleCode>(() => getInitialLocale());
+  const [locale, setLocaleState] = useState<LocaleCode>('en');
 
-  React.useEffect(() => {
+  // Resolve the real locale only on the client to avoid hydration mismatch
+  useEffect(() => {
+    let detected: LocaleCode = 'en';
+    const stored = localStorage.getItem('locale') as LocaleCode | null;
+    if (stored && ['en', 'am', 'om'].includes(stored)) {
+      detected = stored;
+    } else {
+      const browserLang = navigator.language?.split('-')[0];
+      if (browserLang === 'am') detected = 'am';
+      else if (browserLang === 'om') detected = 'om';
+    }
+    setLocaleState(detected);
+    document.documentElement.lang = detected;
+  }, []);
+
+  useEffect(() => {
     document.documentElement.lang = locale;
   }, [locale]);
 
