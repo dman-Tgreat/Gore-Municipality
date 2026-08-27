@@ -8,7 +8,7 @@ import { SearchBar } from './search-bar';
 import Pagination from '@/component/Pagination';
 
 export function AnnouncementsTab() {
-  const { t, announcements, filteredAnnouncements, annSearch, setAnnSearch, annStatusFilter, setAnnStatusFilter, annForm, setAnnForm, handleDeleteAnn, handleToggleAnn, badge, emptyAnnouncementForm } = useAdmin();
+  const { t, announcements, filteredAnnouncements, annSearch, setAnnSearch, annStatusFilter, setAnnStatusFilter, annForm, setAnnForm, handleDeleteAnn, handleRestoreAnn, handleToggleAnn, badge, emptyAnnouncementForm, showTrashedAnn, setShowTrashedAnn } = useAdmin();
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
 
@@ -33,11 +33,15 @@ export function AnnouncementsTab() {
           />
           <div className="flex gap-2 flex-wrap">
             {(['all', 'published', 'draft'] as const).map((f) => (
-              <button key={f} onClick={() => setAnnStatusFilter(f)}
-                className={`text-xs px-3 py-1.5 rounded-full transition font-medium ${annStatusFilter === f ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700'}`}>
+              <button key={f} onClick={() => { setAnnStatusFilter(f); setShowTrashedAnn(false); }}
+                className={`text-xs px-3 py-1.5 rounded-full transition font-medium ${!showTrashedAnn && annStatusFilter === f ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700'}`}>
                 {f === 'all' ? t.admin.filterAll : f === 'published' ? t.admin.filterPublished : t.admin.filterDraft}
               </button>
             ))}
+            <button onClick={() => setShowTrashedAnn(!showTrashedAnn)}
+              className={`text-xs px-3 py-1.5 rounded-full transition font-medium ${showTrashedAnn ? 'bg-red-600 text-white' : 'bg-white text-red-500 hover:bg-red-50 border border-red-200 dark:bg-slate-800 dark:border-red-800 dark:hover:bg-slate-700'}`}>
+              🗑️ Trash
+            </button>
           </div>
         </div>
         <button onClick={() => setAnnForm({ editing: true, editingId: null, data: { ...emptyAnnouncementForm } })}
@@ -65,10 +69,17 @@ export function AnnouncementsTab() {
                       <td className="p-4 text-slate-400 text-xs hidden md:table-cell dark:text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</td>
                       <td className="p-4 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <button onClick={() => setAnnForm({ editing: true, editingId: item.id, data: { title: item.title, titleAm: item.titleAm || '', titleOm: item.titleOm || '', description: item.description, descriptionAm: item.descriptionAm || '', descriptionOm: item.descriptionOm || '', content: item.content, contentAm: item.contentAm || '', contentOm: item.contentOm || '', published: item.published } })}
-                            className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium">{t.admin.editItem}</button>
-                          <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteAnn(item.id); }}
-                            className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition font-medium">{t.admin.deleteItem}</button>
+                          {showTrashedAnn ? (
+                            <button onClick={() => handleRestoreAnn(item.id)}
+                              className="text-xs text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300 transition font-medium">Restore</button>
+                          ) : (
+                            <>
+                              <button onClick={() => setAnnForm({ editing: true, editingId: item.id, data: { title: item.title, titleAm: item.titleAm || '', titleOm: item.titleOm || '', description: item.description, descriptionAm: item.descriptionAm || '', descriptionOm: item.descriptionOm || '', content: item.content, contentAm: item.contentAm || '', contentOm: item.contentOm || '', published: item.published } })}
+                                className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition font-medium">{t.admin.editItem}</button>
+                              <button onClick={() => { if (window.confirm(t.admin.confirmDeleteItemTitle)) handleDeleteAnn(item.id); }}
+                                className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition font-medium">{t.admin.deleteItem}</button>
+                            </>
+                          )}
                         </div>
                       </td>
                     </tr>

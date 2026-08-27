@@ -149,11 +149,20 @@ interface AdminContextType {
   handleLogout: () => void;
   handleMarkRead: (id: number) => Promise<void>;
   handleDeleteMsg: (id: number) => Promise<void>;
+  handleRestoreMsg: (id: number) => Promise<void>;
+  showTrashedMsgs: boolean;
+  setShowTrashedMsgs: React.Dispatch<React.SetStateAction<boolean>>;
   handleSaveNews: (e: React.FormEvent) => Promise<void>;
   handleDeleteNews: (id: number) => Promise<void>;
+  handleRestoreNews: (id: number) => Promise<void>;
+  showTrashedNews: boolean;
+  setShowTrashedNews: React.Dispatch<React.SetStateAction<boolean>>;
   handleToggleNews: (item: NewsArticle) => Promise<void>;
   handleSaveAnn: (e: React.FormEvent) => Promise<void>;
   handleDeleteAnn: (id: number) => Promise<void>;
+  handleRestoreAnn: (id: number) => Promise<void>;
+  showTrashedAnn: boolean;
+  setShowTrashedAnn: React.Dispatch<React.SetStateAction<boolean>>;
   handleToggleAnn: (item: Announcement) => Promise<void>;
   handleSaveProject: (e: React.FormEvent) => Promise<void>;
   handleDeleteProject: (id: number) => Promise<void>;
@@ -225,6 +234,10 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const [invCategoryFilter, setInvCategoryFilter] = useState('');
   const [adminSearch, setAdminSearch] = useState('');
   const [adminStatusFilter, setAdminStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
+  const [showTrashedMsgs, setShowTrashedMsgs] = useState(false);
+  const [showTrashedNews, setShowTrashedNews] = useState(false);
+  const [showTrashedAnn, setShowTrashedAnn] = useState(false);
+
 
   const [newsForm, setNewsForm] = useState<CmsFormState<typeof emptyNewsForm>>({ editing: false, editingId: null, data: { ...emptyNewsForm } });
   const [newsSubmitting, setNewsSubmitting] = useState(false);
@@ -288,7 +301,11 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   };
   const handleDeleteMsg = async (id: number) => {
     if (!token) return;
-    try { await contactAdminApi.delete(token, id); setMessages((p) => p.filter((m) => m.id !== id)); } catch {}
+    try { await contactAdminApi.delete(token, id); setMessages((p) => p.map((m) => (m.id === id ? { ...m, deletedAt: new Date().toISOString() } : m))); } catch {}
+  };
+  const handleRestoreMsg = async (id: number) => {
+    if (!token) return;
+    try { await contactAdminApi.restore(token, id); setMessages((p) => p.map((m) => (m.id === id ? { ...m, deletedAt: null } : m))); } catch {}
   };
 
   const handleSaveNews = async (e: React.FormEvent) => {
@@ -307,7 +324,11 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   };
   const handleDeleteNews = async (id: number) => {
     if (!token) return;
-    try { await newsApi.remove(token, id); setNews((p) => p.filter((n) => n.id !== id)); } catch {}
+    try { await newsApi.remove(token, id); setNews((p) => p.map((n) => (n.id === id ? { ...n, deletedAt: new Date().toISOString() } : n))); } catch {}
+  };
+  const handleRestoreNews = async (id: number) => {
+    if (!token) return;
+    try { await newsApi.restore(token, id); setNews((p) => p.map((n) => (n.id === id ? { ...n, deletedAt: null } : n))); } catch {}
   };
   const handleToggleNews = async (item: NewsArticle) => {
     if (!token) return;
@@ -330,7 +351,11 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   };
   const handleDeleteAnn = async (id: number) => {
     if (!token) return;
-    try { await announcementsApi.remove(token, id); setAnnouncements((p) => p.filter((a) => a.id !== id)); } catch {}
+    try { await announcementsApi.remove(token, id); setAnnouncements((p) => p.map((a) => (a.id === id ? { ...a, deletedAt: new Date().toISOString() } : a))); } catch {}
+  };
+  const handleRestoreAnn = async (id: number) => {
+    if (!token) return;
+    try { await announcementsApi.restore(token, id); setAnnouncements((p) => p.map((a) => (a.id === id ? { ...a, deletedAt: null } : a))); } catch {}
   };
   const handleToggleAnn = async (item: Announcement) => {
     if (!token) return;
@@ -455,6 +480,9 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const unreadCount = messages.filter((m) => !m.isRead).length;
   const filteredMessages = useMemo(() => {
     return messages.filter((m) => {
+      // Filter trashed vs active
+      if (showTrashedMsgs && !m.deletedAt) return false;
+      if (!showTrashedMsgs && m.deletedAt) return false;
       if (msgFilter === 'unread' && m.isRead) return false;
       if (msgFilter === 'read' && !m.isRead) return false;
       if (msgDateFrom) {
@@ -478,10 +506,12 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       }
       return true;
     });
-  }, [messages, msgFilter, msgSearch, msgDateFrom, msgDateTo]);
+  }, [messages, msgFilter, msgSearch, msgDateFrom, msgDateTo, showTrashedMsgs]);
 
   const filteredNews = useMemo(() => {
     return news.filter((n) => {
+      if (showTrashedNews && !n.deletedAt) return false;
+      if (!showTrashedNews && n.deletedAt) return false;
       if (newsStatusFilter === 'published' && !n.published) return false;
       if (newsStatusFilter === 'draft' && n.published) return false;
       if (newsSearch) {
@@ -494,10 +524,12 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       }
       return true;
     });
-  }, [news, newsSearch, newsStatusFilter]);
+  }, [news, newsSearch, newsStatusFilter, showTrashedNews]);
 
   const filteredAnnouncements = useMemo(() => {
     return announcements.filter((a) => {
+      if (showTrashedAnn && !a.deletedAt) return false;
+      if (!showTrashedAnn && a.deletedAt) return false;
       if (annStatusFilter === 'published' && !a.published) return false;
       if (annStatusFilter === 'draft' && a.published) return false;
       if (annSearch) {
@@ -510,7 +542,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       }
       return true;
     });
-  }, [announcements, annSearch, annStatusFilter]);
+  }, [announcements, annSearch, annStatusFilter, showTrashedAnn]);
 
   const filteredDepartments = useMemo(() => {
     return departments.filter((d) => {
@@ -609,9 +641,9 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     settingsForm, setSettingsForm, settingsSaving, setSettingsSaving, settingsError, setSettingsError,
     showAdminModal, setShowAdminModal, adminForm, setAdminForm, submitting, setSubmitting, adminError, setAdminError,
     confirmDelete, setConfirmDelete, togglingId, setTogglingId,
-    handleLogout, handleMarkRead, handleDeleteMsg,
-    handleSaveNews, handleDeleteNews, handleToggleNews,
-    handleSaveAnn, handleDeleteAnn, handleToggleAnn,
+    handleLogout, handleMarkRead, handleDeleteMsg, handleRestoreMsg, showTrashedMsgs, setShowTrashedMsgs,
+    handleSaveNews, handleDeleteNews, handleRestoreNews, handleToggleNews, showTrashedNews, setShowTrashedNews,
+    handleSaveAnn, handleDeleteAnn, handleRestoreAnn, handleToggleAnn, showTrashedAnn, setShowTrashedAnn,
     handleSaveProject, handleDeleteProject,
     handleSaveDept, handleDeleteDept,
     handleSaveInvestment, handleDeleteInvestment, handleToggleInvestment,

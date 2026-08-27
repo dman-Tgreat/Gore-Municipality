@@ -6,7 +6,7 @@ import { SearchBar } from './search-bar';
 import Pagination from '@/component/Pagination';
 
 export function MessagesTab() {
-  const { t, msgFilter, setMsgFilter, msgSearch, setMsgSearch, msgDateFrom, setMsgDateFrom, msgDateTo, setMsgDateTo, filteredMessages, unreadCount, expandedMsg, setExpandedMsg, handleMarkRead, handleDeleteMsg } = useAdmin();
+  const { t, msgFilter, setMsgFilter, msgSearch, setMsgSearch, msgDateFrom, setMsgDateFrom, msgDateTo, setMsgDateTo, filteredMessages, unreadCount, expandedMsg, setExpandedMsg, handleMarkRead, handleDeleteMsg, handleRestoreMsg, showTrashedMsgs, setShowTrashedMsgs } = useAdmin();
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
 
@@ -29,11 +29,15 @@ export function MessagesTab() {
           />
           <div className="flex gap-2 flex-wrap">
             {(['all', 'unread', 'read'] as const).map((f) => (
-              <button key={f} onClick={() => setMsgFilter(f)}
-                className={`text-xs px-3 py-1.5 rounded-full transition font-medium ${msgFilter === f ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700'}`}>
+              <button key={f} onClick={() => { setMsgFilter(f); setShowTrashedMsgs(false); }}
+                className={`text-xs px-3 py-1.5 rounded-full transition font-medium ${!showTrashedMsgs && msgFilter === f ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700'}`}>
                 {f === 'all' ? t.admin.allMessages : f === 'unread' ? `${t.admin.unread} (${unreadCount})` : t.admin.read}
               </button>
             ))}
+            <button onClick={() => setShowTrashedMsgs(!showTrashedMsgs)}
+              className={`text-xs px-3 py-1.5 rounded-full transition font-medium ${showTrashedMsgs ? 'bg-red-600 text-white' : 'bg-white text-red-500 hover:bg-red-50 border border-red-200 dark:bg-slate-800 dark:border-red-800 dark:hover:bg-slate-700'}`}>
+              🗑️ Trash
+            </button>
           </div>
         </div>
         <div className="flex flex-col sm:flex-row gap-3 items-end">
@@ -77,10 +81,17 @@ export function MessagesTab() {
                     <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
                       <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-wrap">{msg.message}</p>
                       <div className="flex gap-2 mt-4">
-                        {!msg.isRead && <button onClick={(e) => { e.stopPropagation(); handleMarkRead(msg.id); }}
-                          className="text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition font-medium">{t.admin.markRead}</button>}
-                        <button onClick={(e) => { e.stopPropagation(); handleDeleteMsg(msg.id); }}
-                          className="text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition font-medium">{t.admin.delete}</button>
+                        {showTrashedMsgs ? (
+                          <button onClick={(e) => { e.stopPropagation(); handleRestoreMsg(msg.id); }}
+                            className="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-3 py-1.5 rounded-lg hover:bg-green-200 dark:hover:bg-green-900/50 transition font-medium">Restore</button>
+                        ) : (
+                          <>
+                            {!msg.isRead && <button onClick={(e) => { e.stopPropagation(); handleMarkRead(msg.id); }}
+                              className="text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition font-medium">{t.admin.markRead}</button>}
+                            <button onClick={(e) => { e.stopPropagation(); handleDeleteMsg(msg.id); }}
+                              className="text-xs bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition font-medium">{t.admin.delete}</button>
+                          </>
+                        )}
                       </div>
                     </div>
                   )}

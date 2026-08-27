@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
@@ -12,6 +13,7 @@ import { UploadModule } from './upload/upload.module';
 import { InvestmentsModule } from './investments/investments.module';
 import { HeroSlidesModule } from './hero-slides/hero-slides.module';
 import { SettingsModule } from './settings/settings.module';
+import { PurgeModule } from './common/purge.module';
 
 @Module({
   imports: [
@@ -56,6 +58,10 @@ import { SettingsModule } from './settings/settings.module';
     HeroSlidesModule,
 
     SettingsModule,
+
+    ScheduleModule.forRoot(),
+
+    PurgeModule,
   ],
 })
 export class AppModule {}

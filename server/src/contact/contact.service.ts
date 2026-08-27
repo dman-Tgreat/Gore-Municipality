@@ -57,23 +57,21 @@ export class ContactService {
   }
 
   async findAll(page?: number, limit?: number) {
+    // Admin view: include soft-deleted items
+    const qb = this.contactRepository.createQueryBuilder('contact')
+      .withDeleted()
+      .orderBy('contact.createdAt', 'DESC');
+
     if (page === undefined && limit === undefined) {
-      return await this.contactRepository.find({
-        order: {
-          createdAt: 'DESC',
-        },
-      });
+      return await qb.getMany();
     }
 
     const pageNum = page || 1;
     const limitNum = limit || 10;
-    const [data, total] = await this.contactRepository.findAndCount({
-      order: {
-        createdAt: 'DESC',
-      },
-      skip: (pageNum - 1) * limitNum,
-      take: limitNum,
-    });
+    const [data, total] = await qb
+      .skip((pageNum - 1) * limitNum)
+      .take(limitNum)
+      .getManyAndCount();
 
     return {
       data,
@@ -87,6 +85,7 @@ export class ContactService {
   async findOne(id: number) {
     const contact = await this.contactRepository.findOne({
       where: { id },
+      withDeleted: true,
     });
 
     if (!contact) {
@@ -105,10 +104,21 @@ export class ContactService {
   async remove(id: number) {
     const contact = await this.findOne(id);
 
-    await this.contactRepository.remove(contact);
+    await this.contactRepository.softRemove(contact);
 
     return {
-      message: 'Contact message deleted successfully',
+      message: 'Contact message moved to trash',
+      id: contact.id,
     };
+  }
+
+  async restore(id: number) {
+    const contact = await this.contactRepository.findOne({
+      where: { id },
+      withDeleted: true,
+    });
+    if (!contact) throw new NotFoundException('Contact message not found');
+    await this.contactRepository.restore(id);
+    return { message: 'Contact message restored successfully', id };
   }
 }

@@ -57,31 +57,29 @@ export class NewsService {
       where.published = published;
     }
 
+    // Admin queries (no published filter) include soft-deleted items
+    const includeDeleted = published === undefined;
+    const qb = this.newsRepository.createQueryBuilder('news')
+      .leftJoinAndSelect('news.createdBy', 'createdBy')
+      .orderBy('news.createdAt', 'DESC');
+
+    if (includeDeleted) {
+      qb.withDeleted();
+    }
+    if (published !== undefined) {
+      qb.andWhere('news.published = :published', { published });
+    }
+
     if (page === undefined && limit === undefined) {
-      return await this.newsRepository.find({
-        where,
-        relations: {
-          createdBy: true,
-        },
-        order: {
-          createdAt: 'DESC',
-        },
-      });
+      return await qb.getMany();
     }
 
     const pageNum = page || 1;
     const limitNum = limit || 10;
-    const [data, total] = await this.newsRepository.findAndCount({
-      where,
-      relations: {
-        createdBy: true,
-      },
-      order: {
-        createdAt: 'DESC',
-      },
-      skip: (pageNum - 1) * limitNum,
-      take: limitNum,
-    });
+    const [data, total] = await qb
+      .skip((pageNum - 1) * limitNum)
+      .take(limitNum)
+      .getManyAndCount();
 
     return {
       data,
@@ -98,6 +96,7 @@ export class NewsService {
       relations: {
         createdBy:true
       },
+      withDeleted: true,
     });
 
     if (!news || (requirePublished && !news.published)) {
@@ -116,10 +115,21 @@ export class NewsService {
   async remove(id: number) {
     const news = await this.findOne(id);
 
-    await this.newsRepository.remove(news);
+    await this.newsRepository.softRemove(news);
 
     return {
-      message: 'News deleted successfully',
+      message: 'News moved to trash',
+      id: news.id,
     };
+  }
+
+  async restore(id: number) {
+    const news = await this.newsRepository.findOne({
+      where: { id },
+      withDeleted: true,
+    });
+    if (!news) throw new NotFoundException('News not found');
+    await this.newsRepository.restore(id);
+    return { message: 'News restored successfully', id };
   }
 }

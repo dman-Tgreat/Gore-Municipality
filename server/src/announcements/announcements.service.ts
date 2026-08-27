@@ -43,31 +43,29 @@ export class AnnouncementsService {
       where.published = published;
     }
 
+    // Admin queries (no published filter) include soft-deleted items
+    const includeDeleted = published === undefined;
+    const qb = this.announcementsRepository.createQueryBuilder('announcement')
+      .leftJoinAndSelect('announcement.createdBy', 'createdBy')
+      .orderBy('announcement.createdAt', 'DESC');
+
+    if (includeDeleted) {
+      qb.withDeleted();
+    }
+    if (published !== undefined) {
+      qb.andWhere('announcement.published = :published', { published });
+    }
+
     if (page === undefined && limit === undefined) {
-      return await this.announcementsRepository.find({
-        where,
-        relations: {
-          createdBy: true,
-        },
-        order: {
-          createdAt: 'DESC',
-        },
-      });
+      return await qb.getMany();
     }
 
     const pageNum = page || 1;
     const limitNum = limit || 10;
-    const [data, total] = await this.announcementsRepository.findAndCount({
-      where,
-      relations: {
-        createdBy: true,
-      },
-      order: {
-        createdAt: 'DESC',
-      },
-      skip: (pageNum - 1) * limitNum,
-      take: limitNum,
-    });
+    const [data, total] = await qb
+      .skip((pageNum - 1) * limitNum)
+      .take(limitNum)
+      .getManyAndCount();
 
     return {
       data,
@@ -84,6 +82,7 @@ export class AnnouncementsService {
       relations: {
         createdBy: true,
       },
+      withDeleted: true,
     });
 
     if (!announcement || (requirePublished && !announcement.published)) {
@@ -102,10 +101,21 @@ export class AnnouncementsService {
   async remove(id: number) {
     const announcement = await this.findOne(id);
 
-    await this.announcementsRepository.remove(announcement);
+    await this.announcementsRepository.softRemove(announcement);
 
     return {
-      message: 'Announcement deleted successfully',
+      message: 'Announcement moved to trash',
+      id: announcement.id,
     };
+  }
+
+  async restore(id: number) {
+    const announcement = await this.announcementsRepository.findOne({
+      where: { id },
+      withDeleted: true,
+    });
+    if (!announcement) throw new NotFoundException('Announcement not found');
+    await this.announcementsRepository.restore(id);
+    return { message: 'Announcement restored successfully', id };
   }
 }

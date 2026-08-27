@@ -58,6 +58,7 @@ export interface NewsArticle {
   createdBy: { id: number; fullName: string; email: string };
   createdAt: string;
   updatedAt: string;
+  deletedAt?: string | null;
 }
 
 export interface PaginatedResponse<T> {
@@ -85,6 +86,8 @@ export const newsApi = {
     request<NewsArticle>(`/news/${id}`, { method: 'PATCH', headers: authHeaders(token), body: JSON.stringify(data) }),
   remove: (token: string, id: number) =>
     request<{ message: string }>(`/news/${id}`, { method: 'DELETE', headers: authHeaders(token) }),
+  restore: (token: string, id: number) =>
+    request<{ message: string; id: number }>(`/news/${id}/restore`, { method: 'POST', headers: authHeaders(token) }),
 };
 
 export interface Announcement {
@@ -102,6 +105,7 @@ export interface Announcement {
   createdBy: { id: number; fullName: string; email: string };
   createdAt: string;
   updatedAt: string;
+  deletedAt?: string | null;
 }
 
 export const announcementsApi = {
@@ -121,6 +125,8 @@ export const announcementsApi = {
     request<Announcement>(`/announcements/${id}`, { method: 'PATCH', headers: authHeaders(token), body: JSON.stringify(data) }),
   remove: (token: string, id: number) =>
     request<{ message: string }>(`/announcements/${id}`, { method: 'DELETE', headers: authHeaders(token) }),
+  restore: (token: string, id: number) =>
+    request<{ message: string; id: number }>(`/announcements/${id}/restore`, { method: 'POST', headers: authHeaders(token) }),
 };
 
 export interface Department {
@@ -205,6 +211,7 @@ export interface ContactMessage {
   isRead: boolean;
   createdAt: string;
   updatedAt: string;
+  deletedAt?: string | null;
 }
 
 export const contactApi = {
@@ -370,6 +377,11 @@ export const contactAdminApi = {
   delete: (token: string, id: number) =>
     request<{ message: string }>(`/contact/${id}`, {
       method: 'DELETE',
+      headers: authHeaders(token),
+    }),
+  restore: (token: string, id: number) =>
+    request<{ message: string; id: number }>(`/contact/${id}/restore`, {
+      method: 'POST',
       headers: authHeaders(token),
     }),
 };

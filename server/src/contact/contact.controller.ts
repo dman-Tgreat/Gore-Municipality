@@ -78,11 +78,23 @@ export class ContactController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete a contact message' })
+  @ApiOperation({ summary: 'Soft-delete a contact message (move to trash)' })
   @ApiParam({ name: 'id', type: Number })
-  @ApiResponse({ status: 200, description: 'Message deleted successfully' })
+  @ApiResponse({ status: 200, description: 'Message moved to trash' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   remove(@Param('id') id: string) {
     return this.contactService.remove(+id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Post(':id/restore')
+  @ApiOperation({ summary: 'Restore a soft-deleted contact message' })
+  @ApiParam({ name: 'id', type: Number })
+  @ApiResponse({ status: 200, description: 'Message restored' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'Message not found' })
+  restore(@Param('id') id: string) {
+    return this.contactService.restore(+id);
   }
 }

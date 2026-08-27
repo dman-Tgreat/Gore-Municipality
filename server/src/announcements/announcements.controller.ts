@@ -91,11 +91,23 @@ export class AnnouncementsController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete an announcement' })
+  @ApiOperation({ summary: 'Soft-delete an announcement (move to trash)' })
   @ApiParam({ name: 'id', type: Number })
-  @ApiResponse({ status: 200, description: 'Announcement deleted successfully' })
+  @ApiResponse({ status: 200, description: 'Announcement moved to trash' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   remove(@Param('id') id: string) {
     return this.announcementsService.remove(+id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Post(':id/restore')
+  @ApiOperation({ summary: 'Restore a soft-deleted announcement' })
+  @ApiParam({ name: 'id', type: Number })
+  @ApiResponse({ status: 200, description: 'Announcement restored' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'Announcement not found' })
+  restore(@Param('id') id: string) {
+    return this.announcementsService.restore(+id);
   }
 }

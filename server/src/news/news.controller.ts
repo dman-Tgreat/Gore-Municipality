@@ -100,12 +100,24 @@ export class NewsController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete a news article' })
+  @ApiOperation({ summary: 'Soft-delete a news article (move to trash)' })
   @ApiParam({ name: 'id', type: Number, description: 'News article ID' })
-  @ApiResponse({ status: 200, description: 'News article deleted successfully' })
+  @ApiResponse({ status: 200, description: 'News article moved to trash' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'News not found' })
   remove(@Param('id') id: string) {
     return this.newsService.remove(+id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Post(':id/restore')
+  @ApiOperation({ summary: 'Restore a soft-deleted news article' })
+  @ApiParam({ name: 'id', type: Number })
+  @ApiResponse({ status: 200, description: 'News article restored' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'News not found' })
+  restore(@Param('id') id: string) {
+    return this.newsService.restore(+id);
   }
 }
